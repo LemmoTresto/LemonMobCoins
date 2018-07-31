@@ -27,7 +27,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>me.max</groupId>
-  <artifactId>mobcoins</artifactId>
+  <artifactId>lemonmobcoins</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
 

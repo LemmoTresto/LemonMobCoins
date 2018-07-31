@@ -1,4 +1,4 @@
-name: MobCoins
+name: LemonMobCoins
 version: ${project.version}
 main: me.max.lemonmobcoins.LemonMobCoins
 commands:
