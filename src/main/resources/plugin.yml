@@ -1,0 +1,9 @@
+name: MobCoins
+version: ${project.version}
+main: me.max.lemonmobcoins.LemonMobCoins
+commands:
+  mobcoins:
+    description: "Main MobCoins command!"
+    aliases: ["mc", "mcoin", "mcoins", "mobc", "mobcoin"]
+  mshop:
+    description: "Opens MobCoins shop!"

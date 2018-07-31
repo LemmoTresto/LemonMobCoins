@@ -1,0 +1,21 @@
+RECEIVED_COINS_FROM_KILL: "You received %amount% MobCoins for killing %entity%, your total balance is %balance%."
+PURCHASED_ITEM_FROM_SHOP: "You bought %item% for %amount%, the balance left is %balance%."
+NOT_ENOUGH_MONEY_TO_PURCHASE: "You do not have enough funds to buy this! Your current balance is %balance%."
+NO_PERMISSION_TO_PURCHASE: "You do not have permission to buy this!"
+UNKNOWN_SUBCOMMAND: "Unknown subcommand, try /mobcoins help"
+ADMIN_HELP_MENU: "/mobcoins help - Display this menu
+                  /mobcoins - Check your balance
+                  /mobcoins [name] - Check somebody else balance
+                  /mshop - Open the shop
+                  /mc give [name] [amount] - Give mob coins to a player
+                  /mc take [name] [amount] - Take mob coins from a player
+                  /mc set [name] [amount] - Set the balance of a player"
+PLAYER_HELP_MENU: "/mobcoins help - Display this menu
+                   /mobcoins - Check your balance
+                   /mobcoins [name] - Check somebody else balance
+                   /mshop - Open the shop"
+OWN_PLAYER_BALANCE: "Your balance is %balance%"
+OTHER_PLAYER_BALANCE: "%player%'s balance is %balance%"
+CONSOLE_CANNOT_USE_COMMAND: "Console cannot use this command!"
+UNKNOWN_PLAYER: "Unknown player."
+NO_PERMISSION_TO_EXECUTE: "You don't have permission to execute this command!"
