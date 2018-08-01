@@ -28,32 +28,32 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 
 public enum Messages {
-    RECEIVED_COINS_FROM_KILL("You received %amount% MobCoins for killing %entity%, your total balance is %balance%"),
-    PURCHASED_ITEM_FROM_SHOP("You bought %item% for %amount%, the balance left is %balance%"),
-    NOT_ENOUGH_MONEY_TO_PURCHASE("You do not have enough funds to buy this! Your current balance is %balance%"),
-    NO_PERMISSION_TO_PURCHASE("You do not have permission to buy this!"),
-    UNKNOWN_SUBCOMMAND("Unknown subcommand, try /mobcoins help"),
-    ADMIN_HELP_MENU("/mobcoins help - Display this menu\n" +
-            "/mobcoins balance - Check your balance\n" +
-            "/mobcoins balance [name] - Check somebody else balance\n" +
-            "/mobcoins shop\n" +
-            "/mshop - Open the shop\n" +
-            "/mc give [name] [amount] - Give mob coins to a player\n" +
-            "/mc take [name] [amount] - Take mob coins from a player\n" +
-            "/mc set [name] [amount] - Set the balance of a player"),
-    PLAYER_HELP_MENU("/mobcoins help - Display this menu\n" +
-            "/mobcoins balance - Check your balance\n" +
-            "/mobcoins balance [name] - Check somebody else balance\n" +
-            "/mobcoins shop\n" +
-            "/mshop - Open the shop"),
-    OWN_PLAYER_BALANCE("Your balance is %balance%"),
-    OTHER_PLAYER_BALANCE("%player%'s balance is %balance%"),
+    RECEIVED_COINS_FROM_KILL("&7You received &e%amount% &7MobCoins for killing &e%entity%&7, your total balance is &e%balance%"),
+    PURCHASED_ITEM_FROM_SHOP("&7You bought &e%item% &7for &e%amount%&7, the balance left is &e%balance%"),
+    NOT_ENOUGH_MONEY_TO_PURCHASE("&7You do not have enough funds to buy this! Your current balance is &e%balance%"),
+    NO_PERMISSION_TO_PURCHASE("&cYou do not have permission to buy this!"),
+    UNKNOWN_SUBCOMMAND("&7Unknown subcommand, try &e/mobcoins help"),
+    ADMIN_HELP_MENU("&e/mobcoins help &8- &7Display this menu\n" +
+            "&e/mobcoins balance &8- &7Check your balance\n" +
+            "&e/mobcoins balance [name] &8- &7Check somebody else balance\n" +
+            "&e/mobcoins shop\n" +
+            "&e/mshop &8- &7Open the shop\n" +
+            "&e/mc give [name] [amount] &8- &7Give mob coins to a player\n" +
+            "&e/mc take [name] [amount] &8- &7Take mob coins from a player\n" +
+            "&e/mc set [name] [amount] &8- &7Set the balance of a player"),
+    PLAYER_HELP_MENU("&e/mobcoins help &8- &7Display this menu\n" +
+            "&e/mobcoins balance &8- &7Check your balance\n" +
+            "&e/mobcoins balance [name] &8- &7Check somebody else balance\n" +
+            "&e/mobcoins shop\n" +
+            "&e/mshop &8- &7Open the shop"),
+    OWN_PLAYER_BALANCE("&7Your balance is &e%balance%"),
+    OTHER_PLAYER_BALANCE("&e%player%'s &7balance is &e%balance%"),
     CONSOLE_CANNOT_USE_COMMAND("Console cannot use this command!"),
-    UNKNOWN_PLAYER("Unknown player."),
-    NO_PERMISSION_TO_EXECUTE("You don't have permission to execute this command!"),
-    SET_PLAYER_BALANCE("Successfully set %player%'s balance to %balance%"),
-    TAKE_PLAYER_BALANCE("Successfully taken %amount$ from %player%'s balance."),
-    GIVE_PLAYER_BALANCE("Successfully given %amount% to %player%");
+    UNKNOWN_PLAYER("&7Unknown player."),
+    NO_PERMISSION_TO_EXECUTE("&cYou don't have permission to execute this command!"),
+    SET_PLAYER_BALANCE("&7Successfully set &e%player%'s &7balance to &e%balance%"),
+    TAKE_PLAYER_BALANCE("&7Successfully taken &e%amount &7coins from &e%player%'s &7balance."),
+    GIVE_PLAYER_BALANCE("&7Successfully given &e%amount% &7to &e%player%");
 
     private String message;
 
