@@ -37,25 +37,24 @@ mob-list:
 # The price in mobcoins that you need to make this purchase.
 # The commands to run after purchase.
 gui:
-  name: "Mob Coin Shop!"
+  name: "&8Mob Coin Shop"
   command: "/coinshop"
   rows: 1
   items:
-    diasword:
+    drill:
+      material: "DIAMOND_PICKAXE"
       slot: 1
-      material: DIAMOND_SWORD
       amount: 1
-      displayname: "&6&lDagger Sword"
+      displayname: "&bDiamond &fDrill"
       glowing: true
       lore:
-      - " &6* &eINFO: &fThe best sword"
-      - "   &fon the server. You can't"
-      - "   &fpass up this deal!"
-      - ""
-      - " &6* &ePRICE: &7100 coins"
-      - ""
-      - "&7&o(( Click to &f&opurchase &7&othis &f&o'&6&l&oDagger Sword&f&o'&7&o! ))"
+      - "&7Efficiency VI"
+      - "&7Unbreaking IV"
+      - "&7Fortune IV"
+      - "&7Made by the most skilled blacksmiths"
+      - ''
+      - "&8* &7Price: &6$&e100"
       permission: false
       price: 100
       commands:
-      - "eco give %player% diamond_sword"
+      - "give %player% diamond_pickaxe 1 name:&bDiamond_&fDrill lore:&7Made_by_the_most_skilled_blacksmiths dig_speed:6 durability:4 fortune:4"
