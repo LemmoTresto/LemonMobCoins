@@ -1,6 +1,6 @@
-RECEIVED_COINS_FROM_KILL: "&7You received &e%amount% &7MobCoins for killing &e%entity%&7, your total balance is &e%balance%"
-PURCHASED_ITEM_FROM_SHOP: "&7You bought &e%item% &7for &e%amount%&7, the balance left is &e%balance%"
-NOT_ENOUGH_MONEY_TO_PURCHASE: "&7You do not have enough funds to buy this! Your current balance is &e%balance%"
+RECEIVED_COINS_FROM_KILL: "&fYou received &e%amount% &fMobCoins for killing &e%entity%&f, your total balance is &e%balance%"
+PURCHASED_ITEM_FROM_SHOP: "&fYou bought &e%item% &ffor &e%amount%&f, the balance left is &e%balance%"
+NOT_ENOUGH_MONEY_TO_PURCHASE: "&fYou do not have enough funds to buy this! Your current balance is &e%balance%"
 NO_PERMISSION_TO_PURCHASE: "&cYou do not have permission to buy this!"
 UNKNOWN_SUBCOMMAND: "&7Unknown subcommand, try &e/mobcoins help"
 ADMIN_HELP_MENU: "&e/mobcoins help &8- &7Display this menu\n" +
