@@ -66,7 +66,17 @@ public enum Messages {
         if (p != null) msg = msg.replaceAll("%player%", p.getName());
         if (e != null) msg = msg.replaceAll("%entity%", e.getName());
         if (received_coins != 0) msg = msg.replaceAll("%amount%", String.valueOf(received_coins));
-        if (p != null) msg = msg.replaceAll("%balance%", String.valueOf(lemonMobCoins.getCoinManager().getCoinsOfPlayer(p)));
+        if (received_coins != 0){
+            if (String.valueOf(received_coins).split(".")[1].equalsIgnoreCase("0")){
+                msg = msg.replaceAll("%balance%", String.valueOf(received_coins).split(".")[0]);
+            }
+        }
+        if (p != null){
+            double amt = lemonMobCoins.getCoinManager().getCoinsOfPlayer(p);
+            if (String.valueOf(amt).split(".")[1].equalsIgnoreCase("0")){
+                msg = msg.replaceAll("%balance%", String.valueOf(amt).split(".")[0]);
+            }
+        }
         return msg;
 
     }
