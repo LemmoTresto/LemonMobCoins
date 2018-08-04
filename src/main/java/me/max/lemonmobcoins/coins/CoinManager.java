@@ -22,32 +22,34 @@
 
 package me.max.lemonmobcoins.coins;
 
-import me.max.lemonmobcoins.LemonMobCoins;
+import me.max.lemonmobcoins.api.LemonMobCoinsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class CoinManager {
+public class CoinManager implements LemonMobCoinsAPI{
 
-    private LemonMobCoins lemonMobCoins;
+    private File dataFolder;
     private Map<OfflinePlayer, Double> coins;
     private List<CoinMob> coinMobList;
 
-    public CoinManager(LemonMobCoins lemonMobCoins) throws IOException {
-        this.lemonMobCoins = lemonMobCoins;
+    public CoinManager(File dataFolder, FileConfiguration config) throws IOException {
+        this.dataFolder = dataFolder;
         coins = new HashMap<>();
         coinMobList = new ArrayList<>();
 
         //Create the data directory and coins file if they do not exist.
-        File file = new File(lemonMobCoins.getDataFolder().toString(), "data");
+        File file = new File(dataFolder.toString(), "data");
         file.mkdir();
-        file = new File(lemonMobCoins.getDataFolder().toString() + "/data/", "coins.yml");
+        file = new File(dataFolder.toString() + "/data/", "coins.yml");
         file.createNewFile();
 
         //Read the data file and put all data in the map.
@@ -55,7 +57,7 @@ public class CoinManager {
         for (String key : coinsData.getKeys(false)) coins.put(Bukkit.getOfflinePlayer(UUID.fromString(key)), coinsData.getDouble(key));
 
         //Read config file
-        ConfigurationSection mobList = lemonMobCoins.getConfig().getConfigurationSection("mob-list");
+        ConfigurationSection mobList = config.getConfigurationSection("mob-list");
         for (String key : mobList.getKeys(false)) {
             ConfigurationSection coinMob = mobList.getConfigurationSection(key);
 
@@ -73,33 +75,43 @@ public class CoinManager {
     }
 
     public void saveData() throws IOException {
-        File file = new File(lemonMobCoins.getDataFolder().toString() + "/data/", "coins.yml");
+        File file = new File(dataFolder.toString() + "/data/", "coins.yml");
         YamlConfiguration coinsData = YamlConfiguration.loadConfiguration(file);
         for (Map.Entry<OfflinePlayer, Double> entry : coins.entrySet()) coinsData.set(entry.getKey().getUniqueId().toString(), entry.getValue());
         coinsData.save(file);
     }
 
-    public double getCoinsOfPlayer(OfflinePlayer p){
+    public CoinMob getCoinMob(@NotNull EntityType entityType){
+        return getCoinMobList().stream().filter(coinMob -> coinMob.getMob() == entityType).findFirst().orElse(null);
+    }
+
+    @Override
+    public double getCoinsOfPlayer(@NotNull OfflinePlayer p){
         return coins.getOrDefault(p, 0.0);
     }
 
-    public void setCoinsOfPlayer(OfflinePlayer p, double coins){
+    @Override
+    public void setCoinsOfPlayer(@NotNull OfflinePlayer p, double coins){
         this.coins.put(p, coins);
     }
 
-    public void addCoinsToPlayer(OfflinePlayer p, double coins){
+    @Override
+    public void addCoinsToPlayer(@NotNull OfflinePlayer p, double coins){
         setCoinsOfPlayer(p, getCoinsOfPlayer(p) + coins);
     }
 
-    public void incrementPlayerBalance(OfflinePlayer p){
+    @Override
+    public void incrementPlayerBalance(@NotNull OfflinePlayer p){
         setCoinsOfPlayer(p, getCoinsOfPlayer(p) + 1);
     }
 
-    public List<CoinMob> getCoinMobList() {
-        return coinMobList;
+    @Override
+    public void deductCoinsFromPlayer(@NotNull OfflinePlayer p, double price) {
+        setCoinsOfPlayer(p, getCoinsOfPlayer(p) - price);
     }
 
-    public void deductCoinsFromPlayer(OfflinePlayer p, double price) {
-        setCoinsOfPlayer(p, getCoinsOfPlayer(p) - price);
+    @NotNull
+    private List<CoinMob> getCoinMobList() {
+        return coinMobList;
     }
 }

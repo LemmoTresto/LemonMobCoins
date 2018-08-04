@@ -22,8 +22,9 @@
 
 package me.max.lemonmobcoins.listeners;
 
-import me.max.lemonmobcoins.LemonMobCoins;
+import me.max.lemonmobcoins.coins.CoinManager;
 import me.max.lemonmobcoins.files.Messages;
+import me.max.lemonmobcoins.gui.GuiManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,22 +32,23 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class PlayerPreProcessCommandListener implements Listener {
 
-    private LemonMobCoins lemonMobCoins;
+    private CoinManager coinManager;
+    private GuiManager guiManager;
 
-    public PlayerPreProcessCommandListener(LemonMobCoins lemonMobCoins){
-        this.lemonMobCoins = lemonMobCoins;
-        lemonMobCoins.getServer().getPluginManager().registerEvents(this, lemonMobCoins);
+    public PlayerPreProcessCommandListener(CoinManager coinManager, GuiManager guiManager){
+        this.coinManager = coinManager;
+        this.guiManager = guiManager;
     }
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event){
-        if (event.getMessage().toLowerCase().startsWith(lemonMobCoins.getGuiManager().getCommand().toLowerCase())){
+        if (event.getMessage().toLowerCase().startsWith(guiManager.getCommand().toLowerCase())){
             Player p = event.getPlayer();
             if (p.hasPermission("lemonmobcoins.shop")){
-                p.openInventory(lemonMobCoins.getGuiManager().getInventory());
+                p.openInventory(guiManager.getInventory());
                 return;
             }
-            p.sendMessage(Messages.NO_PERMISSION_TO_EXECUTE.getMessage(lemonMobCoins, p, null, 0));
+            p.sendMessage(Messages.NO_PERMISSION_TO_EXECUTE.getMessage(coinManager, p, null, 0));
         }
     }
 }

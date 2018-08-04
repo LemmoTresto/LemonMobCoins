@@ -35,9 +35,12 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 public final class LemonMobCoins extends JavaPlugin {
@@ -48,10 +51,10 @@ public final class LemonMobCoins extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        info("Loading data..");
         try {
+            info("Loading data..");
             saveDefaultConfig();
-            coinManager = new CoinManager(this);
+            coinManager = new CoinManager(getDataFolder(), getConfig());
             info("Loaded data!");
         } catch (IOException e) {
             error("Loading data failed! Stopping plugin..");
@@ -59,38 +62,63 @@ public final class LemonMobCoins extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-        info("Loading listeners..");
-        new EntityDeathListener(this);
-        new InventoryClickListener(this);
-        new PlayerPreProcessCommandListener(this);
-        info("Loaded listeners!");
-        info("Loading managers..");
-        new MessageManager(this);
-        guiManager = new GuiManager(this);
-        info("Loaded managers!");
-        info("Loading API..");
-        lemonMobCoinsAPI = new LemonMobCoinsAPI(this);
-        info("Loaded API!");
+
+        try {
+            info("Loading listeners..");
+            registerListeners(new EntityDeathListener(getCoinManager()), new InventoryClickListener(getCoinManager(), getGuiManager()), new PlayerPreProcessCommandListener(getCoinManager(), getGuiManager()));
+            info("Loaded listeners!");
+        } catch (Exception e){
+            error("Loading Listeners failed! Stopping plugin..");
+            e.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        try {
+            info("Loading managers..");
+            new MessageManager(getDataFolder(), getLogger(), this.getClassLoader());
+            guiManager = new GuiManager(getConfig());
+            info("Loaded managers!");
+        } catch (Exception e){
+            error("Loading Managers failed! Stopping plugin..");
+            e.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        try {
+            info("Loading API..");
+            lemonMobCoinsAPI = coinManager;
+            info("Loaded API!");
+        } catch (Exception e){
+            error("Loading API failed! Stopping plugin..");
+            e.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
     }
 
     @Override
     public void onDisable() {
-        info("Saving data..");
         try {
-            coinManager.saveData();
+            info("Saving data..");
+            getCoinManager().saveData();
             info("Saved data!");
+            info("Disabled successfully!");
         } catch (IOException e) {
             error("Could not save data! Retrying..");
             try {
-                coinManager.saveData();
+                getCoinManager().saveData();
                 info("Saved data!");
+                info("Disabled successfully!");
             } catch (IOException e1) {
                 error("Still couldn't save data! Data will be lost ;(");
                 e1.printStackTrace();
             }
-            e.printStackTrace();
         }
-        info("Disabled successfully!");
+    }
+
+    private void registerListeners(Listener... listeners){
+        Arrays.stream(listeners).forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, this));
     }
 
     private void error(String s){
@@ -109,15 +137,18 @@ public final class LemonMobCoins extends JavaPlugin {
         getLogger().log(level, s);
     }
 
-    public CoinManager getCoinManager() {
+    @NotNull
+    private CoinManager getCoinManager() {
         return coinManager;
     }
 
-    public GuiManager getGuiManager() {
+    @NotNull
+    private GuiManager getGuiManager() {
         return guiManager;
     }
 
     @SuppressWarnings("unused")
+    @NotNull
     public static LemonMobCoinsAPI getLemonMobCoinsAPI(){
         return lemonMobCoinsAPI;
     }
@@ -126,16 +157,19 @@ public final class LemonMobCoins extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("mobcoins") || command.getName().equalsIgnoreCase("mc") || command.getName().equalsIgnoreCase("mobc") || command.getName().equalsIgnoreCase("mcoins") || command.getName().equalsIgnoreCase("mcoin") || command.getName().equalsIgnoreCase("mobcoin")){
             if (args.length == 0) {
-                sender.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(this, null, null, 0));
-                return true;
-            }
-
-            if (args[0].equalsIgnoreCase("help")){
-                if (sender.hasPermission("lemonmobcoins.admin")) {
-                    sender.sendMessage(Messages.ADMIN_HELP_MENU.getMessage(this, null, null, 0));
+                if (sender instanceof Player) {
+                    sender.sendMessage(Messages.OWN_PLAYER_BALANCE.getMessage(getCoinManager(), (Player) sender, null, 0));
                     return true;
                 }
-                sender.sendMessage(Messages.PLAYER_HELP_MENU.getMessage(this, null, null, 0));
+                sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(getCoinManager(), null, null, 0));
+            }
+
+            if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("?")){
+                if (sender.hasPermission("lemonmobcoins.admin")) {
+                    sender.sendMessage(Messages.ADMIN_HELP_MENU.getMessage(getCoinManager(), null, null, 0));
+                    return true;
+                }
+                sender.sendMessage(Messages.PLAYER_HELP_MENU.getMessage(getCoinManager(), null, null, 0));
                 return true;
             }
 
@@ -143,19 +177,19 @@ public final class LemonMobCoins extends JavaPlugin {
                 if (args.length == 1){
                     if (sender instanceof Player){
                         Player p = (Player) sender;
-                        p.sendMessage(Messages.OWN_PLAYER_BALANCE.getMessage(this, p, null, 0));
+                        p.sendMessage(Messages.OWN_PLAYER_BALANCE.getMessage(getCoinManager(), p, null, 0));
                         return true;
                     }
-                    sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(this, null, null, 0));
+                    sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(getCoinManager(), null, null, 0));
                     return true;
                 }
                 if (args.length == 2){
                     OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
                     if (player == null) {
-                        sender.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(this, null, null, 0));
+                        sender.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(getCoinManager(), null, null, 0));
                         return true;
                     }
-                    sender.sendMessage(Messages.OTHER_PLAYER_BALANCE.getMessage(this, player, null, 0));
+                    sender.sendMessage(Messages.OTHER_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, 0));
                     return true;
                 }
             }
@@ -165,38 +199,38 @@ public final class LemonMobCoins extends JavaPlugin {
                     ((Player) sender).openInventory(getGuiManager().getInventory());
                     return true;
                 }
-                sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(this, null, null, 0));
+                sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(getCoinManager(), null, null, 0));
                 return true;
             }
 
             if (sender.hasPermission("mobcoins.admin")){
                 if (args.length != 3) {
-                    sender.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(this, null, null, 0));
+                    sender.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(getCoinManager(), null, null, 0));
                     return true;
                 }
                 OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
                 if (player == null) {
-                    sender.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(this, null, null, 0));
+                    sender.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(getCoinManager(), null, null, 0));
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("set")){
                     getCoinManager().setCoinsOfPlayer(player, Double.parseDouble(args[2]));
-                    sender.sendMessage(Messages.SET_PLAYER_BALANCE.getMessage(this, player, null, 0));
+                    sender.sendMessage(Messages.SET_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, 0));
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("take")){
                     getCoinManager().deductCoinsFromPlayer(player, Double.parseDouble(args[2]));
-                    sender.sendMessage(Messages.TAKE_PLAYER_BALANCE.getMessage(this, player, null, Integer.valueOf(args[2])));
+                    sender.sendMessage(Messages.TAKE_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, Integer.valueOf(args[2])));
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("give")){
                     getCoinManager().addCoinsToPlayer(player, Double.parseDouble(args[2]));
-                    sender.sendMessage(Messages.GIVE_PLAYER_BALANCE.getMessage(this, player, null, Integer.valueOf(args[2])));
+                    sender.sendMessage(Messages.GIVE_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, Integer.valueOf(args[2])));
                     return true;
                 }
             }
 
-            sender.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(this, null, null, 0));
+            sender.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(getCoinManager(), null, null, 0));
             return true;
         }
 
@@ -207,10 +241,10 @@ public final class LemonMobCoins extends JavaPlugin {
                     p.openInventory(getGuiManager().getInventory());
                     return true;
                 }
-                p.sendMessage(Messages.NO_PERMISSION_TO_EXECUTE.getMessage(this, p, null, 0));
+                p.sendMessage(Messages.NO_PERMISSION_TO_EXECUTE.getMessage(getCoinManager(), p, null, 0));
                 return true;
             }
-            sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(this, null, null, 0));
+            sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(getCoinManager(), null, null, 0));
             return true;
         }
         return false;

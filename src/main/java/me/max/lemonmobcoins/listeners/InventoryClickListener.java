@@ -22,9 +22,10 @@
 
 package me.max.lemonmobcoins.listeners;
 
-import me.max.lemonmobcoins.LemonMobCoins;
+import me.max.lemonmobcoins.coins.CoinManager;
 import me.max.lemonmobcoins.files.Messages;
 import me.max.lemonmobcoins.gui.GuiHolder;
+import me.max.lemonmobcoins.gui.GuiManager;
 import me.max.lemonmobcoins.gui.GuiMobCoinItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,11 +36,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class InventoryClickListener implements Listener {
 
-    private LemonMobCoins lemonMobCoins;
+    private CoinManager coinManager;
+    private GuiManager guiManager;
 
-    public InventoryClickListener(LemonMobCoins lemonMobCoins){
-        this.lemonMobCoins = lemonMobCoins;
-        lemonMobCoins.getServer().getPluginManager().registerEvents(this, lemonMobCoins);
+    public InventoryClickListener(CoinManager coinManager, GuiManager guiManager){
+        this.coinManager = coinManager;
+        this.guiManager = guiManager;
     }
 
     @EventHandler
@@ -49,23 +51,23 @@ public class InventoryClickListener implements Listener {
         event.setCancelled(true);
 
         Player p = (Player) event.getWhoClicked();
-        GuiMobCoinItem item = lemonMobCoins.getGuiManager().getGuiMobCoinItemFromItemStack(event.getCurrentItem());
+        GuiMobCoinItem item = guiManager.getGuiMobCoinItemFromItemStack(event.getCurrentItem());
 
         if (item.isPermission()){
             if (!p.hasPermission("lemonmobcoins.buy." + item.getIdentifier())) {
-                p.sendMessage(Messages.NO_PERMISSION_TO_PURCHASE.getMessage(lemonMobCoins, p, null, 0));
+                p.sendMessage(Messages.NO_PERMISSION_TO_PURCHASE.getMessage(coinManager, p, null, 0));
                 return;
             }
         }
 
-        if (!(lemonMobCoins.getCoinManager().getCoinsOfPlayer(p) >= item.getPrice())){
-            p.sendMessage(Messages.NOT_ENOUGH_MONEY_TO_PURCHASE.getMessage(lemonMobCoins, p, null, 0));
+        if (!(coinManager.getCoinsOfPlayer(p) >= item.getPrice())){
+            p.sendMessage(Messages.NOT_ENOUGH_MONEY_TO_PURCHASE.getMessage(coinManager, p, null, 0));
             return;
         }
 
-        lemonMobCoins.getCoinManager().deductCoinsFromPlayer(p, item.getPrice());
-        p.sendMessage(Messages.PURCHASED_ITEM_FROM_SHOP.getMessage(lemonMobCoins, p, null, item.getPrice()).replaceAll("%item%", item.getDisplayname()));
-        for (String cmd : item.getCommands()) Bukkit.dispatchCommand(lemonMobCoins.getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&', cmd.replaceAll("%player%", p.getName())));
+        coinManager.deductCoinsFromPlayer(p, item.getPrice());
+        p.sendMessage(Messages.PURCHASED_ITEM_FROM_SHOP.getMessage(coinManager, p, null, item.getPrice()).replaceAll("%item%", item.getDisplayname()));
+        for (String cmd : item.getCommands()) Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', cmd.replaceAll("%player%", p.getName())));
     }
 
 }

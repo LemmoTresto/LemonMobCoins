@@ -22,21 +22,29 @@
 
 package me.max.lemonmobcoins.files;
 
-import me.max.lemonmobcoins.LemonMobCoins;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MessageManager {
 
-    private LemonMobCoins lemonMobCoins;
+    private File dataFolder;
+    private Logger logger;
+    private ClassLoader classLoader;
 
-    public MessageManager(LemonMobCoins lemonMobCoins){
-        this.lemonMobCoins = lemonMobCoins;
+    public MessageManager(File dataFolder, Logger logger, ClassLoader classLoader){
+        this.dataFolder = dataFolder;
+        this.logger = logger;
+        this.classLoader = classLoader;
 
-        File file = new File(lemonMobCoins.getDataFolder(), "messages.yml");
+        File file = new File(dataFolder, "messages.yml");
         if (!file.exists()) {
-            lemonMobCoins.saveResource("messages.yml", false);
+            saveResource("messages.yml");
             return;
         }
 
@@ -45,6 +53,49 @@ public class MessageManager {
             Messages.valueOf(key).setMessage(messages.getString(key));
         }
 
+    }
+
+    private void saveResource(@NotNull String resourcePath) {
+        InputStream in = getResource(resourcePath);
+
+        File outFile = new File(dataFolder, resourcePath);
+        int lastIndex = resourcePath.lastIndexOf('/');
+        File outDir = new File(dataFolder, resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
+
+        outDir.mkdirs();
+
+        try {
+            if (!outFile.exists()) {
+                OutputStream out = new FileOutputStream(outFile);
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                out.close();
+                in.close();
+            } else {
+                logger.log(Level.WARNING, "Could not save " + outFile.getName() + " to " + outFile + " because " + outFile.getName() + " already exists.");
+            }
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "Could not save " + outFile.getName() + " to " + outFile, ex);
+        }
+    }
+
+    private InputStream getResource(@NotNull String filename) {
+        try {
+            URL url = classLoader.getResource(filename);
+
+            if (url == null) {
+                return null;
+            }
+
+            URLConnection connection = url.openConnection();
+            connection.setUseCaches(false);
+            return connection.getInputStream();
+        } catch (IOException ex) {
+            return null;
+        }
     }
 
 

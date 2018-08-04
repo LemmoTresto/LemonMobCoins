@@ -22,13 +22,14 @@
 
 package me.max.lemonmobcoins.gui;
 
-import me.max.lemonmobcoins.LemonMobCoins;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,21 +37,19 @@ import java.util.stream.Collectors;
 
 public class GuiManager {
 
-    private LemonMobCoins lemonMobCoins;
     private int rows;
     private String command;
     private String title;
     private List<GuiMobCoinItem> items;
 
-    public GuiManager(LemonMobCoins lemonMobCoins){
-        this.lemonMobCoins = lemonMobCoins;
-        rows = lemonMobCoins.getConfig().getInt("gui.rows");
-        command = lemonMobCoins.getConfig().getString("gui.command");
-        title = lemonMobCoins.getConfig().getString("gui.name");
+    public GuiManager(FileConfiguration config){
+        rows = config.getInt("gui.rows");
+        command = config.getString("gui.command");
+        title = config.getString("gui.name");
         items = new ArrayList<>();
 
-        for (String key : lemonMobCoins.getConfig().getConfigurationSection("gui.items").getKeys(false)){
-            ConfigurationSection item = lemonMobCoins.getConfig().getConfigurationSection("gui.items." + key);
+        for (String key : config.getConfigurationSection("gui.items").getKeys(false)){
+            ConfigurationSection item = config.getConfigurationSection("gui.items." + key);
             items.add(new GuiMobCoinItem.Builder(key)
                     .setAmount(item.getInt("amount"))
                     .setSlot(item.getInt("slot"))
@@ -69,19 +68,15 @@ public class GuiManager {
 
     public Inventory getInventory(){
         Inventory inv = Bukkit.createInventory(new GuiHolder(), rows * 9, title);
-        for (GuiMobCoinItem item : items){
-            inv.setItem(item.getSlot(), item.toItemStack());
-        }
+        items.forEach(item -> inv.setItem(item.getSlot(), item.toItemStack()));
         return inv;
     }
 
-    public GuiMobCoinItem getGuiMobCoinItemFromItemStack(ItemStack item) {
-        for (GuiMobCoinItem guiMobCoinItem : items){
-            if (guiMobCoinItem.toItemStack().equals(item)) return guiMobCoinItem;
-        }
-        return null;
+    public GuiMobCoinItem getGuiMobCoinItemFromItemStack(@NotNull ItemStack item) {
+        return items.stream().filter(guiMobCoinItem -> guiMobCoinItem.toItemStack().equals(item)).findFirst().orElse(null);
     }
 
+    @NotNull
     public String getCommand() {
         return command;
     }

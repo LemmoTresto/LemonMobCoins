@@ -22,57 +22,39 @@
 
 package me.max.lemonmobcoins.api;
 
-import me.max.lemonmobcoins.LemonMobCoins;
 import org.bukkit.OfflinePlayer;
 
-@SuppressWarnings("unused")
-public class LemonMobCoinsAPI {
-
-    private LemonMobCoins lemonMobCoins;
-
-    public LemonMobCoinsAPI(LemonMobCoins lemonMobCoins){
-        this.lemonMobCoins = lemonMobCoins;
-    }
+public interface LemonMobCoinsAPI {
 
     /**
      * @param player offline player of who you want to get the coins.
      * @return integer amount of coins player has.
      */
-    public double getCoinsOfPlayer(OfflinePlayer player){
-        return lemonMobCoins.getCoinManager().getCoinsOfPlayer(player);
-    }
+    double getCoinsOfPlayer(OfflinePlayer player);
 
     /**
      * @param player the player to change the balance of.
      * @param coins integer amount of how many coins to set the player's balance to.
      */
-    public void setCoinsOfPlayer(OfflinePlayer player, int coins){
-        lemonMobCoins.getCoinManager().setCoinsOfPlayer(player, coins);
-    }
+    void setCoinsOfPlayer(OfflinePlayer player, double coins);
 
     /**
-     * @param p player to add the coins to
+     * @param player player to add the coins to
      * @param coins amount of coins to add to balance.
      */
-    public void addCoinsToPlayer(OfflinePlayer p, int coins){
-        lemonMobCoins.getCoinManager().addCoinsToPlayer(p, coins);
-    }
+    void addCoinsToPlayer(OfflinePlayer player, double coins);
 
     /**
      * Increments the player's balance by 1.
      * @param player the player to increment the balance of
      */
-    public void incrementPlayerBalance(OfflinePlayer player){
-        lemonMobCoins.getCoinManager().incrementPlayerBalance(player);
-    }
+    void incrementPlayerBalance(OfflinePlayer player);
 
     /**
      * Deducts an amount of coins from the player's balance.
-     * @param p the player from who to deduct the coins
+     * @param player the player from who to deduct the coins
      * @param coins the amount of coins to deduct.
      */
-    public void deductCoinsFromPlayer(OfflinePlayer p, double coins) {
-        lemonMobCoins.getCoinManager().deductCoinsFromPlayer(p, coins);
-    }
+    void deductCoinsFromPlayer(OfflinePlayer player, double coins);
 
 }

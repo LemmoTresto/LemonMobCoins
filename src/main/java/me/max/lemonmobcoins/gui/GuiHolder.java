@@ -24,9 +24,11 @@ package me.max.lemonmobcoins.gui;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.jetbrains.annotations.Contract;
 
 public class GuiHolder implements InventoryHolder {
     @Override
+    @Contract("-> null")
     public Inventory getInventory() {
         return null;
     }
