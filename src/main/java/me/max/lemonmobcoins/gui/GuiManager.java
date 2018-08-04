@@ -45,7 +45,7 @@ public class GuiManager {
     public GuiManager(FileConfiguration config){
         rows = config.getInt("gui.rows");
         command = config.getString("gui.command");
-        title = config.getString("gui.name");
+        title = ChatColor.translateAlternateColorCodes('&', config.getString("gui.name"));
         items = new ArrayList<>();
 
         for (String key : config.getConfigurationSection("gui.items").getKeys(false)){

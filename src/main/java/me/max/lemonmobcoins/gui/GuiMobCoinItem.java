@@ -59,12 +59,12 @@ public class GuiMobCoinItem {
     }
 
     @Contract("-> new")
-    public ItemStack toItemStack(){
+    ItemStack toItemStack(){
         ItemStack itemStack = new ItemStack(material, amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(displayname);
         itemMeta.setLore(lore);
-        if (glowing) itemMeta.addEnchant(Enchantment.BINDING_CURSE, 1, false);
+        if (glowing) itemMeta.addEnchant(Enchantment.KNOCKBACK, 1, false);
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemStack.setItemMeta(itemMeta);
         return itemStack;
@@ -113,7 +113,7 @@ public class GuiMobCoinItem {
         return identifier;
     }
 
-    public static class Builder {
+    static class Builder {
         private String identifier;
         private int slot;
         private Material material;
@@ -130,61 +130,61 @@ public class GuiMobCoinItem {
         }
 
         @Contract("_ -> this")
-        public Builder setDisplayname(String displayname) {
+        Builder setDisplayname(String displayname) {
             this.displayname = displayname;
             return this;
         }
 
         @Contract("_ -> this")
-        public Builder setAmount(int amount) {
+        Builder setAmount(int amount) {
             this.amount = amount;
             return this;
         }
 
         @Contract("_ -> this")
-        public Builder setPermission(boolean permission) {
+        Builder setPermission(boolean permission) {
             this.permission = permission;
             return this;
         }
 
         @Contract("_ -> this")
-        public Builder setCommands(List<String> commands) {
+        Builder setCommands(List<String> commands) {
             this.commands = commands;
             return this;
         }
 
         @Contract("_ -> this")
-        public Builder setGlowing(boolean glowing) {
+        Builder setGlowing(boolean glowing) {
             this.glowing = glowing;
             return this;
         }
 
         @Contract("_ -> this")
-        public Builder setLore(List<String> lore) {
+        Builder setLore(List<String> lore) {
             this.lore = lore;
             return this;
         }
 
         @Contract("_ -> this")
-        public Builder setMaterial(Material material) {
+        Builder setMaterial(Material material) {
             this.material = material;
             return this;
         }
 
         @Contract("_ -> this")
-        public Builder setPrice(double price) {
+        Builder setPrice(double price) {
             this.price = price;
             return this;
         }
 
         @Contract("_ -> this")
-        public Builder setSlot(int slot) {
+        Builder setSlot(int slot) {
             this.slot = slot;
             return this;
         }
 
         @Contract("-> new")
-        public GuiMobCoinItem build(){
+        GuiMobCoinItem build(){
             return new GuiMobCoinItem(identifier, slot, material, amount, displayname, glowing, lore, permission, price, commands);
         }
     }

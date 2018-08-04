@@ -56,16 +56,20 @@ public enum Messages {
         String msg = ChatColor.translateAlternateColorCodes('&', message);
         if (p != null) msg = msg.replaceAll("%player%", p.getName());
         if (e != null) msg = msg.replaceAll("%entity%", e.getName());
-        if (received_coins != 0) msg = msg.replaceAll("%amount%", String.valueOf(received_coins));
         if (received_coins != 0){
-            if (String.valueOf(received_coins).split(".")[1].equalsIgnoreCase("0")){
-                msg = msg.replaceAll("%balance%", String.valueOf(received_coins).split(".")[0]);
+            String coins = String.valueOf(received_coins);
+            if (coins.endsWith(".0")){
+                msg = msg.replaceAll("%amount%", coins.substring(0, coins.length() - 2));
+            } else {
+                msg = msg.replaceAll("%amount", coins);
             }
         }
         if (p != null){
-            double amt = coinManager.getCoinsOfPlayer(p);
-            if (String.valueOf(amt).split(".")[1].equalsIgnoreCase("0")){
-                msg = msg.replaceAll("%balance%", String.valueOf(amt).split(".")[0]);
+            String coins = String.valueOf(coinManager.getCoinsOfPlayer(p));
+            if (coins.endsWith(".0")){
+                msg = msg.replaceAll("%balance%", coins.substring(0, coins.length() - 2));
+            } else {
+                msg = msg.replaceAll("%balance%", coins);
             }
         }
         return msg;

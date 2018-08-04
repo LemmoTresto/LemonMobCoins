@@ -49,6 +49,7 @@ public class PlayerPreProcessCommandListener implements Listener {
                 return;
             }
             p.sendMessage(Messages.NO_PERMISSION_TO_EXECUTE.getMessage(coinManager, p, null, 0));
+            event.setCancelled(true);
         }
     }
 }

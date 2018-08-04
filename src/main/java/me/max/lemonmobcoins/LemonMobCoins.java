@@ -55,6 +55,8 @@ public final class LemonMobCoins extends JavaPlugin {
             info("Loading data..");
             saveDefaultConfig();
             coinManager = new CoinManager(getDataFolder(), getConfig());
+            new MessageManager(getDataFolder(), getLogger(), this.getClassLoader());
+            guiManager = new GuiManager(getConfig());
             info("Loaded data!");
         } catch (IOException e) {
             error("Loading data failed! Stopping plugin..");
@@ -69,18 +71,6 @@ public final class LemonMobCoins extends JavaPlugin {
             info("Loaded listeners!");
         } catch (Exception e){
             error("Loading Listeners failed! Stopping plugin..");
-            e.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
-
-        try {
-            info("Loading managers..");
-            new MessageManager(getDataFolder(), getLogger(), this.getClassLoader());
-            guiManager = new GuiManager(getConfig());
-            info("Loaded managers!");
-        } catch (Exception e){
-            error("Loading Managers failed! Stopping plugin..");
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(this);
             return;
