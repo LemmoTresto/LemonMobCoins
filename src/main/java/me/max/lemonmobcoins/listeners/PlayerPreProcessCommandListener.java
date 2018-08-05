@@ -43,13 +43,13 @@ public class PlayerPreProcessCommandListener implements Listener {
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event){
         if (event.getMessage().toLowerCase().startsWith(guiManager.getCommand().toLowerCase())){
+            event.setCancelled(true);
             Player p = event.getPlayer();
             if (p.hasPermission("lemonmobcoins.shop")){
                 p.openInventory(guiManager.getInventory());
                 return;
             }
             p.sendMessage(Messages.NO_PERMISSION_TO_EXECUTE.getMessage(coinManager, p, null, 0));
-            event.setCancelled(true);
         }
     }
 }

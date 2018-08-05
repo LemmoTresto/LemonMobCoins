@@ -1,7 +1,7 @@
 # Use \n for a newline!
 # Use & for color codes.
 RECEIVED_COINS_FROM_KILL: "&fYou received &e%amount% &fMobCoins for killing &e%entity%&f, your total balance is &e%balance%."
-PURCHASED_ITEM_FROM_SHOP: "&fYou bought &e%item% &ffor &e%amount%&f, your balance left is &e%balance%."
+PURCHASED_ITEM_FROM_SHOP: "&fYou bought &e%item% &ffor &e%amount%&f coins, your balance left is &e%balance%."
 NOT_ENOUGH_MONEY_TO_PURCHASE: "&fYou do not have enough funds to buy this! Your current balance is &e%balance%."
 NO_PERMISSION_TO_PURCHASE: "&cYou do not have permission to buy this!"
 UNKNOWN_SUBCOMMAND: "&fUnknown subcommand, try &e/mobcoins help"
@@ -15,7 +15,7 @@ NO_PERMISSION_TO_EXECUTE: "&cYou don't have permission to execute this command!"
 SET_PLAYER_BALANCE: "&fSuccessfully set &e%player%'s &fbalance to &e%balance%."
 TAKE_PLAYER_BALANCE: "&fSuccessfully taken &e%amount &fcoins from &e%player%'s &fbalance."
 GIVE_PLAYER_BALANCE: "&fSuccessfully given &e%amount% &fto &e%player%."
-RESET_PLAYER_BALANCE: "&fSuccessfully reset %player%'s balance."
+RESET_PLAYER_BALANCE: "&fSuccessfully reset &e%player%'s&f balance."
 START_RELOAD: "&fReloading the &eplugin&f.."
 SUCCESSFUL_RELOAD: "&fReloaded plugin &esuccessfully&f!"
 FAILED_RELOAD: "&fReloading the plugin &efailed&f, please restart the server!"

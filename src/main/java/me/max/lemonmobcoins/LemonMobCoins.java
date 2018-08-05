@@ -203,7 +203,24 @@ public final class LemonMobCoins extends JavaPlugin {
                     }
 
                     if (args.length != 2){
-                        sender.sendMessage(Messages.INVALID_USAGE_RESET_COMMAND.getMessage(getCoinManager(), null, null, 0));
+                        if (args[0].equalsIgnoreCase("reset")) {
+                            sender.sendMessage(Messages.INVALID_USAGE_RESET_COMMAND.getMessage(getCoinManager(), null, null, 0));
+                        }
+
+                        if (args[0].equalsIgnoreCase("reload")){
+                            try {
+                                sender.sendMessage(Messages.START_RELOAD.getMessage(getCoinManager(), null, null, 0));
+                                onDisable();
+                                onEnable();
+                                sender.sendMessage(Messages.SUCCESSFUL_RELOAD.getMessage(getCoinManager(), null, null, 0));
+                                return true;
+                            } catch (Exception e){
+                                sender.sendMessage(Messages.FAILED_RELOAD.getMessage(getCoinManager(), null, null, 0));
+                                return true;
+                            }
+                        }
+
+                        sender.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(getCoinManager(), null, null, 0));
                         return true;
                     }
                 }
@@ -218,6 +235,7 @@ public final class LemonMobCoins extends JavaPlugin {
                 if (args[0].equalsIgnoreCase("reset")){
                     getCoinManager().setCoinsOfPlayer(player, 0);
                     sender.sendMessage(Messages.RESET_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, 0));
+                    return true;
                 }
 
                 if (args[0].equalsIgnoreCase("set")){
@@ -232,21 +250,10 @@ public final class LemonMobCoins extends JavaPlugin {
                     return true;
                 }
 
-                if (args[0].equalsIgnoreCase("give")){
+                if (args[0].equalsIgnoreCase("give")) {
                     getCoinManager().addCoinsToPlayer(player, Double.parseDouble(args[2]));
                     sender.sendMessage(Messages.GIVE_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, Integer.valueOf(args[2])));
                     return true;
-                }
-
-                if (args[0].equalsIgnoreCase("reload")){
-                    try {
-                        sender.sendMessage(Messages.START_RELOAD.getMessage(getCoinManager(), player, null, 0));
-                        onDisable();
-                        onEnable();
-                        sender.sendMessage(Messages.SUCCESSFUL_RELOAD.getMessage(getCoinManager(), player, null, 0));
-                    } catch (Exception e){
-                        sender.sendMessage(Messages.FAILED_RELOAD.getMessage(getCoinManager(), player, null, 0));
-                    }
                 }
             }
 
