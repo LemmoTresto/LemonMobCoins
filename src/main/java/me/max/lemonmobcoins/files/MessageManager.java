@@ -45,7 +45,6 @@ public class MessageManager {
         File file = new File(dataFolder, "messages.yml");
         if (!file.exists()) {
             saveResource("messages.yml");
-            return;
         }
 
         YamlConfiguration messages = YamlConfiguration.loadConfiguration(file);

@@ -1,6 +1,7 @@
 name: LemonMobCoins
 version: ${project.version}
 main: me.max.lemonmobcoins.LemonMobCoins
+softdepend: [PlaceholderAPI]
 commands:
   mobcoins:
     description: "Main MobCoins command!"

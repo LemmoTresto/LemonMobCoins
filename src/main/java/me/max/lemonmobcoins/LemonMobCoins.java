@@ -85,6 +85,8 @@ public final class LemonMobCoins extends JavaPlugin {
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(this);
         }
+
+        if (!Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) warn("PlaceholderAPI was not found placeholders from this plugin will NOT work!");
     }
 
     @Override
@@ -195,35 +197,53 @@ public final class LemonMobCoins extends JavaPlugin {
 
             if (sender.hasPermission("mobcoins.admin")){
                 if (args.length != 3) {
-                    sender.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(getCoinManager(), null, null, 0));
-                    return true;
+                    if (args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("take")){
+                        sender.sendMessage(Messages.valueOf("INVALID_USAGE_" + args[0].toUpperCase() + "_COMMAND").getMessage(getCoinManager(), null, null, 0));
+                        return true;
+                    }
+
+                    if (args.length != 2){
+                        sender.sendMessage(Messages.INVALID_USAGE_RESET_COMMAND.getMessage(getCoinManager(), null, null, 0));
+                        return true;
+                    }
                 }
+
                 OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
+
                 if (player == null) {
                     sender.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(getCoinManager(), null, null, 0));
                     return true;
                 }
+
+                if (args[0].equalsIgnoreCase("reset")){
+                    getCoinManager().setCoinsOfPlayer(player, 0);
+                    sender.sendMessage(Messages.RESET_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, 0));
+                }
+
                 if (args[0].equalsIgnoreCase("set")){
                     getCoinManager().setCoinsOfPlayer(player, Double.parseDouble(args[2]));
                     sender.sendMessage(Messages.SET_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, 0));
                     return true;
                 }
+
                 if (args[0].equalsIgnoreCase("take")){
                     getCoinManager().deductCoinsFromPlayer(player, Double.parseDouble(args[2]));
                     sender.sendMessage(Messages.TAKE_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, Integer.valueOf(args[2])));
                     return true;
                 }
+
                 if (args[0].equalsIgnoreCase("give")){
                     getCoinManager().addCoinsToPlayer(player, Double.parseDouble(args[2]));
                     sender.sendMessage(Messages.GIVE_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, Integer.valueOf(args[2])));
                     return true;
                 }
+
                 if (args[0].equalsIgnoreCase("reload")){
                     try {
                         sender.sendMessage(Messages.START_RELOAD.getMessage(getCoinManager(), player, null, 0));
                         onDisable();
                         onEnable();
-                        sender.sendMessage(Messages.SUCCESSFULL_RELOAD.getMessage(getCoinManager(), player, null, 0));
+                        sender.sendMessage(Messages.SUCCESSFUL_RELOAD.getMessage(getCoinManager(), player, null, 0));
                     } catch (Exception e){
                         sender.sendMessage(Messages.FAILED_RELOAD.getMessage(getCoinManager(), player, null, 0));
                     }
