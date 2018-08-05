@@ -218,6 +218,16 @@ public final class LemonMobCoins extends JavaPlugin {
                     sender.sendMessage(Messages.GIVE_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, Integer.valueOf(args[2])));
                     return true;
                 }
+                if (args[0].equalsIgnoreCase("reload")){
+                    try {
+                        sender.sendMessage(Messages.START_RELOAD.getMessage(getCoinManager(), player, null, 0));
+                        onDisable();
+                        onEnable();
+                        sender.sendMessage(Messages.SUCCESSFULL_RELOAD.getMessage(getCoinManager(), player, null, 0));
+                    } catch (Exception e){
+                        sender.sendMessage(Messages.FAILED_RELOAD.getMessage(getCoinManager(), player, null, 0));
+                    }
+                }
             }
 
             sender.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(getCoinManager(), null, null, 0));

@@ -43,7 +43,10 @@ public enum Messages {
     NO_PERMISSION_TO_EXECUTE("&cYou don't have permission to execute this command!"),
     SET_PLAYER_BALANCE("&fSuccessfully set &e%player%'s &fbalance to &e%balance%"),
     TAKE_PLAYER_BALANCE("&fSuccessfully taken &e%amount &fcoins from &e%player%'s &fbalance."),
-    GIVE_PLAYER_BALANCE("&fSuccessfully given &e%amount% &fto &e%player%");
+    GIVE_PLAYER_BALANCE("&fSuccessfully given &e%amount% &fto &e%player%"),
+    START_RELOAD("&fReloading the plugin.."),
+    SUCCESSFULL_RELOAD("&fReloaded plugin successfully!"),
+    FAILED_RELOAD("&fReloading the plugin failed, please restart the server!");
 
     private String message;
 
