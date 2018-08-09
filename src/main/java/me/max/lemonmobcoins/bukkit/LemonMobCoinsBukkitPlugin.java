@@ -133,6 +133,7 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
                 e.printStackTrace();
             }
         }
+        info("Disabled successfully!");
     }
 
     private void registerListeners(Listener... listeners){

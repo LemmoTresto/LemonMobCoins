@@ -35,7 +35,7 @@ public class PluginMessageManager {
 
     private PlayerJoinListener playerJoinListener;
 
-    public PluginMessageManager(PlayerJoinListener playerJoinListener){
+    PluginMessageManager(PlayerJoinListener playerJoinListener){
         this.playerJoinListener = playerJoinListener;
     }
 

@@ -27,6 +27,7 @@ import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.data.DataProvider;
 import me.max.lemonmobcoins.common.exceptions.APILoadException;
 import me.max.lemonmobcoins.common.exceptions.DataLoadException;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -70,6 +71,7 @@ public class LemonMobCoins {
     private void log(Level level, String s){
         getLogger().log(level, s);
     }
+
     public CoinManager getCoinManager() {
         return coinManager;
     }
@@ -79,6 +81,7 @@ public class LemonMobCoins {
         return lemonMobCoinsAPI;
     }
 
+    @NotNull
     private Logger getLogger() {
         return logger;
     }

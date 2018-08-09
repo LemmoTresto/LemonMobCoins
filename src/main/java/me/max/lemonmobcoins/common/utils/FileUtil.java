@@ -29,6 +29,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class FileUtil {
+
     public static void saveResource(@NotNull String resourcePath, @NotNull File dataFolder, @NotNull String outFile, @NotNull ClassLoader classLoader) throws IOException {
         InputStream in = getResource(resourcePath, classLoader);
 

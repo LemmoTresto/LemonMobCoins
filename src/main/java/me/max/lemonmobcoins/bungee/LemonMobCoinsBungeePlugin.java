@@ -129,6 +129,7 @@ public class LemonMobCoinsBungeePlugin extends Plugin {
                 e.printStackTrace();
             }
         }
+        info("Disabled successfully!");
     }
 
     private void error(String s){
