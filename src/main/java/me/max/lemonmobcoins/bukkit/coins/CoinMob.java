@@ -20,7 +20,7 @@
  *
  */
 
-package me.max.lemonmobcoins.coins;
+package me.max.lemonmobcoins.bukkit.coins;
 
 import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +40,7 @@ public class CoinMob {
 
     private Random r = new Random();
 
-    CoinMob(@NotNull EntityType mob, int chance, int amount, int amount2){
+    public CoinMob(@NotNull EntityType mob, int chance, int amount, int amount2){
         this.mob = mob;
         this.chance = chance;
         this.amount = amount;

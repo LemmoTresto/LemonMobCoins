@@ -20,7 +20,7 @@
  *
  */
 
-package me.max.lemonmobcoins.gui;
+package me.max.lemonmobcoins.bukkit.gui;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;

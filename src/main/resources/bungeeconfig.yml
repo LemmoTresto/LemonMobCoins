@@ -1,0 +1,15 @@
+# Storage this is the storage section
+# This allows you to define which storage type you want to use!
+# Available storage types: flatfile, mysql
+# If none is found it will default to flatfile!
+# If choosing MySQL make sure you fill in the mysql section!
+# The mysql section is straightforward fill everything in make sure the database exists and you are good to go
+# The plugin itself already makes a table so do not worry about this.
+storage:
+  type: "flatfile"
+  mysql:
+    hostname: "localhost"
+    port: "3306"
+    username: ""
+    password: ""
+    database: "lemonmobcoins"

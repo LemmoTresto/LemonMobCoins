@@ -20,13 +20,14 @@
  *
  */
 
-package me.max.lemonmobcoins.listeners;
+package me.max.lemonmobcoins.bukkit.listeners;
 
-import me.max.lemonmobcoins.coins.CoinManager;
-import me.max.lemonmobcoins.files.Messages;
-import me.max.lemonmobcoins.gui.GuiHolder;
-import me.max.lemonmobcoins.gui.GuiManager;
-import me.max.lemonmobcoins.gui.GuiMobCoinItem;
+import me.max.lemonmobcoins.bukkit.PluginMessageManager;
+import me.max.lemonmobcoins.bukkit.gui.GuiHolder;
+import me.max.lemonmobcoins.bukkit.gui.GuiManager;
+import me.max.lemonmobcoins.bukkit.gui.GuiMobCoinItem;
+import me.max.lemonmobcoins.bukkit.messages.Messages;
+import me.max.lemonmobcoins.common.data.CoinManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -38,10 +39,12 @@ public class InventoryClickListener implements Listener {
 
     private CoinManager coinManager;
     private GuiManager guiManager;
+    private PluginMessageManager pluginMessageManager;
 
-    public InventoryClickListener(CoinManager coinManager, GuiManager guiManager){
+    public InventoryClickListener(CoinManager coinManager, GuiManager guiManager, PluginMessageManager pluginMessageManager){
         this.coinManager = coinManager;
         this.guiManager = guiManager;
+        this.pluginMessageManager = pluginMessageManager;
     }
 
     @EventHandler
@@ -60,12 +63,13 @@ public class InventoryClickListener implements Listener {
             }
         }
 
-        if (!(coinManager.getCoinsOfPlayer(p) >= item.getPrice())){
+        if (!(coinManager.getCoinsOfPlayer(p.getUniqueId()) >= item.getPrice())){
             p.sendMessage(Messages.NOT_ENOUGH_MONEY_TO_PURCHASE.getMessage(coinManager, p, null, 0));
             return;
         }
 
-        coinManager.deductCoinsFromPlayer(p, item.getPrice());
+        coinManager.deductCoinsFromPlayer(p.getUniqueId(), item.getPrice());
+        if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId(), coinManager.getCoinsOfPlayer(p.getUniqueId()));
         p.sendMessage(Messages.PURCHASED_ITEM_FROM_SHOP.getMessage(coinManager, p, null, item.getPrice()).replaceAll("%item%", item.getDisplayname()));
         for (String cmd : item.getCommands()) Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', cmd.replaceAll("%player%", p.getName())));
     }

@@ -20,10 +20,10 @@
  *
  */
 
-package me.max.lemonmobcoins.files;
+package me.max.lemonmobcoins.bukkit.messages;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.max.lemonmobcoins.coins.CoinManager;
+import me.max.lemonmobcoins.common.data.CoinManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -79,7 +79,7 @@ public enum Messages {
 
         if (p != null){
             msg = msg.replaceAll("%player%", p.getName());
-            String coins = String.valueOf(coinManager.getCoinsOfPlayer(p));
+            String coins = String.valueOf(coinManager.getCoinsOfPlayer(p.getUniqueId()));
             if (coins.endsWith(".0")){
                 msg = msg.replaceAll("%balance%", coins.substring(0, coins.length() - 2));
             } else {

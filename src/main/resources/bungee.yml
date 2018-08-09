@@ -1,0 +1,4 @@
+name: LemonMobCoins
+version: ${project.version}
+author: LemmoTresto
+main: me.max.lemonmobcoins.bungee.LemonMobCoinsBungeePlugin

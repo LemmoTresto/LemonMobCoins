@@ -20,7 +20,7 @@
  *
  */
 
-package me.max.lemonmobcoins.gui;
+package me.max.lemonmobcoins.bukkit.gui;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

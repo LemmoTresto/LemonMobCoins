@@ -20,7 +20,7 @@
  *
  */
 
-package me.max.lemonmobcoins.gui;
+package me.max.lemonmobcoins.bukkit.gui;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -45,7 +45,7 @@ public class GuiMobCoinItem {
     private double price;
     private List<String> commands;
 
-    GuiMobCoinItem(@NotNull String identifier, int slot, @NotNull Material material, int amount, @NotNull String displayname, boolean glowing, @NotNull List<String> lore, boolean permission, double price, @NotNull List<String> commands){
+    private GuiMobCoinItem(@NotNull String identifier, int slot, @NotNull Material material, int amount, @NotNull String displayname, boolean glowing, @NotNull List<String> lore, boolean permission, double price, @NotNull List<String> commands){
         this.identifier = identifier;
         this.slot = slot;
         this.material = material;
@@ -60,11 +60,11 @@ public class GuiMobCoinItem {
 
     @Contract("-> new")
     ItemStack toItemStack(){
-        ItemStack itemStack = new ItemStack(material, amount);
+        ItemStack itemStack = new ItemStack(getMaterial(), getAmount());
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(displayname);
-        itemMeta.setLore(lore);
-        if (glowing) itemMeta.addEnchant(Enchantment.KNOCKBACK, 1, false);
+        itemMeta.setDisplayName(getDisplayname());
+        itemMeta.setLore(getLore());
+        if (isGlowing()) itemMeta.addEnchant(Enchantment.KNOCKBACK, 1, false);
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemStack.setItemMeta(itemMeta);
         return itemStack;
@@ -74,7 +74,8 @@ public class GuiMobCoinItem {
         return amount;
     }
 
-    @NotNull public String getDisplayname() {
+    @NotNull
+    public String getDisplayname() {
         return displayname;
     }
 

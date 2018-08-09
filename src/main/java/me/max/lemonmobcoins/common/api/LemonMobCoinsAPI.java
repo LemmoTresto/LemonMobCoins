@@ -20,41 +20,41 @@
  *
  */
 
-package me.max.lemonmobcoins.api;
+package me.max.lemonmobcoins.common.api;
 
-import org.bukkit.OfflinePlayer;
+import java.util.UUID;
 
 public interface LemonMobCoinsAPI {
 
     /**
-     * @param player offline player of who you want to get the coins.
+     * @param uuid the uuid of the player of who you want to get the coins.
      * @return integer amount of coins player has.
      */
-    double getCoinsOfPlayer(OfflinePlayer player);
+    double getCoinsOfPlayer(UUID uuid);
 
     /**
-     * @param player the player to change the balance of.
+     * @param uuid the uuid of the player to change the balance of.
      * @param coins integer amount of how many coins to set the player's balance to.
      */
-    void setCoinsOfPlayer(OfflinePlayer player, double coins);
+    void setCoinsOfPlayer(UUID uuid, double coins);
 
     /**
-     * @param player player to add the coins to
+     * @param uuid uuid of the player to add the coins to
      * @param coins amount of coins to add to balance.
      */
-    void addCoinsToPlayer(OfflinePlayer player, double coins);
+    void addCoinsToPlayer(UUID uuid, double coins);
 
     /**
      * Increments the player's balance by 1.
-     * @param player the player to increment the balance of
+     * @param uuid the uuid of the player to increment the balance of
      */
-    void incrementPlayerBalance(OfflinePlayer player);
+    void incrementPlayerBalance(UUID uuid);
 
     /**
      * Deducts an amount of coins from the player's balance.
-     * @param player the player from who to deduct the coins
+     * @param uuid the uuid of the player from who to deduct the coins
      * @param coins the amount of coins to deduct.
      */
-    void deductCoinsFromPlayer(OfflinePlayer player, double coins);
+    void deductCoinsFromPlayer(UUID uuid, double coins);
 
 }

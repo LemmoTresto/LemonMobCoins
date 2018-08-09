@@ -20,11 +20,11 @@
  *
  */
 
-package me.max.lemonmobcoins.listeners;
+package me.max.lemonmobcoins.bukkit.listeners;
 
-import me.max.lemonmobcoins.coins.CoinManager;
-import me.max.lemonmobcoins.files.Messages;
-import me.max.lemonmobcoins.gui.GuiManager;
+import me.max.lemonmobcoins.bukkit.gui.GuiManager;
+import me.max.lemonmobcoins.bukkit.messages.Messages;
+import me.max.lemonmobcoins.common.data.CoinManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

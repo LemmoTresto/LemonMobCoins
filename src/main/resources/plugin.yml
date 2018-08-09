@@ -1,7 +1,8 @@
 name: LemonMobCoins
 version: ${project.version}
-main: me.max.lemonmobcoins.LemonMobCoins
-softdepend: [PlaceholderAPI]
+author: LemmoTresto
+main: me.max.lemonmobcoins.bukkit.LemonMobCoinsBukkitPlugin
+softdepend: [PlaceholderAPI, Vault]
 commands:
   mobcoins:
     description: "Main MobCoins command!"

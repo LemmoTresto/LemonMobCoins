@@ -1,3 +1,22 @@
+# Bungeecord do you want to enable bungeecord mode? This requires the plugin to be on bungeecord and the bukkit servers you want to use this plugin on.
+bungeecord: false
+
+# Storage this is the storage section
+# This allows you to define which storage type you want to use!
+# Available storage types: flatfile, mysql
+# If none is found it will default to flatfile!
+# If choosing MySQL make sure you fill in the mysql section!
+# The mysql section is straightforward fill everything in make sure the database exists and you are good to go
+# The plugin itself already makes a table so do not worry about this.
+storage:
+  type: "flatfile"
+  mysql:
+    hostname: "localhost"
+    port: "3306"
+    username: ""
+    password: ""
+    database: "lemonmobcoins"
+
 # Mob-list
 # This list is the chances and the amount of coins the mobs drop when killed.
 #
@@ -57,4 +76,4 @@ gui:
       permission: false
       price: 100
       commands:
-      - "give %player% diamond_pickaxe 1 name:&bDiamond_&fDrill lore:&7Made_by_the_most_skilled_blacksmiths dig_speed:6 durability:4 fortune:4"
+      - "give %player% diamond_pickaxe{display:{Lore:[\"Made by the Most Skilled Blacksmiths\"]},Enchantments:[{id:\"efficiency\",lvl:4},{id:\"fortune\",lvl:6}]} 1"
