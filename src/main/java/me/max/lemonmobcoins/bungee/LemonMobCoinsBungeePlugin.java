@@ -31,7 +31,6 @@ import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.data.DataProvider;
 import me.max.lemonmobcoins.common.data.providers.MySqlProvider;
 import me.max.lemonmobcoins.common.data.providers.YamlBungeeProvider;
-import me.max.lemonmobcoins.common.exceptions.APILoadException;
 import me.max.lemonmobcoins.common.exceptions.DataLoadException;
 import me.max.lemonmobcoins.common.utils.FileUtil;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -58,10 +57,11 @@ public class LemonMobCoinsBungeePlugin extends Plugin {
             info("Loading config..");
             FileUtil.saveResource("bungeeconfig.yml", getDataFolder(), "config.yml" );
             info("Loaded config!");
-        } catch (Exception e){
+        } catch (IOException e){
             error("Could not load config and messages! Stopping plugin!");
             e.printStackTrace();
             shutdown();
+            return;
         }
 
         try {
@@ -80,14 +80,12 @@ public class LemonMobCoinsBungeePlugin extends Plugin {
             error("Failed loading MySql! Stopping plugin!");
             e.printStackTrace();
             shutdown();
+            return;
         } catch (DataLoadException e){
             error("Failed loading data! Stopping plugin!");
             e.printStackTrace();
             shutdown();
-        } catch (APILoadException e){
-            error("Failed loading API! Stopping plugin!");
-            e.printStackTrace();
-            shutdown();
+            return;
         }
     }
 
@@ -101,7 +99,9 @@ public class LemonMobCoinsBungeePlugin extends Plugin {
             error("Loading Listeners failed! Stopping plugin..");
             e.printStackTrace();
             shutdown();
+            return;
         }
+
         for (Map.Entry<UUID, Double> entry : getCoinManager().getCoins().entrySet()){
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("LemonMobCoins");

@@ -61,10 +61,11 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
             FileUtil.saveResource("bukkitconfig.yml", getDataFolder(), "config.yml");
             MessageManager.load(getDataFolder(), getLogger());
             info("Loaded config and messages!");
-        } catch (Exception e){
+        } catch (IOException e){
             error("Could not load config and messages! Stopping plugin!");
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(this);
+            return;
         }
 
         try {
@@ -84,10 +85,12 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
             error("Failed loading MySql! Stopping plugin!");
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(this);
+            return;
         } catch (DataLoadException e){
             error("Failed loading data! Stopping plugin!");
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(this);
+            return;
         }
 
         try {
