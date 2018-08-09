@@ -32,19 +32,16 @@ import java.util.logging.Logger;
 
 public class MessageManager {
 
-    private File dataFolder;
-    private Logger logger;
-    private ClassLoader classLoader;
+    public MessageManager(){
+        throw new UnsupportedOperationException("Instantiation of this class is not allowed.");
 
-    public MessageManager(File dataFolder, Logger logger, ClassLoader classLoader){
-        this.dataFolder = dataFolder;
-        this.logger = logger;
-        this.classLoader = classLoader;
+    }
 
+    public static void load(File dataFolder, Logger logger){
         File file = new File(dataFolder, "messages.yml");
         if (!file.exists()) {
             try {
-                FileUtil.saveResource("messages.yml", dataFolder, "messages.yml", classLoader);
+                FileUtil.saveResource("messages.yml", dataFolder, "messages.yml");
             } catch (IOException e) {
                 logger.severe("Could not load messages! Stopping plugin!");
                 e.printStackTrace();
@@ -56,6 +53,6 @@ public class MessageManager {
         for (String key : messages.getKeys(false)){
             Messages.valueOf(key).setMessage(messages.getString(key));
         }
-
     }
+
 }

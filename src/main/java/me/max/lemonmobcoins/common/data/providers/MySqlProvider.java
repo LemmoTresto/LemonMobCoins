@@ -34,7 +34,7 @@ public class MySqlProvider implements DataProvider {
     private Connection connection;
 
     public MySqlProvider(String hostname, String port, String username, String password, String database) throws SQLException {
-        connection = DriverManager.getConnection("jdbc:mysql://" + hostname+ ":" + port + "/" + database, username, password);
+        connection = DriverManager.getConnection("jdbc:mysql://" + hostname + ":" + port + "/" + database, username, password);
         createTable();
     }
 
@@ -45,17 +45,19 @@ public class MySqlProvider implements DataProvider {
         while (rs.next()){
             coins.put(UUID.fromString(rs.getString(1)), rs.getDouble(2));
         }
+        rs.close();
         return coins;
     }
 
     @Override
     public void saveData(Map<UUID, Double> coins) throws SQLException {
         for (Map.Entry<UUID, Double> entry : coins.entrySet()) setCoin(entry.getKey(), entry.getValue());
+        connection.close();
     }
 
     private enum Queries {
         CREATE_TABLE("CREATE TABLE IF NOT EXISTS coins(uuid VARCHAR(36), amount DOUBLE);"),
-        GET_COINS("SELECT * FROM coins"),
+        GET_COINS("SELECT * FROM coins;"),
         SET_COIN("INSERT INTO coins(uuid, amount) VALUES(?, ?) ON DUPLICATE KEY UPDATE amount = VALUES(amount);");
 
         private String query;
@@ -78,17 +80,21 @@ public class MySqlProvider implements DataProvider {
         stm.setString(1, uuid.toString());
         stm.setDouble(2, amount);
         stm.executeUpdate();
+        stm.close();
     }
 
     private ResultSet getCoins() throws SQLException {
         PreparedStatement stm = prepareStatement(Queries.GET_COINS);
-        return stm.executeQuery();
+        ResultSet rs = stm.executeQuery();
+        stm.close();
+        return rs;
 
     }
 
     private void createTable() throws SQLException {
         PreparedStatement stm = prepareStatement(Queries.CREATE_TABLE);
         stm.executeUpdate();
+        stm.close();
     }
 
 

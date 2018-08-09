@@ -25,7 +25,6 @@ package me.max.lemonmobcoins.common;
 import me.max.lemonmobcoins.common.api.LemonMobCoinsAPI;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.data.DataProvider;
-import me.max.lemonmobcoins.common.exceptions.APILoadException;
 import me.max.lemonmobcoins.common.exceptions.DataLoadException;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,24 +39,16 @@ public class LemonMobCoins {
     private CoinManager coinManager;
     private Logger logger;
 
-    public LemonMobCoins(DataProvider dataProvider, Logger logger) throws DataLoadException, APILoadException{
+    public LemonMobCoins(DataProvider dataProvider, Logger logger) throws DataLoadException {
         this.logger = logger;
 
-        try {
-            info("Loading data..");
-            coinManager = new CoinManager(dataProvider);
-            info("Loaded data!");
-        } catch (Exception e) {
-            throw new DataLoadException(e);
-        }
+        info("Loading data..");
+        coinManager = new CoinManager(dataProvider);
+        info("Loaded data!");
 
-        try {
-            info("Loading API..");
-            lemonMobCoinsAPI = coinManager;
-            info("Loaded API!");
-        } catch (Exception e){
-            throw new APILoadException(e);
-        }
+        info("Loading API..");
+        lemonMobCoinsAPI = coinManager;
+        info("Loaded API!");
     }
 
     public void disable() throws IOException, SQLException{

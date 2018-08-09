@@ -22,48 +22,19 @@
 
 package me.max.lemonmobcoins.common.utils;
 
+import me.max.lemonmobcoins.common.LemonMobCoins;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
 
 public class FileUtil {
 
-    public static void saveResource(@NotNull String resourcePath, @NotNull File dataFolder, @NotNull String outFile, @NotNull ClassLoader classLoader) throws IOException {
-        InputStream in = getResource(resourcePath, classLoader);
-
-        File outF = new File(dataFolder, outFile);
-        int lastIndex = resourcePath.lastIndexOf('/');
-        File outDir = new File(dataFolder, resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
-
-        outDir.mkdirs();
-
-        if (!outF.exists()) {
-            OutputStream out = new FileOutputStream(outF);
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-            out.close();
-            in.close();
-        }
-    }
-
-    private static InputStream getResource(@NotNull String filename, @NotNull ClassLoader classLoader) {
+    public static void saveResource(@NotNull String file, File dataFolder, String out) throws IOException {
         try {
-            URL url = classLoader.getResource(filename);
-
-            if (url == null) {
-                return null;
-            }
-
-            URLConnection connection = url.openConnection();
-            connection.setUseCaches(false);
-            return connection.getInputStream();
-        } catch (IOException ex) {
-            return null;
-        }
+            Files.copy(LemonMobCoins.class.getResourceAsStream(file), new File(dataFolder, out).toPath());
+        } catch (FileAlreadyExistsException ignored){}
     }
 }

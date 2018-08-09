@@ -24,6 +24,7 @@ package me.max.lemonmobcoins.common.data;
 
 
 import me.max.lemonmobcoins.common.api.LemonMobCoinsAPI;
+import me.max.lemonmobcoins.common.exceptions.DataLoadException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -36,9 +37,13 @@ public class CoinManager implements LemonMobCoinsAPI{
     private DataProvider dataProvider;
     private Map<UUID, Double> coins;
 
-    public CoinManager(DataProvider dataProvider) throws IOException, SQLException {
+    public CoinManager(DataProvider dataProvider) throws DataLoadException {
         this.dataProvider = dataProvider;
-        coins = dataProvider.loadData();
+        try {
+            coins = dataProvider.loadData();
+        } catch (Throwable t) {
+            throw new DataLoadException(t);
+        }
     }
 
     public void saveData() throws IOException, SQLException {

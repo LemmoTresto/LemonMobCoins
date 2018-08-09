@@ -31,7 +31,6 @@ import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.data.DataProvider;
 import me.max.lemonmobcoins.common.data.providers.MySqlProvider;
 import me.max.lemonmobcoins.common.data.providers.YamlBukkitProvider;
-import me.max.lemonmobcoins.common.exceptions.APILoadException;
 import me.max.lemonmobcoins.common.exceptions.DataLoadException;
 import me.max.lemonmobcoins.common.utils.FileUtil;
 import org.bukkit.Bukkit;
@@ -59,8 +58,8 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
     public void onEnable() {
         try {
             info("Loading messages and config..");
-            FileUtil.saveResource("bukkitconfig.yml", getDataFolder(), "config.yml", getClassLoader());
-            new MessageManager(getDataFolder(), getLogger(), getClassLoader());
+            FileUtil.saveResource("bukkitconfig.yml", getDataFolder(), "config.yml");
+            MessageManager.load(getDataFolder(), getLogger());
             info("Loaded config and messages!");
         } catch (Exception e){
             error("Could not load config and messages! Stopping plugin!");
@@ -87,10 +86,6 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
         } catch (DataLoadException e){
             error("Failed loading data! Stopping plugin!");
-            e.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin(this);
-        } catch (APILoadException e){
-            error("Failed loading API! Stopping plugin!");
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(this);
         }

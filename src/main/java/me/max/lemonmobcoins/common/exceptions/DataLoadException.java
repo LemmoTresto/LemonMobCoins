@@ -24,14 +24,14 @@ package me.max.lemonmobcoins.common.exceptions;
 
 public class DataLoadException extends RuntimeException {
 
-    private Exception e;
+    private Throwable t;
 
-    public DataLoadException(Exception e){
-        this.e = e;
+    public DataLoadException(Throwable t){
+        this.t = t;
     }
 
     @Override
     public void printStackTrace() {
-        e.printStackTrace();
+        t.printStackTrace();
     }
 }

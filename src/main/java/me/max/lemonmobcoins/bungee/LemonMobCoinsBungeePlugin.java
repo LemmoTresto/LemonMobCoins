@@ -56,7 +56,7 @@ public class LemonMobCoinsBungeePlugin extends Plugin {
     public void onLoad(){
         try {
             info("Loading config..");
-            FileUtil.saveResource("bungeeconfig.yml", getDataFolder(), "config.yml" , this.getClass().getClassLoader());
+            FileUtil.saveResource("bungeeconfig.yml", getDataFolder(), "config.yml" );
             info("Loaded config!");
         } catch (Exception e){
             error("Could not load config and messages! Stopping plugin!");
