@@ -23,41 +23,23 @@
 package me.max.lemonmobcoins.sponge;
 
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.*;
+import org.spongepowered.api.event.game.state.GameInitializationEvent;
+import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 
 @Plugin(id = "lemonmobcoins", name = "LemonMobCoins", version = "1.5", authors = "LemmoTresto")
 public class LemonMobCoinsSpongePlugin {
 
-    //So I do not understand why there are 20 different onEnable methods. Every method should be used for something different don't really understand this.
 
-    //The GameConstructionEvent is triggered. During this state, the @Plugin class instance for each plugin is triggered.
-    @Listener
-    public void onConstruct(GameConstructionEvent event){
-
-    }
-
-    //The GamePreInitializationEvent is triggered. During this state, the plugin gets ready for initialization. Access to a default logger instance and access to information regarding preferred configuration file locations is available.
+    //load data here
     @Listener
     public void onPreInit(GamePreInitializationEvent event){
 
     }
 
-    //The GameInitializationEvent is triggered. During this state, the plugin should finish any work needed in order to be functional. Global event handlers should get registered in this stage.
+    //register stuff here
     @Listener
     public void onInit(GameInitializationEvent event){
-
-    }
-
-    //The GamePostInitializationEvent is triggered. By this state, inter-plugin communication should be ready to occur. Plugins providing an API should be ready to accept basic requests.
-    @Listener
-    public void onPostInit(GamePostInitializationEvent event){
-
-    }
-
-    //The GameLoadCompleteEvent is triggered. By this state, all plugin initialization should be completed.
-    @Listener
-    public void onLoadComplete(GameLoadCompleteEvent event){
 
     }
 }
