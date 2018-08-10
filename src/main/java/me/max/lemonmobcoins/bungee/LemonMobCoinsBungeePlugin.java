@@ -30,22 +30,19 @@ import me.max.lemonmobcoins.common.LemonMobCoins;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.utils.FileUtil;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
 
-public class LemonMobCoinsBungeePlugin extends Plugin {
+public final class LemonMobCoinsBungeePlugin extends Plugin {
 
     private LemonMobCoins lemonMobCoins;
-    private Configuration config;
+    private Logger logger = LoggerFactory.getLogger(LemonMobCoins.class);
 
     @Override
     public void onLoad(){
@@ -57,6 +54,8 @@ public class LemonMobCoinsBungeePlugin extends Plugin {
             error("Could not load config and files! Stopping plugin!");
             e.printStackTrace();
         }
+
+        lemonMobCoins = new LemonMobCoins(getSLF4JLogger(), getDataFolder().toString());
     }
 
     @Override
@@ -101,36 +100,24 @@ public class LemonMobCoinsBungeePlugin extends Plugin {
         info("Disabled successfully!");
     }
 
-    private void error(String s){
-        log(Level.SEVERE, s);
+    private void info(String s){
+        getSLF4JLogger().info(s);
     }
 
     private void warn(String s){
-        log(Level.WARNING, s);
+        getSLF4JLogger().warn(s);
     }
 
-    private void info(String s){
-        log(Level.INFO, s);
+    private void error(String s){
+        getSLF4JLogger().error(s);
     }
 
-    private void log(Level level, String s){
-        getLogger().log(level, s);
+    private Logger getSLF4JLogger() {
+        return logger;
     }
 
     @NotNull
     private CoinManager getCoinManager() {
         return lemonMobCoins.getCoinManager();
-    }
-
-    @NotNull
-    private Configuration getConfig(){
-        if (config == null) {
-            try {
-                config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(getDataFolder(), "config.yml"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return config;
     }
 }
