@@ -88,7 +88,6 @@ public class MySqlProvider implements DataProvider {
         ResultSet rs = stm.executeQuery();
         stm.close();
         return rs;
-
     }
 
     private void createTable() throws SQLException {
