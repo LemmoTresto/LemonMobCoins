@@ -20,7 +20,7 @@
  *
  */
 
-package me.max.lemonmobcoins.bukkit.messages;
+package me.max.lemonmobcoins.common.files.messages;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.max.lemonmobcoins.common.data.CoinManager;

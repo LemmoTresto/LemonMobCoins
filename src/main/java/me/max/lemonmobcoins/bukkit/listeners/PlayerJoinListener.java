@@ -22,20 +22,22 @@
 
 package me.max.lemonmobcoins.bukkit.listeners;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-import org.bukkit.Bukkit;
+import me.max.lemonmobcoins.bukkit.PluginMessageManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.util.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PlayerJoinListener implements Listener {
 
-    //This should not be reloaded when doing /mc reload which is why we instantiate it statically.
-    private Map<UUID, Double> cache = new HashMap<>();
     private Timer timer = new Timer();
+    private PluginMessageManager pluginMessageManager;
+
+    public PlayerJoinListener(PluginMessageManager pluginMessageManager){
+        this.pluginMessageManager = pluginMessageManager;
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event){
@@ -43,20 +45,8 @@ public class PlayerJoinListener implements Listener {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                for (Map.Entry<UUID, Double> entry : cache.entrySet()) {
-                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                    out.writeUTF("LemonMobCoins");
-                    out.writeUTF(entry.getKey().toString());
-                    out.writeDouble(entry.getValue());
-                    event.getPlayer().sendPluginMessage(Bukkit.getPluginManager().getPlugin("LemonMobCoins"), "BungeeCord", out.toByteArray());
-                    Bukkit.getPluginManager().getPlugin("LemonMobCoins").getLogger().info("Sent information of Player " + entry.getKey() + ". Balance sent: " + entry.getValue());
-                }
-                cache.clear();
+                pluginMessageManager.sendPendingPluginMessages();
             }
         }, 1500);
-    }
-
-    public void addToCache(UUID uuid, double balance){
-        cache.put(uuid, balance);
     }
 }

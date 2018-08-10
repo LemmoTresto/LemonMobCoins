@@ -20,15 +20,14 @@
  *
  */
 
-package me.max.lemonmobcoins.bukkit.messages;
+package me.max.lemonmobcoins.common.files.messages;
 
 import me.max.lemonmobcoins.common.utils.FileUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
+import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 public class MessageManager {
 
@@ -37,21 +36,24 @@ public class MessageManager {
 
     }
 
-    public static void load(File dataFolder, Logger logger){
+    public static void load(String dataFolder, Logger logger){
         File file = new File(dataFolder, "messages.yml");
         if (!file.exists()) {
             try {
+                logger.info("No files file found, creating one now..");
                 FileUtil.saveResource("messages.yml", dataFolder, "messages.yml");
+                logger.info("Created files file!");
             } catch (IOException e) {
-                logger.severe("Could not load messages! Stopping plugin!");
+                logger.error("Could not create files!");
                 e.printStackTrace();
-                Bukkit.getPluginManager().disablePlugin(Bukkit.getPluginManager().getPlugin("LemonMobCoins"));
             }
         }
 
-        YamlConfiguration messages = YamlConfiguration.loadConfiguration(file);
-        for (String key : messages.getKeys(false)){
-            Messages.valueOf(key).setMessage(messages.getString(key));
+        try {
+            YAMLConfigurationLoader.builder().setFile(file).build().load().getChildrenMap().forEach((key, value) -> Messages.valueOf(String.valueOf(key)).setMessage(value.getString()));
+        } catch (IOException e) {
+            logger.error("Could not load files file!");
+            e.printStackTrace();
         }
     }
 

@@ -23,7 +23,8 @@
 package me.max.lemonmobcoins.common.data.providers;
 
 import me.max.lemonmobcoins.common.data.DataProvider;
-import org.bukkit.configuration.file.YamlConfiguration;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,36 +32,29 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class YamlBukkitProvider implements DataProvider {
+public class YamlProvider implements DataProvider {
 
-    private File dataFolder;
+    private YAMLConfigurationLoader dataLoader;
 
-    public YamlBukkitProvider(File dataFolder){
-        this.dataFolder = dataFolder;
+    public YamlProvider(String dataFolder) throws IOException {
+        File dataFile = new File(dataFolder + File.separator + "data" + File.separator, "coins.yml");
+        dataFile.mkdir();
+        dataFile.createNewFile();
+        dataLoader = YAMLConfigurationLoader.builder().setFile(dataFile).build();
     }
 
     @Override
     public Map<UUID, Double> loadData() throws IOException {
         Map<UUID, Double> coins = new HashMap<>();
-
-        //Create the data directory and coins file if they do not exist.
-        File file = new File(dataFolder.toString(), "data");
-        file.mkdir();
-        file = new File(dataFolder.toString() + "/data/", "coins.yml");
-        file.createNewFile();
-
-        //Read the data file and put all data in the map.
-        YamlConfiguration coinsData = YamlConfiguration.loadConfiguration(file);
-        coinsData.getKeys(false).forEach(key -> coins.put(UUID.fromString(key), coinsData.getDouble(key)));
-
+        ConfigurationNode coinsData = dataLoader.load();
+        coinsData.getChildrenMap().forEach((key, value) -> coins.put(UUID.fromString(String.valueOf(key)), Double.parseDouble(String.valueOf(value))));
         return coins;
     }
 
     @Override
     public void saveData(Map<UUID, Double> coins) throws IOException {
-        File file = new File(dataFolder.toString() + "/data/", "coins.yml");
-        YamlConfiguration coinsData = YamlConfiguration.loadConfiguration(file);
-        for (Map.Entry<UUID, Double> entry : coins.entrySet()) coinsData.set(entry.getKey().toString(), entry.getValue());
-        coinsData.save(file);
+        ConfigurationNode coinsData = dataLoader.load();
+        coins.forEach((key, value) -> coinsData.getNode(key).setValue(value));
+        dataLoader.save(coinsData);
     }
 }

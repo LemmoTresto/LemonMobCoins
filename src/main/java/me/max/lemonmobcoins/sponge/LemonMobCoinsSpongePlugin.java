@@ -22,24 +22,69 @@
 
 package me.max.lemonmobcoins.sponge;
 
+import com.google.inject.Inject;
+import me.max.lemonmobcoins.common.files.messages.MessageManager;
+import me.max.lemonmobcoins.common.utils.FileUtil;
+import org.slf4j.Logger;
+import org.spongepowered.api.Game;
+import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.scheduler.Task;
+
+import java.io.IOException;
+import java.nio.file.Path;
 
 @Plugin(id = "lemonmobcoins", name = "LemonMobCoins", version = "1.5", authors = "LemmoTresto")
 public class LemonMobCoinsSpongePlugin {
 
+    @Inject
+    private Game game;
 
-    //load data here
+    @Inject
+    private Logger logger;
+
+    @Inject
+    @ConfigDir(sharedRoot = false)
+    private Path configDir;
+
     @Listener
     public void onPreInit(GamePreInitializationEvent event){
-
+        try {
+            info("Loading files and config..");
+            FileUtil.saveResource("generalconfig.yml", configDir.toString(), "config.yml");
+            MessageManager.load(configDir.toString(), logger);
+            info("Loaded config and files!");
+        } catch (IOException e){
+            error("Could not load config and files!");
+            e.printStackTrace();
+            shutdown();
+            return;
+        }
     }
 
-    //register stuff here
     @Listener
     public void onInit(GameInitializationEvent event){
 
+    }
+
+    private void shutdown(){
+        game.getEventManager().unregisterPluginListeners(this);
+        game.getCommandManager().getOwnedBy(this).forEach(game.getCommandManager()::removeMapping);
+        game.getScheduler().getScheduledTasks(this).forEach(Task::cancel);
+    }
+
+    private void info(String s){
+        logger.info(s);
+    }
+
+    private void warn(String s){
+        logger.warn(s);
+    }
+
+    private void error(String s){
+        logger.error(s);
     }
 }

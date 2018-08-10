@@ -24,10 +24,10 @@ package me.max.lemonmobcoins.bukkit.listeners;
 
 import me.max.lemonmobcoins.bukkit.PluginMessageManager;
 import me.max.lemonmobcoins.bukkit.gui.GuiHolder;
-import me.max.lemonmobcoins.bukkit.gui.GuiManager;
-import me.max.lemonmobcoins.bukkit.gui.GuiMobCoinItem;
-import me.max.lemonmobcoins.bukkit.messages.Messages;
 import me.max.lemonmobcoins.common.data.CoinManager;
+import me.max.lemonmobcoins.common.files.gui.GuiManager;
+import me.max.lemonmobcoins.common.files.gui.GuiMobCoinItem;
+import me.max.lemonmobcoins.common.files.messages.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

@@ -22,9 +22,9 @@
 
 package me.max.lemonmobcoins.bukkit.listeners;
 
-import me.max.lemonmobcoins.bukkit.gui.GuiManager;
-import me.max.lemonmobcoins.bukkit.messages.Messages;
 import me.max.lemonmobcoins.common.data.CoinManager;
+import me.max.lemonmobcoins.common.files.gui.GuiManager;
+import me.max.lemonmobcoins.common.files.messages.Messages;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

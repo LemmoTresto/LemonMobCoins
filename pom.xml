@@ -58,6 +58,16 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.spongepowered.configurate-core</pattern>
+                                    <shadedPattern>me.max.lemonmobcoins.dependencies.configurate-core</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.slf4j</pattern>
+                                    <shadedPattern>me.max.lemonmobcoins.dependencies.slf4j</shadedPattern>
+                                </relocation>
+                            </relocations>
                             <minimizeJar>true</minimizeJar>
                         </configuration>
                     </execution>
@@ -116,6 +126,21 @@
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
             <version>7.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>configurate-core</artifactId>
+            <version>3.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
         </dependency>
     </dependencies>
 </project>

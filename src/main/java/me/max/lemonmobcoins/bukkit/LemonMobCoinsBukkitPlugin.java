@@ -22,26 +22,24 @@
 
 package me.max.lemonmobcoins.bukkit;
 
-import me.max.lemonmobcoins.bukkit.gui.GuiManager;
 import me.max.lemonmobcoins.bukkit.listeners.*;
-import me.max.lemonmobcoins.bukkit.messages.MessageManager;
-import me.max.lemonmobcoins.bukkit.messages.Messages;
 import me.max.lemonmobcoins.common.LemonMobCoins;
 import me.max.lemonmobcoins.common.data.CoinManager;
-import me.max.lemonmobcoins.common.data.DataProvider;
-import me.max.lemonmobcoins.common.data.providers.MySqlProvider;
-import me.max.lemonmobcoins.common.data.providers.YamlBukkitProvider;
-import me.max.lemonmobcoins.common.exceptions.DataLoadException;
+import me.max.lemonmobcoins.common.files.coinmob.CoinMobManager;
+import me.max.lemonmobcoins.common.files.gui.GuiManager;
+import me.max.lemonmobcoins.common.files.messages.MessageManager;
+import me.max.lemonmobcoins.common.files.messages.Messages;
 import me.max.lemonmobcoins.common.utils.FileUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -53,45 +51,23 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
     private LemonMobCoins lemonMobCoins;
     private GuiManager guiManager;
     private PluginMessageManager pluginMessageManager;
+    private Logger logger = LoggerFactory.getLogger(LemonMobCoins.class);
 
     @Override
     public void onEnable() {
         try {
-            info("Loading messages and config..");
-            FileUtil.saveResource("bukkitconfig.yml", getDataFolder(), "config.yml");
-            MessageManager.load(getDataFolder(), getLogger());
-            info("Loaded config and messages!");
+            info("Loading files and config..");
+            FileUtil.saveResource("generalconfig.yml", getDataFolder().toString(), "config.yml");
+            MessageManager.load(getDataFolder().toString(), getSLF4JLogger());
+            info("Loaded config and files!");
         } catch (IOException e){
-            error("Could not load config and messages! Stopping plugin!");
+            error("Could not load config and files! Stopping plugin!");
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
-        try {
-            String storageType = getConfig().getString("storage.type");
-            DataProvider dataProvider;
-            if (storageType.equalsIgnoreCase("flatfile")) dataProvider = new YamlBukkitProvider(getDataFolder());
-            else if (storageType.equalsIgnoreCase("mysql")){
-                ConfigurationSection mysqlSection = getConfig().getConfigurationSection("storage.mysql");
-                dataProvider = new MySqlProvider(mysqlSection.getString("hostname"), mysqlSection.getString("port"), mysqlSection.getString("username"), mysqlSection.getString("password"), mysqlSection.getString("database"));
-            } else {
-                error("Invalid storage type found! Using flatfile!");
-                dataProvider = new YamlBukkitProvider(getDataFolder());
-            }
-            lemonMobCoins = new LemonMobCoins(dataProvider, getLogger());
-            guiManager = new GuiManager(getConfig());
-        } catch (SQLException e){
-            error("Failed loading MySql! Stopping plugin!");
-            e.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        } catch (DataLoadException e){
-            error("Failed loading data! Stopping plugin!");
-            e.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
+        lemonMobCoins = new LemonMobCoins(getSLF4JLogger(), getDataFolder().toString());
 
         try {
             info("Loading listeners..");
@@ -102,7 +78,7 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
                 pluginMessageManager = new PluginMessageManager(playerJoinListener);
                 Bukkit.getPluginManager().registerEvents(playerJoinListener, this);
             }
-            registerListeners(new EntityDeathListener(getCoinManager(), getConfig().getConfigurationSection("mob-list"), getPluginMessageManager()), new InventoryClickListener(getCoinManager(), getGuiManager(), getPluginMessageManager()), new PlayerPreProcessCommandListener(getCoinManager(), getGuiManager()));
+            registerListeners(new EntityDeathListener(getCoinManager(), getCoinMobManager(), getPluginMessageManager()), new InventoryClickListener(getCoinManager(), getGuiManager(), getPluginMessageManager()), new PlayerPreProcessCommandListener(getCoinManager(), getGuiManager()));
             info("Loaded listeners!");
         } catch (Exception e){
             error("Loading Listeners failed! Stopping plugin..");
@@ -164,8 +140,17 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
         return guiManager;
     }
 
+    @NotNull
+    private CoinMobManager getCoinMobManager(){
+        return lemonMobCoins.getCoinMobManager();
+    }
+
     private PluginMessageManager getPluginMessageManager() {
         return pluginMessageManager;
+    }
+
+    private Logger getSLF4JLogger(){
+        return logger;
     }
 
     @Override

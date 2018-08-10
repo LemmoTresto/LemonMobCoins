@@ -25,24 +25,28 @@ package me.max.lemonmobcoins.bukkit;
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import me.max.lemonmobcoins.bukkit.listeners.PlayerJoinListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.slf4j.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class PluginMessageManager {
 
-    private PlayerJoinListener playerJoinListener;
+    //This should not be reloaded when doing /mc reload which is why we instantiate it statically.
+    private Map<UUID, Double> cache = new HashMap<>();
+    private Logger logger;
 
-    PluginMessageManager(PlayerJoinListener playerJoinListener){
-        this.playerJoinListener = playerJoinListener;
+    public PluginMessageManager(Logger logger){
+        this.logger = logger;
     }
 
     public void sendPluginMessage(UUID uuid, double balance){
         Player p = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
         if (p == null) {
-            playerJoinListener.addToCache(uuid, balance);
+            cache.put(uuid, balance);
             return;
         }
 
@@ -51,6 +55,12 @@ public class PluginMessageManager {
         out.writeUTF(uuid.toString());
         out.writeDouble(balance);
         p.sendPluginMessage(Bukkit.getPluginManager().getPlugin("LemonMobCoins"), "BungeeCord", out.toByteArray());
-        Bukkit.getPluginManager().getPlugin("LemonMobCoins").getLogger().info("Sent information of Player " + uuid + ". Balance sent: " + balance);
+        logger.info("Sent information of Player " + uuid + ". Balance sent: " + balance);
+    }
+
+    public void sendPendingPluginMessages() {
+        for (Map.Entry<UUID, Double> entry : cache.entrySet()){
+            sendPluginMessage(entry.getKey(), entry.getValue());
+        }
     }
 }

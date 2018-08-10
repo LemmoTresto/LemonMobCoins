@@ -20,7 +20,7 @@
  *
  */
 
-package me.max.lemonmobcoins.bukkit.coins;
+package me.max.lemonmobcoins.common.files.coinmob;
 
 import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;

@@ -27,9 +27,9 @@ import com.google.common.io.ByteStreams;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.slf4j.Logger;
 
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public class PluginMessagingListener implements PluginMessageListener {
 

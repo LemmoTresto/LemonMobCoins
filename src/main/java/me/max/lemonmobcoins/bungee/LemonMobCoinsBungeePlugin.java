@@ -28,10 +28,6 @@ import com.google.common.io.ByteStreams;
 import me.max.lemonmobcoins.bungee.listeners.PluginMessagingListener;
 import me.max.lemonmobcoins.common.LemonMobCoins;
 import me.max.lemonmobcoins.common.data.CoinManager;
-import me.max.lemonmobcoins.common.data.DataProvider;
-import me.max.lemonmobcoins.common.data.providers.MySqlProvider;
-import me.max.lemonmobcoins.common.data.providers.YamlBungeeProvider;
-import me.max.lemonmobcoins.common.exceptions.DataLoadException;
 import me.max.lemonmobcoins.common.utils.FileUtil;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
@@ -55,37 +51,11 @@ public class LemonMobCoinsBungeePlugin extends Plugin {
     public void onLoad(){
         try {
             info("Loading config..");
-            FileUtil.saveResource("bungeeconfig.yml", getDataFolder(), "config.yml" );
+            FileUtil.saveResource("bungeeconfig.yml", getDataFolder().toString(), "config.yml" );
             info("Loaded config!");
         } catch (IOException e){
-            error("Could not load config and messages! Stopping plugin!");
+            error("Could not load config and files! Stopping plugin!");
             e.printStackTrace();
-            shutdown();
-            return;
-        }
-
-        try {
-            String storageType = getConfig().getString("storage.type");
-            DataProvider dataProvider;
-            if (storageType.equalsIgnoreCase("flatfile")) dataProvider = new YamlBungeeProvider(getDataFolder());
-            else if (storageType.equalsIgnoreCase("mysql")){
-                Configuration mysqlSection = getConfig().getSection("storage.mysql");
-                dataProvider = new MySqlProvider(mysqlSection.getString("hostname"), mysqlSection.getString("port"), mysqlSection.getString("username"), mysqlSection.getString("password"), mysqlSection.getString("database"));
-            } else {
-                error("Invalid storage type found! Using flatfile!");
-                dataProvider = new YamlBungeeProvider(getDataFolder());
-            }
-            lemonMobCoins = new LemonMobCoins(dataProvider, getLogger());
-        } catch (SQLException e){
-            error("Failed loading MySql! Stopping plugin!");
-            e.printStackTrace();
-            shutdown();
-            return;
-        } catch (DataLoadException e){
-            error("Failed loading data! Stopping plugin!");
-            e.printStackTrace();
-            shutdown();
-            return;
         }
     }
 
@@ -98,7 +68,6 @@ public class LemonMobCoinsBungeePlugin extends Plugin {
         } catch (Exception e){
             error("Loading Listeners failed! Stopping plugin..");
             e.printStackTrace();
-            shutdown();
             return;
         }
 
@@ -163,10 +132,5 @@ public class LemonMobCoinsBungeePlugin extends Plugin {
             }
         }
         return config;
-    }
-
-    private void shutdown(){
-        getProxy().unregisterChannel("BungeeCord");
-        getProxy().getPluginManager().unregisterListeners(this);
     }
 }

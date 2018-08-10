@@ -20,7 +20,7 @@
  *
  */
 
-package me.max.lemonmobcoins.bukkit.gui;
+package me.max.lemonmobcoins.common.files.gui;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -36,7 +36,7 @@ public class GuiMobCoinItem {
 
     private String identifier;
     private int slot;
-    private Material material;
+    private String material;
     private int amount;
     private String displayname;
     private boolean glowing;
@@ -45,7 +45,7 @@ public class GuiMobCoinItem {
     private double price;
     private List<String> commands;
 
-    private GuiMobCoinItem(@NotNull String identifier, int slot, @NotNull Material material, int amount, @NotNull String displayname, boolean glowing, @NotNull List<String> lore, boolean permission, double price, @NotNull List<String> commands){
+    private GuiMobCoinItem(@NotNull String identifier, int slot, @NotNull String material, int amount, @NotNull String displayname, boolean glowing, @NotNull List<String> lore, boolean permission, double price, @NotNull List<String> commands){
         this.identifier = identifier;
         this.slot = slot;
         this.material = material;
@@ -59,8 +59,8 @@ public class GuiMobCoinItem {
     }
 
     @Contract("-> new")
-    ItemStack toItemStack(){
-        ItemStack itemStack = new ItemStack(getMaterial(), getAmount());
+    ItemStack toBukkitItemStack(){
+        ItemStack itemStack = new ItemStack(Material.matchMaterial(getMaterial()), getAmount());
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(getDisplayname());
         itemMeta.setLore(getLore());
@@ -106,7 +106,7 @@ public class GuiMobCoinItem {
     }
 
     @NotNull
-    public Material getMaterial() {
+    public String getMaterial() {
         return material;
     }
 
@@ -117,7 +117,7 @@ public class GuiMobCoinItem {
     static class Builder {
         private String identifier;
         private int slot;
-        private Material material;
+        private String material;
         private int amount;
         private String displayname;
         private boolean glowing;
@@ -167,7 +167,7 @@ public class GuiMobCoinItem {
         }
 
         @Contract("_ -> this")
-        Builder setMaterial(Material material) {
+        Builder setMaterial(String material) {
             this.material = material;
             return this;
         }

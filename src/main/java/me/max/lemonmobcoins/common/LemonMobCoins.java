@@ -25,26 +25,60 @@ package me.max.lemonmobcoins.common;
 import me.max.lemonmobcoins.common.api.LemonMobCoinsAPI;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.data.DataProvider;
+import me.max.lemonmobcoins.common.data.providers.MySqlProvider;
+import me.max.lemonmobcoins.common.data.providers.YamlProvider;
 import me.max.lemonmobcoins.common.exceptions.DataLoadException;
-import org.jetbrains.annotations.NotNull;
+import me.max.lemonmobcoins.common.files.coinmob.CoinMobManager;
+import me.max.lemonmobcoins.common.files.gui.GuiManager;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
+import org.slf4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class LemonMobCoins {
 
     private static LemonMobCoinsAPI lemonMobCoinsAPI;
     private CoinManager coinManager;
+    private GuiManager guiManager;
+    private CoinMobManager coinMobManager;
     private Logger logger;
 
-    public LemonMobCoins(DataProvider dataProvider, Logger logger) throws DataLoadException {
+    public LemonMobCoins(Logger logger, String dataFolder) throws DataLoadException {
         this.logger = logger;
 
-        info("Loading data..");
-        coinManager = new CoinManager(dataProvider);
-        info("Loaded data!");
+        try {
+            info("Loading data..");
+            ConfigurationLoader<ConfigurationNode> loader = YAMLConfigurationLoader.builder().setFile(new File(dataFolder, "config.yml")).build();
+            ConfigurationNode node = loader.load();
+
+            String storageType = node.getNode("storage", "type").getString("flatfile");
+            DataProvider dataProvider;
+
+            if (storageType.equalsIgnoreCase("mysql")){
+                ConfigurationNode mysqlSection = node.getNode("storage", "mysql");
+                dataProvider = new MySqlProvider(mysqlSection.getNode("hostname").getString(), mysqlSection.getNode("port").getString(), mysqlSection.getNode("username").getString(), mysqlSection.getNode("password").getString(), mysqlSection.getNode("database").getString());
+            } else {
+                error("Invalid storage type found! Using flatfile!");
+                dataProvider = new YamlProvider(dataFolder);
+            }
+
+            coinManager = new CoinManager(dataProvider);
+            guiManager = new GuiManager(node, getLogger());
+            coinMobManager = new CoinMobManager(node, getLogger());
+            info("Loaded data!");
+        } catch (SQLException e){
+            error("Failed loading MySql!");
+            e.printStackTrace();
+            return;
+        } catch (DataLoadException | IOException e){
+            error("Failed loading data!");
+            e.printStackTrace();
+            return;
+        }
 
         info("Loading API..");
         lemonMobCoinsAPI = coinManager;
@@ -56,15 +90,27 @@ public class LemonMobCoins {
     }
 
     private void info(String s){
-        log(Level.INFO, s);
+        getLogger().info(s);
     }
 
-    private void log(Level level, String s){
-        getLogger().log(level, s);
+    private void warn(String s){
+        getLogger().warn(s);
+    }
+
+    private void error(String s){
+        getLogger().error(s);
     }
 
     public CoinManager getCoinManager() {
         return coinManager;
+    }
+
+    public GuiManager getGuiManager() {
+        return guiManager;
+    }
+
+    public CoinMobManager getCoinMobManager() {
+        return coinMobManager;
     }
 
     @SuppressWarnings("unused")
@@ -72,7 +118,6 @@ public class LemonMobCoins {
         return lemonMobCoinsAPI;
     }
 
-    @NotNull
     private Logger getLogger() {
         return logger;
     }
