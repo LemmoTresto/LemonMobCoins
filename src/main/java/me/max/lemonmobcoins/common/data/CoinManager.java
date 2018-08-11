@@ -34,8 +34,8 @@ import java.util.UUID;
 
 public class CoinManager implements LemonMobCoinsAPI{
 
-    private DataProvider dataProvider;
-    private Map<UUID, Double> coins;
+    private final DataProvider dataProvider;
+    private final Map<UUID, Double> coins;
 
     public CoinManager(DataProvider dataProvider) throws DataLoadException {
         this.dataProvider = dataProvider;

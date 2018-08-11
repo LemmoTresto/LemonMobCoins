@@ -22,6 +22,7 @@
 
 package me.max.lemonmobcoins.bukkit.listeners;
 
+import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.files.gui.GuiManager;
 import me.max.lemonmobcoins.common.files.messages.Messages;
@@ -32,12 +33,14 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class PlayerPreProcessCommandListener implements Listener {
 
-    private CoinManager coinManager;
-    private GuiManager guiManager;
+    private final CoinManager coinManager;
+    private final GuiManager guiManager;
+    private final PAPIHook papiHook;
 
-    public PlayerPreProcessCommandListener(CoinManager coinManager, GuiManager guiManager){
+    public PlayerPreProcessCommandListener(CoinManager coinManager, GuiManager guiManager, PAPIHook papiHook){
         this.coinManager = coinManager;
         this.guiManager = guiManager;
+        this.papiHook = papiHook;
     }
 
     @EventHandler
@@ -49,7 +52,7 @@ public class PlayerPreProcessCommandListener implements Listener {
                 p.openInventory(guiManager.getBukkitInventory());
                 return;
             }
-            p.sendMessage(Messages.NO_PERMISSION_TO_EXECUTE.getMessage(coinManager, p, null, 0));
+            p.sendMessage(Messages.NO_PERMISSION_TO_EXECUTE.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook));
         }
     }
 }

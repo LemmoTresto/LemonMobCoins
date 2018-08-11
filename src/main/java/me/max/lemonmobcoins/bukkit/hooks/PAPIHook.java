@@ -20,18 +20,16 @@
  *
  */
 
-package me.max.lemonmobcoins.common.exceptions;
+package me.max.lemonmobcoins.bukkit.hooks;
 
-public class DataLoadException extends RuntimeException {
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.Nullable;
 
-    private final Throwable t;
+public class PAPIHook {
 
-    public DataLoadException(Throwable t){
-        this.t = t;
-    }
-
-    @Override
-    public void printStackTrace() {
-        t.printStackTrace();
+    public String replacePlaceholders(@Nullable OfflinePlayer p, String s){
+        if (p == null) return s;
+        return PlaceholderAPI.setPlaceholders(p, s);
     }
 }

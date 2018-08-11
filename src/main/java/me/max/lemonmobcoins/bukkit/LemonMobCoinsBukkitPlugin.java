@@ -22,6 +22,7 @@
 
 package me.max.lemonmobcoins.bukkit;
 
+import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
 import me.max.lemonmobcoins.bukkit.listeners.*;
 import me.max.lemonmobcoins.common.LemonMobCoins;
 import me.max.lemonmobcoins.common.data.CoinManager;
@@ -50,7 +51,8 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
     private LemonMobCoins lemonMobCoins;
     private GuiManager guiManager;
     private PluginMessageManager pluginMessageManager;
-    private Logger logger = LoggerFactory.getLogger(LemonMobCoins.class);
+    private PAPIHook papiHook;
+    private final Logger logger = LoggerFactory.getLogger(LemonMobCoins.class);
 
     @Override
     public void onEnable() {
@@ -73,11 +75,11 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
             if (getConfig().getBoolean("bungeecord")) {
                 getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
                 getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PluginMessagingListener(getCoinManager(), getSLF4JLogger()));
-                pluginMessageManager = new PluginMessageManager(getSLF4JLogger());
+                pluginMessageManager = new PluginMessageManager(getSLF4JLogger(), getCoinManager());
                 PlayerJoinListener playerJoinListener = new PlayerJoinListener(pluginMessageManager);
                 Bukkit.getPluginManager().registerEvents(playerJoinListener, this);
             }
-            registerListeners(new EntityDeathListener(getCoinManager(), getCoinMobManager(), getPluginMessageManager()), new InventoryClickListener(getCoinManager(), getGuiManager(), getPluginMessageManager()), new PlayerPreProcessCommandListener(getCoinManager(), getGuiManager()));
+            registerListeners(new EntityDeathListener(getCoinManager(), getCoinMobManager(), getPluginMessageManager(), papiHook), new InventoryClickListener(getCoinManager(), getGuiManager(), getPluginMessageManager(), papiHook), new PlayerPreProcessCommandListener(getCoinManager(), getGuiManager(), papiHook));
             info("Loaded listeners!");
         } catch (Exception e){
             error("Loading Listeners failed! Stopping plugin..");
@@ -86,7 +88,11 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
             return;
         }
 
-        if (!Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) warn("PlaceholderAPI was not found placeholders from this plugin will NOT work!");
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            papiHook = new PAPIHook();
+        } else {
+            warn("PlaceholderAPI was not found placeholders from PlaceholderAPI will NOT work!");
+        }
     }
 
     @Override
@@ -154,18 +160,19 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
         if (command.getName().equalsIgnoreCase("mobcoins") || command.getName().equalsIgnoreCase("mc") || command.getName().equalsIgnoreCase("mobc") || command.getName().equalsIgnoreCase("mcoins") || command.getName().equalsIgnoreCase("mcoin") || command.getName().equalsIgnoreCase("mobcoin")){
             if (args.length == 0) {
                 if (sender instanceof Player) {
-                    sender.sendMessage(Messages.OWN_PLAYER_BALANCE.getMessage(getCoinManager(), (Player) sender, null, 0));
+                    Player p = (Player) sender;
+                    sender.sendMessage(Messages.OWN_PLAYER_BALANCE.getMessage(getCoinManager().getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook));
                     return true;
                 }
-                sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(getCoinManager(), null, null, 0));
+                sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0, papiHook));
             }
 
             if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("?")){
                 if (sender.hasPermission("lemonmobcoins.admin")) {
-                    sender.sendMessage(Messages.ADMIN_HELP_MENU.getMessage(getCoinManager(), null, null, 0));
+                    sender.sendMessage(Messages.ADMIN_HELP_MENU.getMessage(0, null, null, 0, papiHook));
                     return true;
                 }
-                sender.sendMessage(Messages.PLAYER_HELP_MENU.getMessage(getCoinManager(), null, null, 0));
+                sender.sendMessage(Messages.PLAYER_HELP_MENU.getMessage(0, null, null, 0, papiHook));
                 return true;
             }
 
@@ -173,19 +180,19 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
                 if (args.length == 1){
                     if (sender instanceof Player){
                         Player p = (Player) sender;
-                        p.sendMessage(Messages.OWN_PLAYER_BALANCE.getMessage(getCoinManager(), p, null, 0));
+                        p.sendMessage(Messages.OWN_PLAYER_BALANCE.getMessage(getCoinManager().getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook));
                         return true;
                     }
-                    sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(getCoinManager(), null, null, 0));
+                    sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0, papiHook));
                     return true;
                 }
                 if (args.length == 2){
                     OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
                     if (player == null) {
-                        sender.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(getCoinManager(), null, null, 0));
+                        sender.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
                         return true;
                     }
-                    sender.sendMessage(Messages.OTHER_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, 0));
+                    sender.sendMessage(Messages.OTHER_PLAYER_BALANCE.getMessage(getCoinManager().getCoinsOfPlayer(player.getUniqueId()), player.getName(), null, 0, papiHook));
                     return true;
                 }
             }
@@ -195,36 +202,37 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
                     ((Player) sender).openInventory(getGuiManager().getBukkitInventory());
                     return true;
                 }
-                sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(getCoinManager(), null, null, 0));
+                sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0, papiHook));
                 return true;
             }
 
             if (sender.hasPermission("mobcoins.admin")){
                 if (args.length != 3) {
                     if (args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("take")){
-                        sender.sendMessage(Messages.valueOf("INVALID_USAGE_" + args[0].toUpperCase() + "_COMMAND").getMessage(getCoinManager(), null, null, 0));
+                        sender.sendMessage(Messages.valueOf("INVALID_USAGE_" + args[0].toUpperCase() + "_COMMAND").getMessage(0, null, null, 0, papiHook));
                         return true;
                     }
 
                     if (args.length != 2){
                         if (args[0].equalsIgnoreCase("reset")) {
-                            sender.sendMessage(Messages.INVALID_USAGE_RESET_COMMAND.getMessage(getCoinManager(), null, null, 0));
+                            sender.sendMessage(Messages.INVALID_USAGE_RESET_COMMAND.getMessage(0, null, null, 0, papiHook));
                         }
 
                         if (args[0].equalsIgnoreCase("reload")){
                             try {
-                                sender.sendMessage(Messages.START_RELOAD.getMessage(getCoinManager(), null, null, 0));
+                                sender.sendMessage(Messages.START_RELOAD.getMessage(0, null, null, 0, papiHook));
                                 onDisable();
                                 onEnable();
-                                sender.sendMessage(Messages.SUCCESSFUL_RELOAD.getMessage(getCoinManager(), null, null, 0));
+                                sender.sendMessage(Messages.SUCCESSFUL_RELOAD.getMessage(0, null, null, 0, papiHook));
                                 return true;
                             } catch (Exception e){
-                                sender.sendMessage(Messages.FAILED_RELOAD.getMessage(getCoinManager(), null, null, 0));
+                                sender.sendMessage(Messages.FAILED_RELOAD.getMessage(0, null, null, 0, papiHook));
+                                e.printStackTrace();
                                 return true;
                             }
                         }
 
-                        sender.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(getCoinManager(), null, null, 0));
+                        sender.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(0, null, null, 0, papiHook));
                         return true;
                     }
                 }
@@ -232,40 +240,40 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
 
                 if (player == null) {
-                    sender.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(getCoinManager(), null, null, 0));
+                    sender.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
                     return true;
                 }
 
                 if (args[0].equalsIgnoreCase("reset")){
                     getCoinManager().setCoinsOfPlayer(player.getUniqueId(), 0);
-                    if (getPluginMessageManager() != null) getPluginMessageManager().sendPluginMessage(player.getUniqueId(), getCoinManager().getCoinsOfPlayer(player.getUniqueId()));
-                    sender.sendMessage(Messages.RESET_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, 0));
+                    if (getPluginMessageManager() != null) getPluginMessageManager().sendPluginMessage(player.getUniqueId());
+                    sender.sendMessage(Messages.RESET_PLAYER_BALANCE.getMessage(getCoinManager().getCoinsOfPlayer(player.getUniqueId()), player.getName(), null, 0, papiHook));
                     return true;
                 }
 
                 if (args[0].equalsIgnoreCase("set")){
                     getCoinManager().setCoinsOfPlayer(player.getUniqueId(), Double.parseDouble(args[2]));
-                    if (getPluginMessageManager() != null) getPluginMessageManager().sendPluginMessage(player.getUniqueId(), getCoinManager().getCoinsOfPlayer(player.getUniqueId()));
-                    sender.sendMessage(Messages.SET_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, 0));
+                    if (getPluginMessageManager() != null) getPluginMessageManager().sendPluginMessage(player.getUniqueId());
+                    sender.sendMessage(Messages.SET_PLAYER_BALANCE.getMessage(getCoinManager().getCoinsOfPlayer(player.getUniqueId()), player.getName(), null, 0, papiHook));
                     return true;
                 }
 
                 if (args[0].equalsIgnoreCase("take")){
                     getCoinManager().deductCoinsFromPlayer(player.getUniqueId(), Double.parseDouble(args[2]));
-                    if (getPluginMessageManager() != null) getPluginMessageManager().sendPluginMessage(player.getUniqueId(), getCoinManager().getCoinsOfPlayer(player.getUniqueId()));
-                    sender.sendMessage(Messages.TAKE_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, Integer.valueOf(args[2])));
+                    if (getPluginMessageManager() != null) getPluginMessageManager().sendPluginMessage(player.getUniqueId());
+                    sender.sendMessage(Messages.TAKE_PLAYER_BALANCE.getMessage(getCoinManager().getCoinsOfPlayer(player.getUniqueId()), player.getName(), null, Integer.valueOf(args[2]), papiHook));
                     return true;
                 }
 
                 if (args[0].equalsIgnoreCase("give")) {
                     getCoinManager().addCoinsToPlayer(player.getUniqueId(), Double.parseDouble(args[2]));
-                    if (getPluginMessageManager() != null) getPluginMessageManager().sendPluginMessage(player.getUniqueId(), getCoinManager().getCoinsOfPlayer(player.getUniqueId()));
-                    sender.sendMessage(Messages.GIVE_PLAYER_BALANCE.getMessage(getCoinManager(), player, null, Integer.valueOf(args[2])));
+                    if (getPluginMessageManager() != null) getPluginMessageManager().sendPluginMessage(player.getUniqueId());
+                    sender.sendMessage(Messages.GIVE_PLAYER_BALANCE.getMessage(getCoinManager().getCoinsOfPlayer(player.getUniqueId()), player.getName(), null, Integer.valueOf(args[2]), papiHook));
                     return true;
                 }
             }
 
-            sender.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(getCoinManager(), null, null, 0));
+            sender.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(0, null, null, 0, papiHook));
             return true;
         }
 
@@ -276,10 +284,10 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
                     p.openInventory(getGuiManager().getBukkitInventory());
                     return true;
                 }
-                p.sendMessage(Messages.NO_PERMISSION_TO_EXECUTE.getMessage(getCoinManager(), p, null, 0));
+                p.sendMessage(Messages.NO_PERMISSION_TO_EXECUTE.getMessage(0, p.getName(), null, 0, papiHook));
                 return true;
             }
-            sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(getCoinManager(), null, null, 0));
+            sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0, papiHook));
             return true;
         }
         return false;

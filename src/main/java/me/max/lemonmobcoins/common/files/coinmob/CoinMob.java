@@ -22,25 +22,24 @@
 
 package me.max.lemonmobcoins.common.files.coinmob;
 
-import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
 public class CoinMob {
 
-    private EntityType mob;
-    private int chance;
+    private final String mob;
+    private final int chance;
 
     //In case they do amount: "1-5"
     //amount will be 1 and amount2 will be 5.
     //If amount2 is zero then they are not using something random
-    private int amount;
-    private int amount2;
+    private final int amount;
+    private final int amount2;
 
-    private Random r = new Random();
+    private final Random r = new Random();
 
-    public CoinMob(@NotNull EntityType mob, int chance, int amount, int amount2){
+    public CoinMob(@NotNull String mob, int chance, int amount, int amount2){
         this.mob = mob;
         this.chance = chance;
         this.amount = amount;
@@ -48,7 +47,7 @@ public class CoinMob {
     }
 
     @NotNull
-    public EntityType getMob() {
+    public String getMob() {
         return mob;
     }
 

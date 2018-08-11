@@ -23,7 +23,6 @@
 package me.max.lemonmobcoins.common.files.coinmob;
 
 import ninja.leaping.configurate.ConfigurationNode;
-import org.bukkit.entity.EntityType;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 public class CoinMobManager {
 
-    private List<CoinMob> coinMobList;
+    private final List<CoinMob> coinMobList;
 
     public CoinMobManager(ConfigurationNode config, Logger logger){
         coinMobList = new ArrayList<>();
@@ -49,7 +48,7 @@ public class CoinMobManager {
                 amounts.add("0");
             }
 
-            coinMobList.add(new CoinMob(EntityType.valueOf(entry.getKey().toString().toUpperCase()), entry.getValue().getNode("chance").getInt(), Integer.parseInt(amounts.get(0)), Integer.parseInt(amounts.get(1))));
+            coinMobList.add(new CoinMob(entry.getKey().toString(), entry.getValue().getNode("chance").getInt(), Integer.parseInt(amounts.get(0)), Integer.parseInt(amounts.get(1))));
         }
     }
 
@@ -57,7 +56,7 @@ public class CoinMobManager {
         return coinMobList;
     }
 
-    public CoinMob getCoinMob(EntityType type){
-        return getCoinMobList().stream().filter(coinMob -> coinMob.getMob() == type).findFirst().orElse(null);
+    public CoinMob getCoinMob(String type){
+        return getCoinMobList().stream().filter(coinMob -> coinMob.getMob().equalsIgnoreCase(type)).findFirst().orElse(null);
     }
 }

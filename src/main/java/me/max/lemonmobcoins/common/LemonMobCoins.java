@@ -45,7 +45,7 @@ public class LemonMobCoins {
     private CoinManager coinManager;
     private GuiManager guiManager;
     private CoinMobManager coinMobManager;
-    private Logger logger;
+    private final Logger logger;
 
     public LemonMobCoins(Logger logger, String dataFolder) throws DataLoadException {
         this.logger = logger;

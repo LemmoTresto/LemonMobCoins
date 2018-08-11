@@ -24,9 +24,10 @@ package me.max.lemonmobcoins.bukkit.listeners;
 
 import me.max.lemonmobcoins.bukkit.PluginMessageManager;
 import me.max.lemonmobcoins.bukkit.gui.GuiHolder;
+import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.files.gui.GuiManager;
-import me.max.lemonmobcoins.common.files.gui.GuiMobCoinItem;
+import me.max.lemonmobcoins.common.files.gui.ShopItem;
 import me.max.lemonmobcoins.common.files.messages.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -37,14 +38,16 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class InventoryClickListener implements Listener {
 
-    private CoinManager coinManager;
-    private GuiManager guiManager;
-    private PluginMessageManager pluginMessageManager;
+    private final CoinManager coinManager;
+    private final GuiManager guiManager;
+    private final PluginMessageManager pluginMessageManager;
+    private final PAPIHook papiHook;
 
-    public InventoryClickListener(CoinManager coinManager, GuiManager guiManager, PluginMessageManager pluginMessageManager){
+    public InventoryClickListener(CoinManager coinManager, GuiManager guiManager, PluginMessageManager pluginMessageManager, PAPIHook papiHook){
         this.coinManager = coinManager;
         this.guiManager = guiManager;
         this.pluginMessageManager = pluginMessageManager;
+        this.papiHook = papiHook;
     }
 
     @EventHandler
@@ -54,23 +57,23 @@ public class InventoryClickListener implements Listener {
         event.setCancelled(true);
 
         Player p = (Player) event.getWhoClicked();
-        GuiMobCoinItem item = guiManager.getGuiMobCoinItemFromItemStack(event.getCurrentItem());
+        ShopItem item = guiManager.getGuiMobCoinItemFromItemStack(event.getCurrentItem());
 
         if (item.isPermission()){
             if (!p.hasPermission("lemonmobcoins.buy." + item.getIdentifier())) {
-                p.sendMessage(Messages.NO_PERMISSION_TO_PURCHASE.getMessage(coinManager, p, null, 0));
+                p.sendMessage(Messages.NO_PERMISSION_TO_PURCHASE.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook));
                 return;
             }
         }
 
         if (!(coinManager.getCoinsOfPlayer(p.getUniqueId()) >= item.getPrice())){
-            p.sendMessage(Messages.NOT_ENOUGH_MONEY_TO_PURCHASE.getMessage(coinManager, p, null, 0));
+            p.sendMessage(Messages.NOT_ENOUGH_MONEY_TO_PURCHASE.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook));
             return;
         }
 
         coinManager.deductCoinsFromPlayer(p.getUniqueId(), item.getPrice());
-        if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId(), coinManager.getCoinsOfPlayer(p.getUniqueId()));
-        p.sendMessage(Messages.PURCHASED_ITEM_FROM_SHOP.getMessage(coinManager, p, null, item.getPrice()).replaceAll("%item%", item.getDisplayname()));
+        if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId());
+        p.sendMessage(Messages.PURCHASED_ITEM_FROM_SHOP.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, item.getPrice(), papiHook).replaceAll("%item%", item.getDisplayname()));
         for (String cmd : item.getCommands()) Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', cmd.replaceAll("%player%", p.getName())));
     }
 

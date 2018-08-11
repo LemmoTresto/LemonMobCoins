@@ -20,49 +20,42 @@
  *
  */
 
-package me.max.lemonmobcoins.bukkit.listeners;
+package me.max.lemonmobcoins.sponge.listeners;
 
-import me.max.lemonmobcoins.bukkit.PluginMessageManager;
-import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.files.coinmob.CoinMob;
 import me.max.lemonmobcoins.common.files.coinmob.CoinMobManager;
 import me.max.lemonmobcoins.common.files.messages.Messages;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.entity.DestructEntityEvent;
+import org.spongepowered.api.text.Text;
 
-public class EntityDeathListener implements Listener {
+public class EntityDeathListener {
 
     private final CoinManager coinManager;
-    private final PluginMessageManager pluginMessageManager;
     private final CoinMobManager coinMobManager;
-    private final PAPIHook papiHook;
 
-    public EntityDeathListener(CoinManager coinManager, CoinMobManager coinMobManager, PluginMessageManager pluginMessageManager, PAPIHook papiHook){
+    public EntityDeathListener(CoinManager coinManager, CoinMobManager coinMobManager){
         this.coinManager = coinManager;
-        this.pluginMessageManager = pluginMessageManager;
         this.coinMobManager = coinMobManager;
-        this.papiHook = papiHook;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onEntityDeath(EntityDeathEvent event){
-        Player p = event.getEntity().getKiller();
-        if (p == null) return;
+    @Listener
+    public void onEntityDeath(DestructEntityEvent.Death event){
+        if (!(event.getSource() instanceof Player)) return;
+        Player p = (Player) event.getSource();
 
-        CoinMob coinMob = coinMobManager.getCoinMob(event.getEntityType().toString());
+        CoinMob coinMob = coinMobManager.getCoinMob(event.getTargetEntity().getType().toString());
         if (coinMob == null) return;
 
         int amountToDrop = coinMob.getAmountToDrop();
         if (amountToDrop == 0) return;
         coinManager.addCoinsToPlayer(p.getUniqueId(), amountToDrop);
-        if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId());
 
-        event.getEntity().getKiller().sendMessage(Messages.RECEIVED_COINS_FROM_KILL.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), event.getEntity().getName(), amountToDrop, papiHook));
+        //todo if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId(), coinManager.getCoinsOfPlayer(p.g));
+
+        p.sendMessage(Text.of(Messages.RECEIVED_COINS_FROM_KILL.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), event.getTargetEntity().getType().getName(), amountToDrop, null)));
 
     }
-
 }

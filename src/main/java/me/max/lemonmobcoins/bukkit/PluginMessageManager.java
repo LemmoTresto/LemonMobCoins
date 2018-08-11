@@ -25,42 +25,50 @@ package me.max.lemonmobcoins.bukkit;
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import me.max.lemonmobcoins.common.data.CoinManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class PluginMessageManager {
 
     //This should not be reloaded when doing /mc reload which is why we instantiate it statically.
-    private Map<UUID, Double> cache = new HashMap<>();
-    private Logger logger;
+    private final List<UUID> cache = new ArrayList<>();
+    private final Logger logger;
+    private final CoinManager coinManager;
 
-    public PluginMessageManager(Logger logger){
+    public PluginMessageManager(Logger logger, CoinManager coinManager){
         this.logger = logger;
+        this.coinManager = coinManager;
     }
 
-    public void sendPluginMessage(UUID uuid, double balance){
+    public void sendPluginMessage(UUID uuid){
         Player p = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
         if (p == null) {
-            cache.put(uuid, balance);
+            cache.add(uuid);
             return;
         }
+
+        double balance = coinManager.getCoinsOfPlayer(uuid);
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("LemonMobCoins");
         out.writeUTF(uuid.toString());
         out.writeDouble(balance);
         p.sendPluginMessage(Bukkit.getPluginManager().getPlugin("LemonMobCoins"), "BungeeCord", out.toByteArray());
+
         logger.info("Sent information of Player " + uuid + ". Balance sent: " + balance);
     }
 
     public void sendPendingPluginMessages() {
-        for (Map.Entry<UUID, Double> entry : cache.entrySet()){
-            sendPluginMessage(entry.getKey(), entry.getValue());
-        }
+        cache.forEach(this::sendPluginMessage);
+    }
+
+    public List<UUID> getCache() {
+        return cache;
     }
 }

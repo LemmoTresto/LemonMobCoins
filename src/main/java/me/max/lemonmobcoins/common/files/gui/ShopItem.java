@@ -32,20 +32,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class GuiMobCoinItem {
+public class ShopItem {
 
-    private String identifier;
-    private int slot;
-    private String material;
-    private int amount;
-    private String displayname;
-    private boolean glowing;
-    private List<String> lore;
-    private boolean permission;
-    private double price;
-    private List<String> commands;
+    private final String identifier;
+    private final int slot;
+    private final String material;
+    private final int amount;
+    private final String displayname;
+    private final boolean glowing;
+    private final List<String> lore;
+    private final boolean permission;
+    private final double price;
+    private final List<String> commands;
 
-    private GuiMobCoinItem(@NotNull String identifier, int slot, @NotNull String material, int amount, @NotNull String displayname, boolean glowing, @NotNull List<String> lore, boolean permission, double price, @NotNull List<String> commands){
+    private ShopItem(@NotNull String identifier, int slot, @NotNull String material, int amount, @NotNull String displayname, boolean glowing, @NotNull List<String> lore, boolean permission, double price, @NotNull List<String> commands){
         this.identifier = identifier;
         this.slot = slot;
         this.material = material;
@@ -115,7 +115,7 @@ public class GuiMobCoinItem {
     }
 
     static class Builder {
-        private String identifier;
+        private final String identifier;
         private int slot;
         private String material;
         private int amount;
@@ -185,8 +185,8 @@ public class GuiMobCoinItem {
         }
 
         @Contract("-> new")
-        GuiMobCoinItem build(){
-            return new GuiMobCoinItem(identifier, slot, material, amount, displayname, glowing, lore, permission, price, commands);
+        ShopItem build(){
+            return new ShopItem(identifier, slot, material, amount, displayname, glowing, lore, permission, price, commands);
         }
     }
 }

@@ -39,10 +39,10 @@ import java.util.stream.Collectors;
 
 public class GuiManager {
 
-    private int rows;
-    private String command;
-    private String title;
-    private List<GuiMobCoinItem> items;
+    private final int rows;
+    private final String command;
+    private final String title;
+    private final List<ShopItem> items;
 
     public GuiManager(ConfigurationNode config, Logger logger){
         config = config.getNode("gui");
@@ -54,7 +54,7 @@ public class GuiManager {
         for (ConfigurationNode key : config.getNode("items").getChildrenList()){
             ConfigurationNode itemNode = config.getNode("items", key.getString());
             try {
-                items.add(new GuiMobCoinItem.Builder(key.getString())
+                items.add(new ShopItem.Builder(key.getString())
                         .setAmount(itemNode.getNode("amount").getInt())
                         .setSlot(itemNode.getNode("slot").getInt())
                         .setMaterial(itemNode.getNode("material").getString())
@@ -79,7 +79,7 @@ public class GuiManager {
     }
 
     @NotNull
-    public List<GuiMobCoinItem> getItems() {
+    public List<ShopItem> getItems() {
         return items;
     }
 
@@ -94,7 +94,7 @@ public class GuiManager {
         return inv;
     }
 
-    public GuiMobCoinItem getGuiMobCoinItemFromItemStack(@NotNull ItemStack item) {
+    public ShopItem getGuiMobCoinItemFromItemStack(@NotNull ItemStack item) {
         return items.stream().filter(guiMobCoinItem -> guiMobCoinItem.toBukkitItemStack().equals(item)).findFirst().orElse(null);
     }
 

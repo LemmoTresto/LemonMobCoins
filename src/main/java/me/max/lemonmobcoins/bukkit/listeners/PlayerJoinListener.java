@@ -32,8 +32,14 @@ import java.util.TimerTask;
 
 public class PlayerJoinListener implements Listener {
 
-    private Timer timer = new Timer();
-    private PluginMessageManager pluginMessageManager;
+    private final Timer timer = new Timer();
+    private final TimerTask timerTask = new TimerTask() {
+        @Override
+        public void run() {
+            pluginMessageManager.sendPendingPluginMessages();
+        }
+    };
+    private final PluginMessageManager pluginMessageManager;
 
     public PlayerJoinListener(PluginMessageManager pluginMessageManager){
         this.pluginMessageManager = pluginMessageManager;
@@ -41,12 +47,7 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event){
-
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                pluginMessageManager.sendPendingPluginMessages();
-            }
-        }, 1500);
+        if (pluginMessageManager.getCache().isEmpty()) return;
+        timer.schedule(timerTask, 1500);
     }
 }

@@ -33,8 +33,8 @@ import java.util.UUID;
 
 public class PluginMessagingListener implements PluginMessageListener {
 
-    private CoinManager coinManager;
-    private Logger logger;
+    private final CoinManager coinManager;
+    private final Logger logger;
 
     public PluginMessagingListener(CoinManager coinManager, Logger logger){
         this.coinManager = coinManager;

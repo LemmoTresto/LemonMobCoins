@@ -22,13 +22,11 @@
 
 package me.max.lemonmobcoins.common.files.messages;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.max.lemonmobcoins.common.data.CoinManager;
+import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public enum Messages {
     RECEIVED_COINS_FROM_KILL(""),
@@ -58,38 +56,30 @@ public enum Messages {
 
     private String message;
 
+    @SuppressWarnings("SameParameterValue")
     Messages(String message){
         this.message = message;
     }
 
-    @NotNull
-    public String getMessage(CoinManager coinManager, OfflinePlayer p, Entity e, double received_coins) {
+    public String getMessage(double balance, @Nullable String playerName, @Nullable String entityName, double amount, @Nullable PAPIHook papiHook) {
         String msg = ChatColor.translateAlternateColorCodes('&', message);
 
-        if (e != null) msg = msg.replaceAll("%entity%", e.getName());
+        if (entityName != null) msg = msg.replaceAll("%entity%", entityName);
 
-        if (received_coins != 0){
-            String coins = String.valueOf(received_coins);
-            if (coins.endsWith(".0")){
-                msg = msg.replaceAll("%amount%", coins.substring(0, coins.length() - 2));
-            } else {
-                msg = msg.replaceAll("%amount", coins);
-            }
-        }
+        msg = msg.replaceAll("%amount%", removeZeroDecimal(String.valueOf(amount)));
 
-        if (p != null){
-            msg = msg.replaceAll("%player%", p.getName());
-            String coins = String.valueOf(coinManager.getCoinsOfPlayer(p.getUniqueId()));
-            if (coins.endsWith(".0")){
-                msg = msg.replaceAll("%balance%", coins.substring(0, coins.length() - 2));
-            } else {
-                msg = msg.replaceAll("%balance%", coins);
-            }
-            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) msg = PlaceholderAPI.setPlaceholders(p, msg);
+        if (playerName != null) msg = msg.replaceAll("%player%", playerName);
 
-        }
+        msg = msg.replaceAll("%balance%", removeZeroDecimal(String.valueOf(balance)));
+
+        if (papiHook != null) msg = papiHook.replacePlaceholders(Bukkit.getOfflinePlayer(playerName), msg);
 
         return msg;
+    }
+
+    private String removeZeroDecimal(String s){
+        if (s.endsWith(".0")) return s.substring(0, s.length() - 2);
+        return s;
     }
 
     public void setMessage(@NotNull String message) {

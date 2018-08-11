@@ -23,8 +23,12 @@
 package me.max.lemonmobcoins.sponge;
 
 import com.google.inject.Inject;
+import me.max.lemonmobcoins.common.LemonMobCoins;
+import me.max.lemonmobcoins.common.data.CoinManager;
+import me.max.lemonmobcoins.common.files.coinmob.CoinMobManager;
 import me.max.lemonmobcoins.common.files.messages.MessageManager;
 import me.max.lemonmobcoins.common.utils.FileUtil;
+import me.max.lemonmobcoins.sponge.listeners.EntityDeathListener;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.config.ConfigDir;
@@ -36,9 +40,12 @@ import org.spongepowered.api.scheduler.Task;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 
 @Plugin(id = "lemonmobcoins", name = "LemonMobCoins", version = "1.5", authors = "LemmoTresto")
-public class LemonMobCoinsSpongePlugin {
+public final class LemonMobCoinsSpongePlugin {
+
+    private LemonMobCoins lemonMobCoins;
 
     @Inject
     private Game game;
@@ -53,7 +60,7 @@ public class LemonMobCoinsSpongePlugin {
     @Listener
     public void onPreInit(GamePreInitializationEvent event){
         try {
-            info("Loading files and config..");
+            info("Loading messages and config..");
             FileUtil.saveResource("generalconfig.yml", configDir.toString(), "config.yml");
             MessageManager.load(configDir.toString(), logger);
             info("Loaded config and files!");
@@ -63,17 +70,22 @@ public class LemonMobCoinsSpongePlugin {
             shutdown();
             return;
         }
+        lemonMobCoins = new LemonMobCoins(getLogger(), configDir.toString());
     }
 
     @Listener
     public void onInit(GameInitializationEvent event){
-
+        registerListeners(new EntityDeathListener(getCoinManager(), getCoinMobManager()));
     }
 
     private void shutdown(){
         game.getEventManager().unregisterPluginListeners(this);
         game.getCommandManager().getOwnedBy(this).forEach(game.getCommandManager()::removeMapping);
         game.getScheduler().getScheduledTasks(this).forEach(Task::cancel);
+    }
+
+    private void registerListeners(Object... listeners){
+        Arrays.stream(listeners).forEach(l -> game.getEventManager().registerListeners(this, l));
     }
 
     private void info(String s){
@@ -86,5 +98,17 @@ public class LemonMobCoinsSpongePlugin {
 
     private void error(String s){
         logger.error(s);
+    }
+
+    private Logger getLogger() {
+        return logger;
+    }
+
+    private CoinManager getCoinManager(){
+        return lemonMobCoins.getCoinManager();
+    }
+
+    private CoinMobManager getCoinMobManager(){
+        return lemonMobCoins.getCoinMobManager();
     }
 }

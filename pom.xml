@@ -60,8 +60,8 @@
                         <configuration>
                             <relocations>
                                 <relocation>
-                                    <pattern>org.spongepowered.configurate-core</pattern>
-                                    <shadedPattern>me.max.lemonmobcoins.dependencies.configurate-core</shadedPattern>
+                                    <pattern>ninja.leaping.configurate</pattern>
+                                    <shadedPattern>me.max.lemonmobcoins.dependencies.configurate</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.slf4j</pattern>

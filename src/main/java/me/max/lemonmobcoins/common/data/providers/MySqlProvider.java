@@ -31,7 +31,7 @@ import java.util.UUID;
 
 public class MySqlProvider implements DataProvider {
 
-    private Connection connection;
+    private final Connection connection;
 
     public MySqlProvider(String hostname, String port, String username, String password, String database) throws SQLException {
         connection = DriverManager.getConnection("jdbc:mysql://" + hostname + ":" + port + "/" + database, username, password);
@@ -60,7 +60,7 @@ public class MySqlProvider implements DataProvider {
         GET_COINS("SELECT * FROM coins;"),
         SET_COIN("INSERT INTO coins(uuid, amount) VALUES(?, ?) ON DUPLICATE KEY UPDATE amount = VALUES(amount);");
 
-        private String query;
+        private final String query;
 
         Queries(String query){
             this.query = query;

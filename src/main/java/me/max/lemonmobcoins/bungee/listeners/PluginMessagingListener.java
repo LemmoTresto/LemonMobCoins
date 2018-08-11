@@ -36,8 +36,8 @@ import java.util.UUID;
 
 public class PluginMessagingListener implements Listener {
 
-    private ProxyServer server;
-    private CoinManager coinManager;
+    private final ProxyServer server;
+    private final CoinManager coinManager;
 
     public PluginMessagingListener(ProxyServer server, CoinManager coinManager){
         this.server = server;

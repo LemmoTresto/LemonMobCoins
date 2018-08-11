@@ -42,7 +42,7 @@ import java.util.UUID;
 public final class LemonMobCoinsBungeePlugin extends Plugin {
 
     private LemonMobCoins lemonMobCoins;
-    private Logger logger = LoggerFactory.getLogger(LemonMobCoins.class);
+    private final Logger logger = LoggerFactory.getLogger(LemonMobCoins.class);
 
     @Override
     public void onLoad(){
