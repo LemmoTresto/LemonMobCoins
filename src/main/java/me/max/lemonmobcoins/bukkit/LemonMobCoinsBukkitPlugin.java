@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.logging.Level;
 
 public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
 
@@ -73,9 +72,9 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
             info("Loading listeners..");
             if (getConfig().getBoolean("bungeecord")) {
                 getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-                getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PluginMessagingListener(getCoinManager(), getLogger()));
-                PlayerJoinListener playerJoinListener = new PlayerJoinListener();
-                pluginMessageManager = new PluginMessageManager(playerJoinListener);
+                getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PluginMessagingListener(getCoinManager(), getSLF4JLogger()));
+                pluginMessageManager = new PluginMessageManager(getSLF4JLogger());
+                PlayerJoinListener playerJoinListener = new PlayerJoinListener(pluginMessageManager);
                 Bukkit.getPluginManager().registerEvents(playerJoinListener, this);
             }
             registerListeners(new EntityDeathListener(getCoinManager(), getCoinMobManager(), getPluginMessageManager()), new InventoryClickListener(getCoinManager(), getGuiManager(), getPluginMessageManager()), new PlayerPreProcessCommandListener(getCoinManager(), getGuiManager()));
@@ -115,20 +114,17 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
     }
 
     private void error(String s){
-        log(Level.SEVERE, s);
+        getSLF4JLogger().error(s);
     }
 
     private void warn(String s){
-        log(Level.WARNING, s);
+        getSLF4JLogger().warn(s);
     }
 
     private void info(String s){
-        log(Level.INFO, s);
+        getSLF4JLogger().info(s);
     }
 
-    private void log(Level level, String s){
-        getLogger().log(level, s);
-    }
 
     @NotNull
     private CoinManager getCoinManager() {
@@ -196,7 +192,7 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
 
             if (args[0].equalsIgnoreCase("shop")){
                 if (sender instanceof Player){
-                    ((Player) sender).openInventory(getGuiManager().getInventory());
+                    ((Player) sender).openInventory(getGuiManager().getBukkitInventory());
                     return true;
                 }
                 sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(getCoinManager(), null, null, 0));
@@ -277,7 +273,7 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
             if (sender instanceof Player){
                 Player p = (Player) sender;
                 if (p.hasPermission("lemonmobcoins.shop")){
-                    p.openInventory(getGuiManager().getInventory());
+                    p.openInventory(getGuiManager().getBukkitInventory());
                     return true;
                 }
                 p.sendMessage(Messages.NO_PERMISSION_TO_EXECUTE.getMessage(getCoinManager(), p, null, 0));

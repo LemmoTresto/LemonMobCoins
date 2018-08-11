@@ -46,7 +46,7 @@ public class PlayerPreProcessCommandListener implements Listener {
             event.setCancelled(true);
             Player p = event.getPlayer();
             if (p.hasPermission("lemonmobcoins.shop")){
-                p.openInventory(guiManager.getInventory());
+                p.openInventory(guiManager.getBukkitInventory());
                 return;
             }
             p.sendMessage(Messages.NO_PERMISSION_TO_EXECUTE.getMessage(coinManager, p, null, 0));

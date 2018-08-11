@@ -88,7 +88,7 @@ public class GuiManager {
         return title;
     }
 
-    public Inventory getInventory(){
+    public Inventory getBukkitInventory(){
         Inventory inv = Bukkit.createInventory(new GuiHolder(), rows * 9, title);
         items.forEach(item -> inv.setItem(item.getSlot(), item.toBukkitItemStack()));
         return inv;
@@ -97,6 +97,8 @@ public class GuiManager {
     public GuiMobCoinItem getGuiMobCoinItemFromItemStack(@NotNull ItemStack item) {
         return items.stream().filter(guiMobCoinItem -> guiMobCoinItem.toBukkitItemStack().equals(item)).findFirst().orElse(null);
     }
+
+    //todo abstract this for sponge too.
 
     @NotNull
     public String getCommand() {
