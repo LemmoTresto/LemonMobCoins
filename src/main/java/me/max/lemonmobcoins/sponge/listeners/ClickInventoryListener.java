@@ -20,61 +20,58 @@
  *
  */
 
-package me.max.lemonmobcoins.bukkit.listeners;
+package me.max.lemonmobcoins.sponge.listeners;
 
 import me.max.lemonmobcoins.bukkit.PluginMessageManager;
 import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
-import me.max.lemonmobcoins.common.abstraction.inventory.BukkitHolder;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.files.gui.GuiManager;
 import me.max.lemonmobcoins.common.files.gui.ShopItem;
 import me.max.lemonmobcoins.common.files.messages.Messages;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
+import org.spongepowered.api.text.Text;
 
-public class InventoryClickListener implements Listener {
+public class ClickInventoryListener {
 
     private final CoinManager coinManager;
     private final GuiManager guiManager;
     private final PluginMessageManager pluginMessageManager;
     private final PAPIHook papiHook;
 
-    public InventoryClickListener(CoinManager coinManager, GuiManager guiManager, PluginMessageManager pluginMessageManager, PAPIHook papiHook){
+    public ClickInventoryListener(CoinManager coinManager, GuiManager guiManager, PluginMessageManager pluginMessageManager, PAPIHook papiHook){
         this.coinManager = coinManager;
         this.guiManager = guiManager;
         this.pluginMessageManager = pluginMessageManager;
         this.papiHook = papiHook;
     }
 
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent event){
-        if (event.getCurrentItem() == null) return;
-        if (!(event.getInventory().getHolder() instanceof BukkitHolder)) return;
+    @Listener
+    public void onInventoryClick(ClickInventoryEvent event){
+        if (!event.getTargetInventory().getPlugin().getId().equals("lemonmobcoins")) return;
         event.setCancelled(true);
 
-        Player p = (Player) event.getWhoClicked();
-        ShopItem item = guiManager.getGuiMobCoinItemFromItemStack(event.getCurrentItem());
+        Player p = (Player) event.getSource();
+        ShopItem item = guiManager.getGuiMobCoinItemFromItemStack(event.getCursorTransaction().getFinal().createStack()); //todo
 
         if (item.isPermission()){
             if (!p.hasPermission("lemonmobcoins.buy." + item.getIdentifier())) {
-                p.sendMessage(Messages.NO_PERMISSION_TO_PURCHASE.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook));
+                p.sendMessage(Text.of(Messages.NO_PERMISSION_TO_PURCHASE.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook)));
                 return;
             }
         }
 
         if (!(coinManager.getCoinsOfPlayer(p.getUniqueId()) >= item.getPrice())){
-            p.sendMessage(Messages.NOT_ENOUGH_MONEY_TO_PURCHASE.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook));
+            p.sendMessage(Text.of(Messages.NOT_ENOUGH_MONEY_TO_PURCHASE.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook)));
             return;
         }
 
         coinManager.deductCoinsFromPlayer(p.getUniqueId(), item.getPrice());
         if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId());
-        p.sendMessage(Messages.PURCHASED_ITEM_FROM_SHOP.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, item.getPrice(), papiHook).replaceAll("%item%", item.getDisplayname()));
-        for (String cmd : item.getCommands()) Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', cmd.replaceAll("%player%", p.getName())));
+        p.sendMessage(Text.of(Messages.PURCHASED_ITEM_FROM_SHOP.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, item.getPrice(), papiHook).replaceAll("%item%", item.getDisplayname())));
+        for (String cmd : item.getCommands()) Sponge.getCommandManager().process(Sponge.getServer().getConsole(), ChatColor.translateAlternateColorCodes('&', cmd.replaceAll("%player%", p.getName())));
     }
-
 }
