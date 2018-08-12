@@ -22,11 +22,6 @@
 
 package me.max.lemonmobcoins.common.files.gui;
 
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,20 +52,6 @@ public class ShopItem {
         this.price = price;
         this.commands = commands;
     }
-
-    @Contract("-> new")
-    ItemStack toBukkitItemStack(){
-        ItemStack itemStack = new ItemStack(Material.matchMaterial(getMaterial()), getAmount());
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(getDisplayname());
-        itemMeta.setLore(getLore());
-        if (isGlowing()) itemMeta.addEnchant(Enchantment.KNOCKBACK, 1, false);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
-    }
-
-    //todo
 
     public int getAmount() {
         return amount;

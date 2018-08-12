@@ -20,16 +20,16 @@
  *
  */
 
-package me.max.lemonmobcoins.bukkit.gui;
+package me.max.lemonmobcoins.common.abstraction.inventory;
 
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.Contract;
+import org.spongepowered.api.item.inventory.Carrier;
+import org.spongepowered.api.item.inventory.type.CarriedInventory;
 
-public class GuiHolder implements InventoryHolder {
+public class SpongeCarrier implements Carrier {
     @Override
     @Contract("-> null")
-    public Inventory getInventory() {
+    public CarriedInventory<? extends Carrier> getInventory() {
         return null;
     }
 }

@@ -23,7 +23,6 @@
 package me.max.lemonmobcoins.common.files.coinmob;
 
 import ninja.leaping.configurate.ConfigurationNode;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +33,7 @@ public class CoinMobManager {
 
     private final List<CoinMob> coinMobList;
 
-    public CoinMobManager(ConfigurationNode config, Logger logger){
+    public CoinMobManager(ConfigurationNode config){
         coinMobList = new ArrayList<>();
 
         for (Map.Entry<Object, ? extends ConfigurationNode> entry : config.getNode("mob-list").getChildrenMap().entrySet()) {

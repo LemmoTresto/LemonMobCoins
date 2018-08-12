@@ -23,6 +23,7 @@
 package me.max.lemonmobcoins.common.files.gui;
 
 import com.google.common.reflect.TypeToken;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -88,12 +89,12 @@ public class GuiManager {
         return title;
     }
 
-    public Object getInventory(){
-        return platform.createInventory();
+    public IWrappedInventory getInventory(){
+        return platform.createInventory(title, rows, items);
     }
 
     public ShopItem getGuiMobCoinItemFromItemStack(@NotNull ItemStack item) {
-        return items.stream().filter(guiMobCoinItem -> guiMobCoinItem.toBukkitItemStack().equals(item)).findFirst().orElse(null);
+        return items.stream().filter(guiMobCoinItem -> guiMobCoinItem.equals(item)).findFirst().orElse(null);
     }
 
     //todo abstract this for sponge too.

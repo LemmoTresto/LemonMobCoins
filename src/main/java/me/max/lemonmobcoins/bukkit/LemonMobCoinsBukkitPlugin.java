@@ -22,26 +22,33 @@
 
 package me.max.lemonmobcoins.bukkit;
 
+import co.aikar.commands.BukkitCommandManager;
 import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
-import me.max.lemonmobcoins.bukkit.listeners.*;
+import me.max.lemonmobcoins.bukkit.listeners.EntityDeathListener;
+import me.max.lemonmobcoins.bukkit.listeners.InventoryClickListener;
+import me.max.lemonmobcoins.bukkit.listeners.PlayerJoinListener;
+import me.max.lemonmobcoins.bukkit.listeners.PluginMessagingListener;
 import me.max.lemonmobcoins.common.LemonMobCoins;
+import me.max.lemonmobcoins.common.abstraction.platform.BukkitWrappedPlatform;
+import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
+import me.max.lemonmobcoins.common.commands.CustomShopCommand;
+import me.max.lemonmobcoins.common.commands.MStoreCommand;
+import me.max.lemonmobcoins.common.commands.MobCoinsCommand;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.files.coinmob.CoinMobManager;
 import me.max.lemonmobcoins.common.files.gui.GuiManager;
 import me.max.lemonmobcoins.common.files.messages.MessageManager;
-import me.max.lemonmobcoins.common.files.messages.Messages;
 import me.max.lemonmobcoins.common.utils.FileUtil;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -53,6 +60,8 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
     private PluginMessageManager pluginMessageManager;
     private PAPIHook papiHook;
     private final Logger logger = LoggerFactory.getLogger(LemonMobCoins.class);
+    private YAMLConfigurationLoader dataLoader;
+    private IWrappedPlatform platform;
 
     @Override
     public void onEnable() {
@@ -60,6 +69,7 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
             info("Loading files and config..");
             FileUtil.saveResource("generalconfig.yml", getDataFolder().toString(), "config.yml");
             MessageManager.load(getDataFolder().toString(), getSLF4JLogger());
+            dataLoader = YAMLConfigurationLoader.builder().setFile(new File(getDataFolder().toString(), "config.yml")).build();
             info("Loaded config and files!");
         } catch (IOException e){
             error("Could not load config and files! Stopping plugin!");
@@ -67,26 +77,35 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+        platform = new BukkitWrappedPlatform(this);
+        lemonMobCoins = new LemonMobCoins(getSLF4JLogger(), getDataFolder().toString(), platform);
 
-        lemonMobCoins = new LemonMobCoins(getSLF4JLogger(), getDataFolder().toString());
-
+        ConfigurationNode node;
         try {
-            info("Loading listeners..");
-            if (getConfig().getBoolean("bungeecord")) {
-                getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-                getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PluginMessagingListener(getCoinManager(), getSLF4JLogger()));
-                pluginMessageManager = new PluginMessageManager(getSLF4JLogger(), getCoinManager());
-                PlayerJoinListener playerJoinListener = new PlayerJoinListener(pluginMessageManager);
-                Bukkit.getPluginManager().registerEvents(playerJoinListener, this);
-            }
-            registerListeners(new EntityDeathListener(getCoinManager(), getCoinMobManager(), getPluginMessageManager(), papiHook), new InventoryClickListener(getCoinManager(), getGuiManager(), getPluginMessageManager(), papiHook), new PlayerPreProcessCommandListener(getCoinManager(), getGuiManager(), papiHook));
-            info("Loaded listeners!");
-        } catch (Exception e){
-            error("Loading Listeners failed! Stopping plugin..");
+            node = dataLoader.load();
+        } catch (IOException e) {
             e.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+
+        info("Loading listeners..");
+        if (node.getNode("bungeecord").getBoolean()) {
+            getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+            getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PluginMessagingListener(getCoinManager(), getSLF4JLogger()));
+            pluginMessageManager = new PluginMessageManager(getSLF4JLogger(), getCoinManager());
+            PlayerJoinListener playerJoinListener = new PlayerJoinListener(pluginMessageManager);
+            Bukkit.getPluginManager().registerEvents(playerJoinListener, this);
+        }
+        registerListeners(new EntityDeathListener(getCoinManager(), getCoinMobManager(), getPluginMessageManager(), papiHook), new InventoryClickListener(getCoinManager(), getGuiManager(), getPluginMessageManager(), papiHook));
+        info("Loaded listeners!");
+
+        info("Loading commands..");
+        BukkitCommandManager manager = new BukkitCommandManager(this);
+        manager.registerCommand(new MobCoinsCommand(getCoinManager(), papiHook, platform, getGuiManager()));
+        manager.registerCommand(new CustomShopCommand(platform, papiHook, getGuiManager()));
+        manager.registerCommand(new MStoreCommand(platform, papiHook, getGuiManager()));
+        manager.getCommandReplacements().addReplacement("shopCmd", getGuiManager().getCommand().substring(1));
+        info("Loaded commands!");
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             papiHook = new PAPIHook();
@@ -97,8 +116,14 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        //todo convert to configurate
-        if (getConfig().getBoolean("bungeecord")) return;
+        ConfigurationNode node = null;
+        try {
+            node = dataLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (node != null && node.getNode("bungeecord").getBoolean()) return;
         try {
             info("Saving data..");
             lemonMobCoins.disable();
@@ -154,143 +179,5 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
 
     private Logger getSLF4JLogger(){
         return logger;
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("mobcoins") || command.getName().equalsIgnoreCase("mc") || command.getName().equalsIgnoreCase("mobc") || command.getName().equalsIgnoreCase("mcoins") || command.getName().equalsIgnoreCase("mcoin") || command.getName().equalsIgnoreCase("mobcoin")){
-            if (args.length == 0) {
-                if (sender instanceof Player) {
-                    Player p = (Player) sender;
-                    sender.sendMessage(Messages.OWN_PLAYER_BALANCE.getMessage(getCoinManager().getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook));
-                    return true;
-                }
-                sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0, papiHook));
-            }
-
-            if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("?")){
-                if (sender.hasPermission("lemonmobcoins.admin")) {
-                    sender.sendMessage(Messages.ADMIN_HELP_MENU.getMessage(0, null, null, 0, papiHook));
-                    return true;
-                }
-                sender.sendMessage(Messages.PLAYER_HELP_MENU.getMessage(0, null, null, 0, papiHook));
-                return true;
-            }
-
-            if (args[0].equalsIgnoreCase("balance") || args[0].equalsIgnoreCase("bal")){
-                if (args.length == 1){
-                    if (sender instanceof Player){
-                        Player p = (Player) sender;
-                        p.sendMessage(Messages.OWN_PLAYER_BALANCE.getMessage(getCoinManager().getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook));
-                        return true;
-                    }
-                    sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0, papiHook));
-                    return true;
-                }
-                if (args.length == 2){
-                    OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
-                    if (player == null) {
-                        sender.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
-                        return true;
-                    }
-                    sender.sendMessage(Messages.OTHER_PLAYER_BALANCE.getMessage(getCoinManager().getCoinsOfPlayer(player.getUniqueId()), player.getName(), null, 0, papiHook));
-                    return true;
-                }
-            }
-
-            if (args[0].equalsIgnoreCase("shop")){
-                if (sender instanceof Player){
-                    ((Player) sender).openInventory(getGuiManager().getBukkitInventory());
-                    return true;
-                }
-                sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0, papiHook));
-                return true;
-            }
-
-            if (sender.hasPermission("mobcoins.admin")){
-                if (args.length != 3) {
-                    if (args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("take")){
-                        sender.sendMessage(Messages.valueOf("INVALID_USAGE_" + args[0].toUpperCase() + "_COMMAND").getMessage(0, null, null, 0, papiHook));
-                        return true;
-                    }
-
-                    if (args.length != 2){
-                        if (args[0].equalsIgnoreCase("reset")) {
-                            sender.sendMessage(Messages.INVALID_USAGE_RESET_COMMAND.getMessage(0, null, null, 0, papiHook));
-                        }
-
-                        if (args[0].equalsIgnoreCase("reload")){
-                            try {
-                                sender.sendMessage(Messages.START_RELOAD.getMessage(0, null, null, 0, papiHook));
-                                onDisable();
-                                onEnable();
-                                sender.sendMessage(Messages.SUCCESSFUL_RELOAD.getMessage(0, null, null, 0, papiHook));
-                                return true;
-                            } catch (Exception e){
-                                sender.sendMessage(Messages.FAILED_RELOAD.getMessage(0, null, null, 0, papiHook));
-                                e.printStackTrace();
-                                return true;
-                            }
-                        }
-
-                        sender.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(0, null, null, 0, papiHook));
-                        return true;
-                    }
-                }
-
-                OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
-
-                if (player == null) {
-                    sender.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
-                    return true;
-                }
-
-                if (args[0].equalsIgnoreCase("reset")){
-                    getCoinManager().setCoinsOfPlayer(player.getUniqueId(), 0);
-                    if (getPluginMessageManager() != null) getPluginMessageManager().sendPluginMessage(player.getUniqueId());
-                    sender.sendMessage(Messages.RESET_PLAYER_BALANCE.getMessage(getCoinManager().getCoinsOfPlayer(player.getUniqueId()), player.getName(), null, 0, papiHook));
-                    return true;
-                }
-
-                if (args[0].equalsIgnoreCase("set")){
-                    getCoinManager().setCoinsOfPlayer(player.getUniqueId(), Double.parseDouble(args[2]));
-                    if (getPluginMessageManager() != null) getPluginMessageManager().sendPluginMessage(player.getUniqueId());
-                    sender.sendMessage(Messages.SET_PLAYER_BALANCE.getMessage(getCoinManager().getCoinsOfPlayer(player.getUniqueId()), player.getName(), null, 0, papiHook));
-                    return true;
-                }
-
-                if (args[0].equalsIgnoreCase("take")){
-                    getCoinManager().deductCoinsFromPlayer(player.getUniqueId(), Double.parseDouble(args[2]));
-                    if (getPluginMessageManager() != null) getPluginMessageManager().sendPluginMessage(player.getUniqueId());
-                    sender.sendMessage(Messages.TAKE_PLAYER_BALANCE.getMessage(getCoinManager().getCoinsOfPlayer(player.getUniqueId()), player.getName(), null, Integer.valueOf(args[2]), papiHook));
-                    return true;
-                }
-
-                if (args[0].equalsIgnoreCase("give")) {
-                    getCoinManager().addCoinsToPlayer(player.getUniqueId(), Double.parseDouble(args[2]));
-                    if (getPluginMessageManager() != null) getPluginMessageManager().sendPluginMessage(player.getUniqueId());
-                    sender.sendMessage(Messages.GIVE_PLAYER_BALANCE.getMessage(getCoinManager().getCoinsOfPlayer(player.getUniqueId()), player.getName(), null, Integer.valueOf(args[2]), papiHook));
-                    return true;
-                }
-            }
-
-            sender.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(0, null, null, 0, papiHook));
-            return true;
-        }
-
-        if (command.getName().equalsIgnoreCase("mshop")){
-            if (sender instanceof Player){
-                Player p = (Player) sender;
-                if (p.hasPermission("lemonmobcoins.shop")){
-                    p.openInventory(getGuiManager().getBukkitInventory());
-                    return true;
-                }
-                p.sendMessage(Messages.NO_PERMISSION_TO_EXECUTE.getMessage(0, p.getName(), null, 0, papiHook));
-                return true;
-            }
-            sender.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0, papiHook));
-            return true;
-        }
-        return false;
     }
 }

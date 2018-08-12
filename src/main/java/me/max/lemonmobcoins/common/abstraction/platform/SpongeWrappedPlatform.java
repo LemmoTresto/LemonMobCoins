@@ -26,16 +26,33 @@ import me.max.lemonmobcoins.common.abstraction.entity.IWrappedOfflinePlayer;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
 import me.max.lemonmobcoins.common.abstraction.entity.SpongeWrappedOfflinePlayer;
 import me.max.lemonmobcoins.common.abstraction.entity.SpongeWrappedPlayer;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
+import me.max.lemonmobcoins.common.abstraction.inventory.SpongeCarrier;
+import me.max.lemonmobcoins.common.abstraction.inventory.SpongeWrappedInventory;
+import me.max.lemonmobcoins.common.files.gui.ShopItem;
 import me.max.lemonmobcoins.sponge.LemonMobCoinsSpongePlugin;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.enchantment.Enchantment;
+import org.spongepowered.api.item.enchantment.EnchantmentTypes;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.property.InventoryDimension;
+import org.spongepowered.api.item.inventory.property.InventoryTitle;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.service.user.UserStorageService;
+import org.spongepowered.api.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class SpongeWrappedPlatform implements IWrappedPlatform {
 
@@ -78,12 +95,41 @@ public class SpongeWrappedPlatform implements IWrappedPlatform {
 
     @Override
     public void enable() {
-        //todo
+        plugin.onPreInit(null);
+        plugin.onInit(null);
     }
 
     @Override
     public void disable() {
-        //todo
+        plugin.onServerStop(null);
+    }
+
+    @Override
+    public IWrappedInventory createInventory(String title, int rows, List<ShopItem> items) {
+        Inventory.Builder invBuilder = Inventory.builder();
+        invBuilder.forCarrier(new SpongeCarrier());
+        invBuilder.property(InventoryTitle.PROPERTY_NAME, InventoryTitle.of(Text.of(title)));
+        invBuilder.property(InventoryDimension.PROPERTY_NAME, InventoryDimension.of(9, rows));
+        Inventory inv = invBuilder.build(plugin);
+
+        for (ShopItem item : items){
+            Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, item.getMaterial());
+            if (!type.isPresent()) continue;
+            ItemStack itemStack = ItemStack.of(type.get(), item.getAmount());
+
+            if (item.isGlowing()){
+                EnchantmentData enchData = itemStack.getOrCreate(EnchantmentData.class).get();
+                enchData.set(enchData.enchantments().add(Enchantment.of(EnchantmentTypes.UNBREAKING, 1)));
+                itemStack.offer(Keys.HIDE_ENCHANTMENTS, true);
+            }
+
+            itemStack.offer(Keys.DISPLAY_NAME, Text.of(item.getDisplayname()));
+            itemStack.offer(Keys.ITEM_LORE, item.getLore().stream().map(Text::of).collect(Collectors.toList()));
+            inv.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(item.getSlot()))).first().set(itemStack);
+        }
+
+        return new SpongeWrappedInventory(inv);
+
     }
 
     private Optional<User> getUser(UUID uuid) {

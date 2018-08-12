@@ -22,6 +22,7 @@
 
 package me.max.lemonmobcoins.common;
 
+import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
 import me.max.lemonmobcoins.common.api.LemonMobCoinsAPI;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.data.DataProvider;
@@ -47,7 +48,7 @@ public class LemonMobCoins {
     private CoinMobManager coinMobManager;
     private final Logger logger;
 
-    public LemonMobCoins(Logger logger, String dataFolder) throws DataLoadException {
+    public LemonMobCoins(Logger logger, String dataFolder, IWrappedPlatform platform) throws DataLoadException {
         this.logger = logger;
 
         try {
@@ -67,8 +68,8 @@ public class LemonMobCoins {
             }
 
             coinManager = new CoinManager(dataProvider);
-            guiManager = new GuiManager(node, getLogger());
-            coinMobManager = new CoinMobManager(node, getLogger());
+            guiManager = new GuiManager(node, getLogger(), platform);
+            coinMobManager = new CoinMobManager(node);
             info("Loaded data!");
         } catch (SQLException e){
             error("Failed loading MySql!");

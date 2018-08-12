@@ -49,6 +49,7 @@ public class MobCoinsCommand extends BaseCommand {
     }
 
     @Subcommand("balance|bal")
+    @CommandPermission("lemonmobcoins.balance")
     public void onBalance(CommandIssuer issuer, @Optional String player){
         if (player == null){
             if (issuer.isPlayer()){
@@ -151,6 +152,7 @@ public class MobCoinsCommand extends BaseCommand {
     }
 
     @Subcommand("help|?|h")
+    @CommandPermission("lemonmobcoins.help")
     public void onHelp(CommandIssuer issuer){
         if (issuer.hasPermission("lemonmobcoins.admin")){
             issuer.sendMessage(Messages.ADMIN_HELP_MENU.getMessage(0, null, null, 0, papiHook));
@@ -159,7 +161,7 @@ public class MobCoinsCommand extends BaseCommand {
         issuer.sendMessage(Messages.PLAYER_HELP_MENU.getMessage(0, null, null, 0, papiHook));
     }
 
-    @Subcommand("shop")
+    @Subcommand("shop|s")
     @CommandPermission("lemonmobcoins.shop")
     public void onShop(CommandIssuer issuer){
         IWrappedPlayer player = platform.getPlayer(issuer.getUniqueId());

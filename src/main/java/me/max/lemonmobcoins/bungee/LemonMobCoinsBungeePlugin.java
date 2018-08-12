@@ -55,7 +55,7 @@ public final class LemonMobCoinsBungeePlugin extends Plugin {
             e.printStackTrace();
         }
 
-        lemonMobCoins = new LemonMobCoins(getSLF4JLogger(), getDataFolder().toString());
+        lemonMobCoins = new LemonMobCoins(getSLF4JLogger(), getDataFolder().toString(), null);
     }
 
     @Override

@@ -48,10 +48,9 @@ public enum Messages {
     START_RELOAD(""),
     SUCCESSFUL_RELOAD(""),
     FAILED_RELOAD(""),
-    // These supress warnings are because we use Messages#valueOf() instead of directly accessing these to reduce code.
-    @SuppressWarnings("unused") INVALID_USAGE_SET_COMMAND(""),
-    @SuppressWarnings("unused") INVALID_USAGE_GIVE_COMMAND(""),
-    @SuppressWarnings("unused") INVALID_USAGE_TAKE_COMMAND(""),
+    INVALID_USAGE_SET_COMMAND(""),
+    INVALID_USAGE_GIVE_COMMAND(""),
+    INVALID_USAGE_TAKE_COMMAND(""),
     INVALID_USAGE_RESET_COMMAND(""),
     PAY_PLAYER(""),
     PAID_BY_PLAYER(""),
