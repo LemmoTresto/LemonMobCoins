@@ -70,6 +70,8 @@ public class ShopItem {
         return itemStack;
     }
 
+    //todo
+
     public int getAmount() {
         return amount;
     }

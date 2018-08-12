@@ -23,3 +23,6 @@ INVALID_USAGE_SET_COMMAND: "&fInvalid usage, usage: &e/mobcoins set [name] [amou
 INVALID_USAGE_GIVE_COMMAND: "&fInvalid usage, usage: &e/mobcoins give [name] [amount]"
 INVALID_USAGE_TAKE_COMMAND: "&fInvalid usage, usage: &e/mobcoins take [name] [amount]"
 INVALID_USAGE_RESET_COMMAND: "&fInvalid usage, usage: &e/mobcoins reset [name]"
+PAY_PLAYER: "&fYou paid &e%player%&f &e%amount%&f MobCoins."
+PAID_BY_PLAYER: "&fYou were paid &e%amount%&f by &e%player%&f!"
+NOT_ENOUGH_MONEY_TO_PAY: "&fYou don't have enough money to pay this player!"

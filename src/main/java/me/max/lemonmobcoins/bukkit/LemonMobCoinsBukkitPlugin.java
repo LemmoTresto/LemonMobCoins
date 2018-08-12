@@ -97,6 +97,7 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        //todo convert to configurate
         if (getConfig().getBoolean("bungeecord")) return;
         try {
             info("Saving data..");

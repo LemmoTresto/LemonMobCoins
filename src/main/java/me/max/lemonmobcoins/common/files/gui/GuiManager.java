@@ -23,12 +23,10 @@
 package me.max.lemonmobcoins.common.files.gui;
 
 import com.google.common.reflect.TypeToken;
-import me.max.lemonmobcoins.bukkit.gui.GuiHolder;
+import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -43,13 +41,15 @@ public class GuiManager {
     private final String command;
     private final String title;
     private final List<ShopItem> items;
+    private final IWrappedPlatform platform;
 
-    public GuiManager(ConfigurationNode config, Logger logger){
+    public GuiManager(ConfigurationNode config, Logger logger, IWrappedPlatform platform){
         config = config.getNode("gui");
         rows = config.getNode("rows").getInt();
         command = config.getNode("command").getString();
         title = ChatColor.translateAlternateColorCodes('&', config.getNode("name").getString());
         items = new ArrayList<>();
+        this.platform = platform;
 
         for (ConfigurationNode key : config.getNode("items").getChildrenList()){
             ConfigurationNode itemNode = config.getNode("items", key.getString());
@@ -88,10 +88,8 @@ public class GuiManager {
         return title;
     }
 
-    public Inventory getBukkitInventory(){
-        Inventory inv = Bukkit.createInventory(new GuiHolder(), rows * 9, title);
-        items.forEach(item -> inv.setItem(item.getSlot(), item.toBukkitItemStack()));
-        return inv;
+    public Object getInventory(){
+        return platform.createInventory();
     }
 
     public ShopItem getGuiMobCoinItemFromItemStack(@NotNull ItemStack item) {

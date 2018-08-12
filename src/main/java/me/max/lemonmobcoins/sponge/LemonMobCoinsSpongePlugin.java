@@ -40,6 +40,7 @@ import org.spongepowered.api.scheduler.Task;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 @Plugin(id = "lemonmobcoins", name = "LemonMobCoins", version = "1.5", authors = "LemmoTresto")
@@ -78,10 +79,26 @@ public final class LemonMobCoinsSpongePlugin {
         registerListeners(new EntityDeathListener(getCoinManager(), getCoinMobManager()));
     }
 
-    private void shutdown(){
+    public void shutdown(){
         game.getEventManager().unregisterPluginListeners(this);
         game.getCommandManager().getOwnedBy(this).forEach(game.getCommandManager()::removeMapping);
         game.getScheduler().getScheduledTasks(this).forEach(Task::cancel);
+        if (.getBoolean("bungeecord")) return;
+        try {
+            info("Saving data..");
+            lemonMobCoins.disable();
+            info("Saved data!");
+        } catch (IOException | SQLException e) {
+            error("Failed saving data! Retrying..");
+            try {
+                lemonMobCoins.disable();
+                info("Saved data!");
+            } catch (IOException | SQLException e1){
+                error("Failed saving data again! Data will be lost ;(");
+                e.printStackTrace();
+            }
+        }
+        info("Disabled successfully!");
     }
 
     private void registerListeners(Object... listeners){

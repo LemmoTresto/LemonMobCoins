@@ -52,7 +52,10 @@ public enum Messages {
     @SuppressWarnings("unused") INVALID_USAGE_SET_COMMAND(""),
     @SuppressWarnings("unused") INVALID_USAGE_GIVE_COMMAND(""),
     @SuppressWarnings("unused") INVALID_USAGE_TAKE_COMMAND(""),
-    INVALID_USAGE_RESET_COMMAND("");
+    INVALID_USAGE_RESET_COMMAND(""),
+    PAY_PLAYER(""),
+    PAID_BY_PLAYER(""),
+    NOT_ENOUGH_MONEY_TO_PAY("");
 
     private String message;
 
