@@ -26,10 +26,8 @@ import me.max.lemonmobcoins.common.abstraction.entity.IWrappedOfflinePlayer;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
 import me.max.lemonmobcoins.common.abstraction.entity.SpongeWrappedOfflinePlayer;
 import me.max.lemonmobcoins.common.abstraction.entity.SpongeWrappedPlayer;
-import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
-import me.max.lemonmobcoins.common.abstraction.inventory.SpongeCarrier;
-import me.max.lemonmobcoins.common.abstraction.inventory.SpongeWrappedInventory;
-import me.max.lemonmobcoins.common.files.gui.ShopItem;
+import me.max.lemonmobcoins.common.abstraction.inventory.*;
+import me.max.lemonmobcoins.common.gui.ShopItem;
 import me.max.lemonmobcoins.sponge.LemonMobCoinsSpongePlugin;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -130,6 +128,23 @@ public class SpongeWrappedPlatform implements IWrappedPlatform {
 
         return new SpongeWrappedInventory(inv);
 
+    }
+
+    @Override
+    public IWrappedItemStack toItemStack(ShopItem item) {
+        Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, item.getMaterial());
+        if (! type.isPresent()) return null;
+        ItemStack itemStack = ItemStack.of(type.get(), item.getAmount());
+
+        if (item.isGlowing()) {
+            EnchantmentData enchData = itemStack.getOrCreate(EnchantmentData.class).get();
+            enchData.set(enchData.enchantments().add(Enchantment.of(EnchantmentTypes.UNBREAKING, 1)));
+            itemStack.offer(Keys.HIDE_ENCHANTMENTS, true);
+        }
+
+        itemStack.offer(Keys.DISPLAY_NAME, Text.of(item.getDisplayname()));
+        itemStack.offer(Keys.ITEM_LORE, item.getLore().stream().map(Text::of).collect(Collectors.toList()));
+        return new SpongeWrappedItemStack(itemStack);
     }
 
     private Optional<User> getUser(UUID uuid) {

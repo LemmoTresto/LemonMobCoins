@@ -20,7 +20,7 @@
  *
  */
 
-package me.max.lemonmobcoins.common.files.messages;
+package me.max.lemonmobcoins.common.messages;
 
 import me.max.lemonmobcoins.common.utils.FileUtil;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;

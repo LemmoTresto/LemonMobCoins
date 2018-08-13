@@ -24,13 +24,14 @@ package me.max.lemonmobcoins.common;
 
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
 import me.max.lemonmobcoins.common.api.LemonMobCoinsAPI;
+import me.max.lemonmobcoins.common.coinmob.CoinMobManager;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.data.DataProvider;
 import me.max.lemonmobcoins.common.data.providers.MySqlProvider;
 import me.max.lemonmobcoins.common.data.providers.YamlProvider;
 import me.max.lemonmobcoins.common.exceptions.DataLoadException;
-import me.max.lemonmobcoins.common.files.coinmob.CoinMobManager;
-import me.max.lemonmobcoins.common.files.gui.GuiManager;
+import me.max.lemonmobcoins.common.gui.GuiManager;
+import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
@@ -46,6 +47,7 @@ public class LemonMobCoins {
     private CoinManager coinManager;
     private GuiManager guiManager;
     private CoinMobManager coinMobManager;
+    private AbstractPluginMessageManager pluginMessageManager;
     private final Logger logger;
 
     public LemonMobCoins(Logger logger, String dataFolder, IWrappedPlatform platform) throws DataLoadException {

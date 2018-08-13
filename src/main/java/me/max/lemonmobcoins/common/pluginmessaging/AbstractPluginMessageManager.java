@@ -20,22 +20,44 @@
  *
  */
 
-package me.max.lemonmobcoins.bukkit.listeners;
+package me.max.lemonmobcoins.common.pluginmessaging;
 
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPlayerJoinListener;
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import me.max.lemonmobcoins.common.data.CoinManager;
+import org.slf4j.Logger;
 
-public class PlayerJoinListener extends AbstractPlayerJoinListener implements Listener {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
-    public PlayerJoinListener(AbstractPluginMessageManager pluginMessageManager) {
-        super(pluginMessageManager);
+public abstract class AbstractPluginMessageManager {
+
+    private List<UUID> cache = new ArrayList<>();
+    private CoinManager coinManager;
+    private Logger logger;
+
+    AbstractPluginMessageManager(CoinManager coinManager, Logger logger) {
+        this.coinManager = coinManager;
+        this.logger = logger;
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event){
-        launchTimer();
+    public void sendPluginMessage(UUID uuid) {
+
     }
+
+    public void sendPendingPluginMessages() {
+        cache.forEach(this::sendPluginMessage);
+    }
+
+    public List<UUID> getCache() {
+        return cache;
+    }
+
+    public CoinManager getCoinManager() {
+        return coinManager;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
 }

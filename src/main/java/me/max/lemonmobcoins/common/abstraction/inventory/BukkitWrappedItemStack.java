@@ -20,22 +20,26 @@
  *
  */
 
-package me.max.lemonmobcoins.bukkit.listeners;
+package me.max.lemonmobcoins.common.abstraction.inventory;
 
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPlayerJoinListener;
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 
-public class PlayerJoinListener extends AbstractPlayerJoinListener implements Listener {
+public class BukkitWrappedItemStack implements IWrappedItemStack {
 
-    public PlayerJoinListener(AbstractPluginMessageManager pluginMessageManager) {
-        super(pluginMessageManager);
+    private ItemStack itemStack;
+
+    public BukkitWrappedItemStack(ItemStack itemStack) {
+        this.itemStack = itemStack;
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event){
-        launchTimer();
+    @Override
+    public ItemStack getStack() {
+        return itemStack;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return itemStack.equals(obj);
+    }
+
 }

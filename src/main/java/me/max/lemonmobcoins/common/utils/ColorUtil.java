@@ -20,22 +20,19 @@
  *
  */
 
-package me.max.lemonmobcoins.bukkit.listeners;
+package me.max.lemonmobcoins.common.utils;
 
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPlayerJoinListener;
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+public class ColorUtil {
 
-public class PlayerJoinListener extends AbstractPlayerJoinListener implements Listener {
-
-    public PlayerJoinListener(AbstractPluginMessageManager pluginMessageManager) {
-        super(pluginMessageManager);
+    public static String colorize(String s) {
+        char[] b = s.toCharArray();
+        for (int i = 0; i < b.length - 1; i++) {
+            if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > - 1) {
+                b[i] = '\u00A7';
+                b[i + 1] = Character.toLowerCase(b[i + 1]);
+            }
+        }
+        return new String(b);
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event){
-        launchTimer();
-    }
 }

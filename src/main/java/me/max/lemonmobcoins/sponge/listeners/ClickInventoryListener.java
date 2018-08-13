@@ -22,13 +22,13 @@
 
 package me.max.lemonmobcoins.sponge.listeners;
 
-import me.max.lemonmobcoins.bukkit.PluginMessageManager;
-import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
+import me.max.lemonmobcoins.common.abstraction.inventory.SpongeWrappedItemStack;
 import me.max.lemonmobcoins.common.data.CoinManager;
-import me.max.lemonmobcoins.common.files.gui.GuiManager;
-import me.max.lemonmobcoins.common.files.gui.ShopItem;
-import me.max.lemonmobcoins.common.files.messages.Messages;
-import org.bukkit.ChatColor;
+import me.max.lemonmobcoins.common.gui.GuiManager;
+import me.max.lemonmobcoins.common.gui.ShopItem;
+import me.max.lemonmobcoins.common.messages.Messages;
+import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
+import me.max.lemonmobcoins.common.utils.ColorUtil;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -39,14 +39,12 @@ public class ClickInventoryListener {
 
     private final CoinManager coinManager;
     private final GuiManager guiManager;
-    private final PluginMessageManager pluginMessageManager;
-    private final PAPIHook papiHook;
+    private final AbstractPluginMessageManager pluginMessageManager;
 
-    public ClickInventoryListener(CoinManager coinManager, GuiManager guiManager, PluginMessageManager pluginMessageManager, PAPIHook papiHook){
+    public ClickInventoryListener(CoinManager coinManager, GuiManager guiManager, AbstractPluginMessageManager pluginMessageManager) {
         this.coinManager = coinManager;
         this.guiManager = guiManager;
         this.pluginMessageManager = pluginMessageManager;
-        this.papiHook = papiHook;
     }
 
     @Listener
@@ -55,23 +53,30 @@ public class ClickInventoryListener {
         event.setCancelled(true);
 
         Player p = (Player) event.getSource();
-        ShopItem item = guiManager.getGuiMobCoinItemFromItemStack(event.getCursorTransaction().getFinal().createStack()); //todo
+        ShopItem item = guiManager
+                .getShopItem(new SpongeWrappedItemStack(event.getCursorTransaction().getFinal().createStack()));
 
         if (item.isPermission()){
             if (!p.hasPermission("lemonmobcoins.buy." + item.getIdentifier())) {
-                p.sendMessage(Text.of(Messages.NO_PERMISSION_TO_PURCHASE.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook)));
+                p.sendMessage(Text.of(Messages.NO_PERMISSION_TO_PURCHASE
+                        .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, null)));
                 return;
             }
         }
 
         if (!(coinManager.getCoinsOfPlayer(p.getUniqueId()) >= item.getPrice())){
-            p.sendMessage(Text.of(Messages.NOT_ENOUGH_MONEY_TO_PURCHASE.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook)));
+            p.sendMessage(Text.of(Messages.NOT_ENOUGH_MONEY_TO_PURCHASE
+                    .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, null)));
             return;
         }
 
         coinManager.deductCoinsFromPlayer(p.getUniqueId(), item.getPrice());
         if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId());
-        p.sendMessage(Text.of(Messages.PURCHASED_ITEM_FROM_SHOP.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, item.getPrice(), papiHook).replaceAll("%item%", item.getDisplayname())));
-        for (String cmd : item.getCommands()) Sponge.getCommandManager().process(Sponge.getServer().getConsole(), ChatColor.translateAlternateColorCodes('&', cmd.replaceAll("%player%", p.getName())));
+        p.sendMessage(Text.of(Messages.PURCHASED_ITEM_FROM_SHOP
+                .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, item.getPrice(), null)
+                .replaceAll("%item%", item.getDisplayname())));
+        for (String cmd : item.getCommands())
+            Sponge.getCommandManager().process(Sponge.getServer().getConsole(), ColorUtil
+                    .colorize(cmd.replaceAll("%player%", p.getName())));
     }
 }

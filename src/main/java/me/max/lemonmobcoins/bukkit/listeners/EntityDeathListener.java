@@ -22,12 +22,12 @@
 
 package me.max.lemonmobcoins.bukkit.listeners;
 
-import me.max.lemonmobcoins.bukkit.PluginMessageManager;
 import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
+import me.max.lemonmobcoins.common.coinmob.CoinMob;
+import me.max.lemonmobcoins.common.coinmob.CoinMobManager;
 import me.max.lemonmobcoins.common.data.CoinManager;
-import me.max.lemonmobcoins.common.files.coinmob.CoinMob;
-import me.max.lemonmobcoins.common.files.coinmob.CoinMobManager;
-import me.max.lemonmobcoins.common.files.messages.Messages;
+import me.max.lemonmobcoins.common.messages.Messages;
+import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,11 +37,11 @@ import org.bukkit.event.entity.EntityDeathEvent;
 public class EntityDeathListener implements Listener {
 
     private final CoinManager coinManager;
-    private final PluginMessageManager pluginMessageManager;
+    private final AbstractPluginMessageManager pluginMessageManager;
     private final CoinMobManager coinMobManager;
     private final PAPIHook papiHook;
 
-    public EntityDeathListener(CoinManager coinManager, CoinMobManager coinMobManager, PluginMessageManager pluginMessageManager, PAPIHook papiHook){
+    public EntityDeathListener(CoinManager coinManager, CoinMobManager coinMobManager, AbstractPluginMessageManager pluginMessageManager, PAPIHook papiHook) {
         this.coinManager = coinManager;
         this.pluginMessageManager = pluginMessageManager;
         this.coinMobManager = coinMobManager;

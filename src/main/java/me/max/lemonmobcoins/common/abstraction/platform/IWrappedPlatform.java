@@ -25,7 +25,8 @@ package me.max.lemonmobcoins.common.abstraction.platform;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedOfflinePlayer;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
 import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
-import me.max.lemonmobcoins.common.files.gui.ShopItem;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedItemStack;
+import me.max.lemonmobcoins.common.gui.ShopItem;
 
 import java.util.List;
 import java.util.UUID;
@@ -47,4 +48,6 @@ public interface IWrappedPlatform {
     void disable();
 
     IWrappedInventory createInventory(String title, int rows, List<ShopItem> items);
+
+    IWrappedItemStack toItemStack(ShopItem item);
 }

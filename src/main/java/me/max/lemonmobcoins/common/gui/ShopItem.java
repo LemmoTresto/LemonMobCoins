@@ -20,7 +20,7 @@
  *
  */
 
-package me.max.lemonmobcoins.common.files.gui;
+package me.max.lemonmobcoins.common.gui;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

@@ -20,22 +20,18 @@
  *
  */
 
-package me.max.lemonmobcoins.bukkit.listeners;
+package me.max.lemonmobcoins.sponge.listeners;
 
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPlayerJoinListener;
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.spongepowered.api.Platform;
+import org.spongepowered.api.network.ChannelBuf;
+import org.spongepowered.api.network.RawDataListener;
+import org.spongepowered.api.network.RemoteConnection;
 
-public class PlayerJoinListener extends AbstractPlayerJoinListener implements Listener {
+public class PluginMessagingListener implements RawDataListener {
 
-    public PlayerJoinListener(AbstractPluginMessageManager pluginMessageManager) {
-        super(pluginMessageManager);
+    @Override
+    public void handlePayload(ChannelBuf data, RemoteConnection connection, Platform.Type side) {
+
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event){
-        launchTimer();
-    }
 }

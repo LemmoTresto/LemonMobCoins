@@ -22,10 +22,11 @@
 
 package me.max.lemonmobcoins.sponge.listeners;
 
+import me.max.lemonmobcoins.common.coinmob.CoinMob;
+import me.max.lemonmobcoins.common.coinmob.CoinMobManager;
 import me.max.lemonmobcoins.common.data.CoinManager;
-import me.max.lemonmobcoins.common.files.coinmob.CoinMob;
-import me.max.lemonmobcoins.common.files.coinmob.CoinMobManager;
-import me.max.lemonmobcoins.common.files.messages.Messages;
+import me.max.lemonmobcoins.common.messages.Messages;
+import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
@@ -35,10 +36,12 @@ public class EntityDeathListener {
 
     private final CoinManager coinManager;
     private final CoinMobManager coinMobManager;
+    private final AbstractPluginMessageManager pluginMessageManager;
 
-    public EntityDeathListener(CoinManager coinManager, CoinMobManager coinMobManager){
+    public EntityDeathListener(CoinManager coinManager, CoinMobManager coinMobManager, AbstractPluginMessageManager pluginMessageManager) {
         this.coinManager = coinManager;
         this.coinMobManager = coinMobManager;
+        this.pluginMessageManager = pluginMessageManager;
     }
 
     @Listener
@@ -53,7 +56,7 @@ public class EntityDeathListener {
         if (amountToDrop == 0) return;
         coinManager.addCoinsToPlayer(p.getUniqueId(), amountToDrop);
 
-        //todo if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId(), coinManager.getCoinsOfPlayer(p.g));
+        if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId());
 
         p.sendMessage(Text.of(Messages.RECEIVED_COINS_FROM_KILL.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), event.getTargetEntity().getType().getName(), amountToDrop, null)));
 

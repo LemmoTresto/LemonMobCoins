@@ -20,15 +20,15 @@
  *
  */
 
-package me.max.lemonmobcoins.common.files.gui;
+package me.max.lemonmobcoins.common.gui;
 
 import com.google.common.reflect.TypeToken;
 import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedItemStack;
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
+import me.max.lemonmobcoins.common.utils.ColorUtil;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import org.bukkit.ChatColor;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -48,7 +48,7 @@ public class GuiManager {
         config = config.getNode("gui");
         rows = config.getNode("rows").getInt();
         command = config.getNode("command").getString();
-        title = ChatColor.translateAlternateColorCodes('&', config.getNode("name").getString());
+        title = ColorUtil.colorize(config.getNode("name").getString());
         items = new ArrayList<>();
         this.platform = platform;
 
@@ -59,12 +59,12 @@ public class GuiManager {
                         .setAmount(itemNode.getNode("amount").getInt())
                         .setSlot(itemNode.getNode("slot").getInt())
                         .setMaterial(itemNode.getNode("material").getString())
-                        .setDisplayname(ChatColor.translateAlternateColorCodes('&', itemNode.getNode("displayname").getString()))
+                        .setDisplayname(ColorUtil.colorize(itemNode.getNode("displayname").getString()))
                         .setGlowing(itemNode.getNode("glowing").getBoolean())
                         .setLore(itemNode.getNode("lore").getList(TypeToken.of(String.class))
-                                .stream()
-                                .map(s -> ChatColor.translateAlternateColorCodes('&', s))
-                                .collect(Collectors.toList()))
+                                         .stream()
+                                         .map(ColorUtil::colorize)
+                                         .collect(Collectors.toList()))
                         .setPermission(itemNode.getNode("permission").getBoolean())
                         .setPrice(itemNode.getNode("price").getDouble())
                         .setCommands(itemNode.getNode("commands").getList(TypeToken.of(String.class))).build());
@@ -93,14 +93,12 @@ public class GuiManager {
         return platform.createInventory(title, rows, items);
     }
 
-    public ShopItem getGuiMobCoinItemFromItemStack(@NotNull ItemStack item) {
-        return items.stream().filter(guiMobCoinItem -> guiMobCoinItem.equals(item)).findFirst().orElse(null);
-    }
-
-    //todo abstract this for sponge too.
-
     @NotNull
     public String getCommand() {
         return command;
+    }
+
+    public ShopItem getShopItem(IWrappedItemStack itemStack) {
+        return items.stream().filter(item -> platform.toItemStack(item).equals(itemStack)).findFirst().orElse(null);
     }
 }

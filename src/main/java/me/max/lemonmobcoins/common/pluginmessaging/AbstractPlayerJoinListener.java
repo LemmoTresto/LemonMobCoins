@@ -20,22 +20,33 @@
  *
  */
 
-package me.max.lemonmobcoins.bukkit.listeners;
+package me.max.lemonmobcoins.common.pluginmessaging;
 
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPlayerJoinListener;
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class PlayerJoinListener extends AbstractPlayerJoinListener implements Listener {
+public class AbstractPlayerJoinListener {
 
-    public PlayerJoinListener(AbstractPluginMessageManager pluginMessageManager) {
-        super(pluginMessageManager);
+    private final Timer timer = new Timer();
+    private final AbstractPluginMessageManager pluginMessageManager;
+    private final TimerTask timerTask = new TimerTask() {
+        @Override
+        public void run() {
+            pluginMessageManager.sendPendingPluginMessages();
+        }
+    };
+
+    public AbstractPlayerJoinListener(AbstractPluginMessageManager pluginMessageManager) {
+        this.pluginMessageManager = pluginMessageManager;
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event){
-        launchTimer();
+    public AbstractPluginMessageManager getPluginMessageManager() {
+        return pluginMessageManager;
     }
+
+    public void launchTimer() {
+        if (getPluginMessageManager().getCache().isEmpty()) return;
+        timer.schedule(timerTask, 1500L);
+    }
+
 }

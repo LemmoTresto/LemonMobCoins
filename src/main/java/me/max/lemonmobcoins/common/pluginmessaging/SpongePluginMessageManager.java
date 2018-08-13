@@ -20,55 +20,42 @@
  *
  */
 
-package me.max.lemonmobcoins.bukkit;
+package me.max.lemonmobcoins.common.pluginmessaging;
 
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.max.lemonmobcoins.common.data.CoinManager;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-public class PluginMessageManager {
+public class SpongePluginMessageManager extends AbstractPluginMessageManager {
 
-    //This should not be reloaded when doing /mc reload which is why we instantiate it statically.
-    private final List<UUID> cache = new ArrayList<>();
-    private final Logger logger;
-    private final CoinManager coinManager;
-
-    public PluginMessageManager(Logger logger, CoinManager coinManager){
-        this.logger = logger;
-        this.coinManager = coinManager;
+    public SpongePluginMessageManager(CoinManager coinManager, Logger logger) {
+        super(coinManager, logger);
     }
 
-    public void sendPluginMessage(UUID uuid){
-        Player p = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
+    public void sendPluginMessage(UUID uuid) {
+        Player p = Iterables.getFirst(Sponge.getGame().getServer().getOnlinePlayers(), null);
         if (p == null) {
-            cache.add(uuid);
+            if (getCache().contains(uuid)) return;
+            getCache().add(uuid);
             return;
         }
 
-        double balance = coinManager.getCoinsOfPlayer(uuid);
+        double balance = getCoinManager().getCoinsOfPlayer(uuid);
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("LemonMobCoins");
         out.writeUTF(uuid.toString());
         out.writeDouble(balance);
-        p.sendPluginMessage(Bukkit.getPluginManager().getPlugin("LemonMobCoins"), "BungeeCord", out.toByteArray());
 
-        logger.info("Sent information of Player " + uuid + ". Balance sent: " + balance);
+        //todo send plugin msg
+
+        getLogger().info("Sent information of Player " + uuid + ". Balance sent: " + balance);
     }
 
-    public void sendPendingPluginMessages() {
-        cache.forEach(this::sendPluginMessage);
-    }
-
-    public List<UUID> getCache() {
-        return cache;
-    }
 }

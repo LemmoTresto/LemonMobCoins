@@ -27,19 +27,25 @@ import com.google.inject.Inject;
 import me.max.lemonmobcoins.common.LemonMobCoins;
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
 import me.max.lemonmobcoins.common.abstraction.platform.SpongeWrappedPlatform;
+import me.max.lemonmobcoins.common.coinmob.CoinMobManager;
 import me.max.lemonmobcoins.common.commands.CustomShopCommand;
 import me.max.lemonmobcoins.common.commands.MStoreCommand;
 import me.max.lemonmobcoins.common.commands.MobCoinsCommand;
 import me.max.lemonmobcoins.common.data.CoinManager;
-import me.max.lemonmobcoins.common.files.coinmob.CoinMobManager;
-import me.max.lemonmobcoins.common.files.gui.GuiManager;
-import me.max.lemonmobcoins.common.files.messages.MessageManager;
+import me.max.lemonmobcoins.common.gui.GuiManager;
+import me.max.lemonmobcoins.common.messages.MessageManager;
+import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
+import me.max.lemonmobcoins.common.pluginmessaging.SpongePluginMessageManager;
 import me.max.lemonmobcoins.common.utils.FileUtil;
+import me.max.lemonmobcoins.sponge.listeners.ClickInventoryListener;
 import me.max.lemonmobcoins.sponge.listeners.EntityDeathListener;
+import me.max.lemonmobcoins.sponge.listeners.PlayerJoinListener;
+import me.max.lemonmobcoins.sponge.listeners.PluginMessagingListener;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
@@ -71,6 +77,7 @@ public final class LemonMobCoinsSpongePlugin {
 
     private YAMLConfigurationLoader dataLoader;
     private IWrappedPlatform platform;
+    private AbstractPluginMessageManager pluginMessageManager;
 
     @Listener
     public void onPreInit(GamePreInitializationEvent event){
@@ -92,8 +99,24 @@ public final class LemonMobCoinsSpongePlugin {
 
     @Listener
     public void onInit(GameInitializationEvent event){
+        ConfigurationNode node;
+        try {
+            node = dataLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
         info("Loading listeners..");
-        registerListeners(new EntityDeathListener(getCoinManager(), getCoinMobManager()));
+        if (node.getNode("bungeecord").getBoolean()) {
+            if (! Sponge.getChannelRegistrar().getChannel("BungeeCord").isPresent()) {
+                Sponge.getChannelRegistrar().createRawChannel(this, "BungeeCord")
+                      .addListener(new PluginMessagingListener());
+            }
+            pluginMessageManager = new SpongePluginMessageManager(getCoinManager(), getLogger());
+            registerListeners(new PlayerJoinListener(pluginMessageManager));
+        }
+        registerListeners(new EntityDeathListener(getCoinManager(), getCoinMobManager(), getPluginMessageManager()), new ClickInventoryListener(getCoinManager(), getGuiManager(), getPluginMessageManager()));
         info("Loaded listeners!");
 
         info("Loading commands..");
@@ -169,5 +192,9 @@ public final class LemonMobCoinsSpongePlugin {
 
     private GuiManager getGuiManager(){
         return lemonMobCoins.getGuiManager();
+    }
+
+    public AbstractPluginMessageManager getPluginMessageManager() {
+        return pluginMessageManager;
     }
 }

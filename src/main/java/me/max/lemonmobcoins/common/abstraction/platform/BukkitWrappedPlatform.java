@@ -27,10 +27,8 @@ import me.max.lemonmobcoins.common.abstraction.entity.BukkitWrappedOfflinePlayer
 import me.max.lemonmobcoins.common.abstraction.entity.BukkitWrappedPlayer;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedOfflinePlayer;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
-import me.max.lemonmobcoins.common.abstraction.inventory.BukkitHolder;
-import me.max.lemonmobcoins.common.abstraction.inventory.BukkitWrappedInventory;
-import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
-import me.max.lemonmobcoins.common.files.gui.ShopItem;
+import me.max.lemonmobcoins.common.abstraction.inventory.*;
+import me.max.lemonmobcoins.common.gui.ShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -104,5 +102,19 @@ public class BukkitWrappedPlatform implements IWrappedPlatform {
             inv.setItem(item.getSlot(), itemStack);
         }
         return new BukkitWrappedInventory(inv);
+    }
+
+    @Override
+    public IWrappedItemStack toItemStack(ShopItem item) {
+        ItemStack itemStack = new ItemStack(Material.matchMaterial(item.getMaterial()), item.getAmount());
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName(item.getDisplayname());
+        meta.setLore(item.getLore());
+        if (item.isGlowing()) {
+            meta.addEnchant(Enchantment.KNOCKBACK, 1, false);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+        itemStack.setItemMeta(meta);
+        return new BukkitWrappedItemStack(itemStack);
     }
 }

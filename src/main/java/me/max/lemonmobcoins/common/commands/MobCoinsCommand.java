@@ -30,8 +30,8 @@ import me.max.lemonmobcoins.common.abstraction.entity.IWrappedOfflinePlayer;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
 import me.max.lemonmobcoins.common.data.CoinManager;
-import me.max.lemonmobcoins.common.files.gui.GuiManager;
-import me.max.lemonmobcoins.common.files.messages.Messages;
+import me.max.lemonmobcoins.common.gui.GuiManager;
+import me.max.lemonmobcoins.common.messages.Messages;
 
 @CommandAlias("mobcoins|mobcoin|mc|mcoin|mcoins|mobc")
 public class MobCoinsCommand extends BaseCommand {

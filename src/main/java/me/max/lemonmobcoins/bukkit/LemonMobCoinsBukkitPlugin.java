@@ -31,13 +31,15 @@ import me.max.lemonmobcoins.bukkit.listeners.PluginMessagingListener;
 import me.max.lemonmobcoins.common.LemonMobCoins;
 import me.max.lemonmobcoins.common.abstraction.platform.BukkitWrappedPlatform;
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
+import me.max.lemonmobcoins.common.coinmob.CoinMobManager;
 import me.max.lemonmobcoins.common.commands.CustomShopCommand;
 import me.max.lemonmobcoins.common.commands.MStoreCommand;
 import me.max.lemonmobcoins.common.commands.MobCoinsCommand;
 import me.max.lemonmobcoins.common.data.CoinManager;
-import me.max.lemonmobcoins.common.files.coinmob.CoinMobManager;
-import me.max.lemonmobcoins.common.files.gui.GuiManager;
-import me.max.lemonmobcoins.common.files.messages.MessageManager;
+import me.max.lemonmobcoins.common.gui.GuiManager;
+import me.max.lemonmobcoins.common.messages.MessageManager;
+import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
+import me.max.lemonmobcoins.common.pluginmessaging.BukkitPluginMessageManager;
 import me.max.lemonmobcoins.common.utils.FileUtil;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
@@ -56,8 +58,7 @@ import java.util.Arrays;
 public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
 
     private LemonMobCoins lemonMobCoins;
-    private GuiManager guiManager;
-    private PluginMessageManager pluginMessageManager;
+    private AbstractPluginMessageManager pluginMessageManager;
     private PAPIHook papiHook;
     private final Logger logger = LoggerFactory.getLogger(LemonMobCoins.class);
     private YAMLConfigurationLoader dataLoader;
@@ -77,6 +78,7 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+
         platform = new BukkitWrappedPlatform(this);
         lemonMobCoins = new LemonMobCoins(getSLF4JLogger(), getDataFolder().toString(), platform);
 
@@ -92,9 +94,8 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
         if (node.getNode("bungeecord").getBoolean()) {
             getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
             getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PluginMessagingListener(getCoinManager(), getSLF4JLogger()));
-            pluginMessageManager = new PluginMessageManager(getSLF4JLogger(), getCoinManager());
-            PlayerJoinListener playerJoinListener = new PlayerJoinListener(pluginMessageManager);
-            Bukkit.getPluginManager().registerEvents(playerJoinListener, this);
+            pluginMessageManager = new BukkitPluginMessageManager(getCoinManager(), getSLF4JLogger());
+            registerListeners(new PlayerJoinListener(pluginMessageManager));
         }
         registerListeners(new EntityDeathListener(getCoinManager(), getCoinMobManager(), getPluginMessageManager(), papiHook), new InventoryClickListener(getCoinManager(), getGuiManager(), getPluginMessageManager(), papiHook));
         info("Loaded listeners!");
@@ -165,7 +166,7 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
 
     @NotNull
     private GuiManager getGuiManager() {
-        return guiManager;
+        return lemonMobCoins.getGuiManager();
     }
 
     @NotNull
@@ -173,7 +174,7 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
         return lemonMobCoins.getCoinMobManager();
     }
 
-    private PluginMessageManager getPluginMessageManager() {
+    private AbstractPluginMessageManager getPluginMessageManager() {
         return pluginMessageManager;
     }
 

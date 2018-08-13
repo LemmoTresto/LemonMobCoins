@@ -20,15 +20,15 @@
  *
  */
 
-package me.max.lemonmobcoins.common.files.messages;
+package me.max.lemonmobcoins.common.messages;
 
 import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
+import me.max.lemonmobcoins.common.utils.ColorUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public enum Messages {
+public enum Messages { //todo look at the commands with which messages. Some are internally (maybe change this or remove it)
     RECEIVED_COINS_FROM_KILL(""),
     PURCHASED_ITEM_FROM_SHOP(""),
     NOT_ENOUGH_MONEY_TO_PURCHASE(""),
@@ -64,7 +64,7 @@ public enum Messages {
     }
 
     public String getMessage(double balance, @Nullable String playerName, @Nullable String entityName, double amount, @Nullable PAPIHook papiHook) {
-        String msg = ChatColor.translateAlternateColorCodes('&', message);
+        String msg = ColorUtil.colorize(message);
 
         if (entityName != null) msg = msg.replaceAll("%entity%", entityName);
 

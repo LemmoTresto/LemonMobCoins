@@ -31,8 +31,8 @@ import co.aikar.commands.annotation.Default;
 import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
-import me.max.lemonmobcoins.common.files.gui.GuiManager;
-import me.max.lemonmobcoins.common.files.messages.Messages;
+import me.max.lemonmobcoins.common.gui.GuiManager;
+import me.max.lemonmobcoins.common.messages.Messages;
 
 @CommandAlias("mstore|mshop")
 @CommandPermission("lemonmobcoins.shop")
