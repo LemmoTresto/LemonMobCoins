@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Contract;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 
+@SuppressWarnings("NullableProblems")
 public class SpongeCarrier implements Carrier {
 
     @Override

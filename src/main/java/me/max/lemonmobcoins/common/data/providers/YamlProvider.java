@@ -36,6 +36,7 @@ public class YamlProvider implements DataProvider {
 
     private YAMLConfigurationLoader dataLoader;
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public YamlProvider(String dataFolder) throws IOException {
         File dataFile = new File(dataFolder + File.separator + "data" + File.separator, "coins.yml");
         dataFile.mkdir();

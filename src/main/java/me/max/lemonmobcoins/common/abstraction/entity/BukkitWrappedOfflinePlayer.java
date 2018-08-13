@@ -28,7 +28,7 @@ import java.util.UUID;
 
 public class BukkitWrappedOfflinePlayer implements IWrappedOfflinePlayer {
 
-    private OfflinePlayer offlinePlayer;
+    private final OfflinePlayer offlinePlayer;
 
     public BukkitWrappedOfflinePlayer(OfflinePlayer offlinePlayer) {
         this.offlinePlayer = offlinePlayer;

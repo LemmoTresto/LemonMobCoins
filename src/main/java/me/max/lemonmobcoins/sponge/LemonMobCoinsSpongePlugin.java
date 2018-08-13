@@ -83,7 +83,7 @@ public final class LemonMobCoinsSpongePlugin {
     public void onPreInit(GamePreInitializationEvent event) {
         try {
             info("Loading messages and config..");
-            FileUtil.saveResource("generalconfig.yml", configDir.toString(), "config.yml");
+            FileUtil.saveResource("generalConfig.yml", configDir.toString(), "config.yml");
             MessageManager.load(configDir.toString(), logger);
             dataLoader = YAMLConfigurationLoader.builder().setFile(new File(configDir.toString(), "config.yml"))
                                                 .build();
@@ -110,17 +110,18 @@ public final class LemonMobCoinsSpongePlugin {
 
         info("Loading listeners..");
         if (node.getNode("bungeecord").getBoolean()) {
-            if (! Sponge.getChannelRegistrar().getChannel("BungeeCord").isPresent()) {
-                Sponge.getChannelRegistrar().createRawChannel(this, "BungeeCord")
-                      .addListener(new PluginMessagingListener());
-            }
             pluginMessageManager = new SpongePluginMessageManager(getCoinManager(), getLogger());
+            if (!Sponge.getChannelRegistrar().getChannel("BungeeCord").isPresent()) {
+                Sponge.getChannelRegistrar().createRawChannel(this, "BungeeCord")
+                      .addListener(new PluginMessagingListener(getCoinManager(), getLogger()));
+            }
             registerListeners(new PlayerJoinListener(pluginMessageManager));
         }
         registerListeners(new EntityDeathListener(getCoinManager(), getCoinMobManager(), getPluginMessageManager()), new ClickInventoryListener(getCoinManager(), getGuiManager(), getPluginMessageManager()));
         info("Loaded listeners!");
 
         info("Loading commands..");
+        @SuppressWarnings("OptionalGetWithoutIsPresent")
         SpongeCommandManager manager = new SpongeCommandManager(game.getPluginManager().getPlugin("lemonmobcoins")
                                                                     .get());
         manager.registerCommand(new MobCoinsCommand(getCoinManager(), null, platform, getGuiManager()));
@@ -158,7 +159,7 @@ public final class LemonMobCoinsSpongePlugin {
         info("Disabled successfully!");
     }
 
-    public void shutdown() {
+    private void shutdown() {
         game.getEventManager().unregisterPluginListeners(this);
         game.getCommandManager().getOwnedBy(this).forEach(game.getCommandManager()::removeMapping);
         game.getScheduler().getScheduledTasks(this).forEach(Task::cancel);
@@ -196,7 +197,7 @@ public final class LemonMobCoinsSpongePlugin {
         return lemonMobCoins.getGuiManager();
     }
 
-    public AbstractPluginMessageManager getPluginMessageManager() {
+    private AbstractPluginMessageManager getPluginMessageManager() {
         return pluginMessageManager;
     }
 

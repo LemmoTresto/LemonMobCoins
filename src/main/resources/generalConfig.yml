@@ -22,7 +22,7 @@ storage:
 #
 # Chance: the chance for the amount to be dropped. Make this 100 if you want it to always drop the amount.
 # Amount: the amount to be dropped. This can be randomized by doing:
-# amount: "minimumvalue-maximumvalue"
+# amount: "minimumValue-maximumValue"
 # For example I want to drop a random amount ranging from 2 to 8 coins
 # Then I would do:
 # amount: "2-8"

@@ -30,7 +30,7 @@ import java.util.UUID;
 
 public class BukkitWrappedPlayer implements IWrappedPlayer {
 
-    private Player player;
+    private final Player player;
 
     public BukkitWrappedPlayer(Player player) {
         this.player = player;

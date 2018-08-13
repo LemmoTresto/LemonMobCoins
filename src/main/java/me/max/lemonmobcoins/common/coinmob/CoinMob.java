@@ -68,7 +68,7 @@ public class CoinMob {
     }
 
     public int getAmountToDrop() {
-        if (! willDropCoins()) return 0;
+        if (!willDropCoins()) return 0;
 
         //Not using random amount
         if (getAmount2() == 0) return getAmount();

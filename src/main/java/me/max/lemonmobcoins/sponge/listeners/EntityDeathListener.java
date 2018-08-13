@@ -46,7 +46,7 @@ public class EntityDeathListener {
 
     @Listener
     public void onEntityDeath(DestructEntityEvent.Death event) {
-        if (! (event.getSource() instanceof Player)) return;
+        if (!(event.getSource() instanceof Player)) return;
         Player p = (Player) event.getSource();
 
         CoinMob coinMob = coinMobManager.getCoinMob(event.getTargetEntity().getType().toString());

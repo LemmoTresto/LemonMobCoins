@@ -26,7 +26,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 
 public class SpongeWrappedItemStack implements IWrappedItemStack {
 
-    private ItemStack itemStack;
+    private final ItemStack itemStack;
 
     public SpongeWrappedItemStack(ItemStack itemStack) {
         this.itemStack = itemStack;
@@ -39,7 +39,7 @@ public class SpongeWrappedItemStack implements IWrappedItemStack {
 
     @Override
     public boolean equals(Object obj) {
-        if (! (obj instanceof ItemStack)) return false;
+        if (!(obj instanceof ItemStack)) return false;
         return itemStack.equalTo((ItemStack) obj);
     }
 

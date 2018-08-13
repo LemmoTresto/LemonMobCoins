@@ -36,15 +36,15 @@ public class AbstractPlayerJoinListener {
         }
     };
 
-    public AbstractPlayerJoinListener(AbstractPluginMessageManager pluginMessageManager) {
+    protected AbstractPlayerJoinListener(AbstractPluginMessageManager pluginMessageManager) {
         this.pluginMessageManager = pluginMessageManager;
     }
 
-    public AbstractPluginMessageManager getPluginMessageManager() {
+    private AbstractPluginMessageManager getPluginMessageManager() {
         return pluginMessageManager;
     }
 
-    public void launchTimer() {
+    protected void launchTimer() {
         if (getPluginMessageManager().getCache().isEmpty()) return;
         timer.schedule(timerTask, 1500L);
     }

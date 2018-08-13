@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
 
 public class SpongeWrappedPlatform implements IWrappedPlatform {
 
-    private LemonMobCoinsSpongePlugin plugin;
+    private final LemonMobCoinsSpongePlugin plugin;
 
     public SpongeWrappedPlatform(LemonMobCoinsSpongePlugin plugin) {
         this.plugin = plugin;
@@ -112,10 +112,11 @@ public class SpongeWrappedPlatform implements IWrappedPlatform {
 
         for (ShopItem item : items) {
             Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, item.getMaterial());
-            if (! type.isPresent()) continue;
+            if (!type.isPresent()) continue;
             ItemStack itemStack = ItemStack.of(type.get(), item.getAmount());
 
             if (item.isGlowing()) {
+                @SuppressWarnings("OptionalGetWithoutIsPresent")
                 EnchantmentData enchData = itemStack.getOrCreate(EnchantmentData.class).get();
                 enchData.set(enchData.enchantments().add(Enchantment.of(EnchantmentTypes.UNBREAKING, 1)));
                 itemStack.offer(Keys.HIDE_ENCHANTMENTS, true);
@@ -133,10 +134,11 @@ public class SpongeWrappedPlatform implements IWrappedPlatform {
     @Override
     public IWrappedItemStack toItemStack(ShopItem item) {
         Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, item.getMaterial());
-        if (! type.isPresent()) return null;
+        if (!type.isPresent()) return null;
         ItemStack itemStack = ItemStack.of(type.get(), item.getAmount());
 
         if (item.isGlowing()) {
+            @SuppressWarnings("OptionalGetWithoutIsPresent")
             EnchantmentData enchData = itemStack.getOrCreate(EnchantmentData.class).get();
             enchData.set(enchData.enchantments().add(Enchantment.of(EnchantmentTypes.UNBREAKING, 1)));
             itemStack.offer(Keys.HIDE_ENCHANTMENTS, true);

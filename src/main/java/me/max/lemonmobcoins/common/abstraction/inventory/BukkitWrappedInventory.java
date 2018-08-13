@@ -26,7 +26,7 @@ import org.bukkit.inventory.Inventory;
 
 public class BukkitWrappedInventory implements IWrappedInventory {
 
-    private Inventory inventory;
+    private final Inventory inventory;
 
     public BukkitWrappedInventory(Inventory inventory) {
         this.inventory = inventory;

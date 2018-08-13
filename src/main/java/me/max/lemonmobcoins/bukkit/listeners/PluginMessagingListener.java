@@ -43,17 +43,16 @@ public class PluginMessagingListener implements PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
-        if (! channel.equals("BungeeCord")) return;
+        if (!channel.equals("BungeeCord")) return;
 
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
-        String subchannel = in.readUTF();
-        if (! subchannel.equals("LemonMobCoins")) return;
+        String subChannel = in.readUTF();
+        if (!subChannel.equals("LemonMobCoins")) return;
 
-        //yes we know about the argument player but we want to be able to receive data from offlineplayers too so this could be a random player!
-        String playeruuid = in.readUTF();
+        String playerUuid = in.readUTF();
         double balance = in.readDouble();
-        coinManager.setCoinsOfPlayer(UUID.fromString(playeruuid), balance);
-        logger.info("Received information of Player " + playeruuid + ". Balance received: " + balance);
+        coinManager.setCoinsOfPlayer(UUID.fromString(playerUuid), balance);
+        logger.info("Received information of Player " + playerUuid + ". Balance received: " + balance);
     }
 
 }

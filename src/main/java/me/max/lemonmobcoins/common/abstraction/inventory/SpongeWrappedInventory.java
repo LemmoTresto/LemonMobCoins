@@ -26,7 +26,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 
 public class SpongeWrappedInventory implements IWrappedInventory {
 
-    private Inventory inventory;
+    private final Inventory inventory;
 
     public SpongeWrappedInventory(Inventory inventory) {
         this.inventory = inventory;

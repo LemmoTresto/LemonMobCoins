@@ -38,9 +38,9 @@ import me.max.lemonmobcoins.common.messages.Messages;
 @CommandPermission("lemonmobcoins.shop")
 public class MStoreCommand extends BaseCommand {
 
-    private IWrappedPlatform platform;
-    private PAPIHook papiHook;
-    private GuiManager guiManager;
+    private final IWrappedPlatform platform;
+    private final PAPIHook papiHook;
+    private final GuiManager guiManager;
 
     public MStoreCommand(IWrappedPlatform platform, PAPIHook papiHook, GuiManager guiManager) {
         this.platform = platform;
@@ -51,7 +51,7 @@ public class MStoreCommand extends BaseCommand {
     @Default
     @CatchUnknown
     public void onShop(CommandIssuer issuer) {
-        if (! issuer.isPlayer()) {
+        if (!issuer.isPlayer()) {
             issuer.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0, papiHook));
             return;
         }

@@ -36,10 +36,10 @@ import me.max.lemonmobcoins.common.messages.Messages;
 @CommandAlias("mobcoins|mobcoin|mc|mcoin|mcoins|mobc")
 public class MobCoinsCommand extends BaseCommand {
 
-    private CoinManager coinManager;
-    private PAPIHook papiHook;
-    private IWrappedPlatform platform;
-    private GuiManager guiManager;
+    private final CoinManager coinManager;
+    private final PAPIHook papiHook;
+    private final IWrappedPlatform platform;
+    private final GuiManager guiManager;
 
     public MobCoinsCommand(CoinManager coinManager, PAPIHook papiHook, IWrappedPlatform platform, GuiManager guiManager) {
         this.coinManager = coinManager;
@@ -125,7 +125,7 @@ public class MobCoinsCommand extends BaseCommand {
     @Subcommand("pay")
     @CommandPermission("lemonmobcoins.pay")
     public void onPay(CommandIssuer issuer, String player, double amount) {
-        if (! issuer.isPlayer()) {
+        if (!issuer.isPlayer()) {
             issuer.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0, papiHook));
             return;
         }
@@ -134,7 +134,7 @@ public class MobCoinsCommand extends BaseCommand {
             issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
             return;
         }
-        if (! (coinManager.getCoinsOfPlayer(issuer.getUniqueId()) >= amount)) {
+        if (!(coinManager.getCoinsOfPlayer(issuer.getUniqueId()) >= amount)) {
             issuer.sendMessage(Messages.NOT_ENOUGH_MONEY_TO_PAY
                     .getMessage(coinManager.getCoinsOfPlayer(issuer.getUniqueId()), null, null, 0, papiHook));
             return;

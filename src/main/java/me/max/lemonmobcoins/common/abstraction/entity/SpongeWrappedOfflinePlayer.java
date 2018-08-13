@@ -28,7 +28,7 @@ import java.util.UUID;
 
 public class SpongeWrappedOfflinePlayer implements IWrappedOfflinePlayer {
 
-    private User user;
+    private final User user;
 
     public SpongeWrappedOfflinePlayer(User user) {
         this.user = user;

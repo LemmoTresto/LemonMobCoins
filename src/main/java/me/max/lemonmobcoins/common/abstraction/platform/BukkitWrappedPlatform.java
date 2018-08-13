@@ -43,7 +43,7 @@ import java.util.UUID;
 
 public class BukkitWrappedPlatform implements IWrappedPlatform {
 
-    private LemonMobCoinsBukkitPlugin plugin;
+    private final LemonMobCoinsBukkitPlugin plugin;
 
     public BukkitWrappedPlatform(LemonMobCoinsBukkitPlugin plugin) {
         this.plugin = plugin;

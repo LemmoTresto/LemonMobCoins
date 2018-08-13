@@ -38,7 +38,7 @@ public class MessageManager {
 
     public static void load(String dataFolder, Logger logger) {
         File file = new File(dataFolder, "messages.yml");
-        if (! file.exists()) {
+        if (!file.exists()) {
             try {
                 logger.info("No files file found, creating one now..");
                 FileUtil.saveResource("messages.yml", dataFolder, "messages.yml");

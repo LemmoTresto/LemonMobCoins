@@ -31,9 +31,9 @@ import java.util.UUID;
 
 public abstract class AbstractPluginMessageManager {
 
-    private List<UUID> cache = new ArrayList<>();
-    private CoinManager coinManager;
-    private Logger logger;
+    private final List<UUID> cache = new ArrayList<>();
+    private final CoinManager coinManager;
+    private final Logger logger;
 
     AbstractPluginMessageManager(CoinManager coinManager, Logger logger) {
         this.coinManager = coinManager;
@@ -52,11 +52,11 @@ public abstract class AbstractPluginMessageManager {
         return cache;
     }
 
-    public CoinManager getCoinManager() {
+    CoinManager getCoinManager() {
         return coinManager;
     }
 
-    public Logger getLogger() {
+    Logger getLogger() {
         return logger;
     }
 

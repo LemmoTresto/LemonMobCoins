@@ -31,7 +31,7 @@ import java.util.UUID;
 
 public class SpongeWrappedPlayer implements IWrappedPlayer {
 
-    private Player player;
+    private final Player player;
 
     public SpongeWrappedPlayer(Player player) {
         this.player = player;

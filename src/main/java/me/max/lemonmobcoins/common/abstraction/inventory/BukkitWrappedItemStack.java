@@ -26,7 +26,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class BukkitWrappedItemStack implements IWrappedItemStack {
 
-    private ItemStack itemStack;
+    private final ItemStack itemStack;
 
     public BukkitWrappedItemStack(ItemStack itemStack) {
         this.itemStack = itemStack;
@@ -37,6 +37,7 @@ public class BukkitWrappedItemStack implements IWrappedItemStack {
         return itemStack;
     }
 
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
     public boolean equals(Object obj) {
         return itemStack.equals(obj);

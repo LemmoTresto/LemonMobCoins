@@ -92,7 +92,7 @@ public class MySqlProvider implements DataProvider {
             this.query = query;
         }
 
-        public String getQuery() {
+        String getQuery() {
             return query;
         }
     }
