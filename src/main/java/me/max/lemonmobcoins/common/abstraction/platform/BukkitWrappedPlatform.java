@@ -45,7 +45,7 @@ public class BukkitWrappedPlatform implements IWrappedPlatform {
 
     private LemonMobCoinsBukkitPlugin plugin;
 
-    public BukkitWrappedPlatform(LemonMobCoinsBukkitPlugin plugin){
+    public BukkitWrappedPlatform(LemonMobCoinsBukkitPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -89,12 +89,12 @@ public class BukkitWrappedPlatform implements IWrappedPlatform {
     @Override
     public IWrappedInventory createInventory(String title, int rows, List<ShopItem> items) {
         Inventory inv = Bukkit.createInventory(new BukkitHolder(), rows, title);
-        for (ShopItem item : items){
+        for (ShopItem item : items) {
             ItemStack itemStack = new ItemStack(Material.matchMaterial(item.getMaterial()), item.getAmount());
             ItemMeta meta = itemStack.getItemMeta();
             meta.setDisplayName(item.getDisplayname());
             meta.setLore(item.getLore());
-            if (item.isGlowing()){
+            if (item.isGlowing()) {
                 meta.addEnchant(Enchantment.KNOCKBACK, 1, false);
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
@@ -117,4 +117,5 @@ public class BukkitWrappedPlatform implements IWrappedPlatform {
         itemStack.setItemMeta(meta);
         return new BukkitWrappedItemStack(itemStack);
     }
+
 }

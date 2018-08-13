@@ -48,23 +48,23 @@ public class ClickInventoryListener {
     }
 
     @Listener
-    public void onInventoryClick(ClickInventoryEvent event){
-        if (!event.getTargetInventory().getPlugin().getId().equals("lemonmobcoins")) return;
+    public void onInventoryClick(ClickInventoryEvent event) {
+        if (! event.getTargetInventory().getPlugin().getId().equals("lemonmobcoins")) return;
         event.setCancelled(true);
 
         Player p = (Player) event.getSource();
         ShopItem item = guiManager
                 .getShopItem(new SpongeWrappedItemStack(event.getCursorTransaction().getFinal().createStack()));
 
-        if (item.isPermission()){
-            if (!p.hasPermission("lemonmobcoins.buy." + item.getIdentifier())) {
+        if (item.isPermission()) {
+            if (! p.hasPermission("lemonmobcoins.buy." + item.getIdentifier())) {
                 p.sendMessage(Text.of(Messages.NO_PERMISSION_TO_PURCHASE
                         .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, null)));
                 return;
             }
         }
 
-        if (!(coinManager.getCoinsOfPlayer(p.getUniqueId()) >= item.getPrice())){
+        if (! (coinManager.getCoinsOfPlayer(p.getUniqueId()) >= item.getPrice())) {
             p.sendMessage(Text.of(Messages.NOT_ENOUGH_MONEY_TO_PURCHASE
                     .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, null)));
             return;
@@ -79,4 +79,5 @@ public class ClickInventoryListener {
             Sponge.getCommandManager().process(Sponge.getServer().getConsole(), ColorUtil
                     .colorize(cmd.replaceAll("%player%", p.getName())));
     }
+
 }

@@ -35,4 +35,5 @@ public interface IWrappedPlayer {
     void sendMessage(String message);
 
     void openInventory(IWrappedInventory inventory);
+
 }

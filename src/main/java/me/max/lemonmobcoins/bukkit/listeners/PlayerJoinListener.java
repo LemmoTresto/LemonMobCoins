@@ -35,7 +35,8 @@ public class PlayerJoinListener extends AbstractPlayerJoinListener implements Li
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event){
+    public void onPlayerJoin(PlayerJoinEvent event) {
         launchTimer();
     }
+
 }

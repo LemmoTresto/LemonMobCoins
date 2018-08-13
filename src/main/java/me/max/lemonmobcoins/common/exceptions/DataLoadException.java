@@ -26,7 +26,7 @@ public class DataLoadException extends RuntimeException {
 
     private final Throwable t;
 
-    public DataLoadException(Throwable t){
+    public DataLoadException(Throwable t) {
         this.t = t;
     }
 
@@ -34,4 +34,5 @@ public class DataLoadException extends RuntimeException {
     public void printStackTrace() {
         t.printStackTrace();
     }
+
 }

@@ -33,7 +33,7 @@ public class SpongeWrappedPlayer implements IWrappedPlayer {
 
     private Player player;
 
-    public SpongeWrappedPlayer(Player player){
+    public SpongeWrappedPlayer(Player player) {
         this.player = player;
     }
 
@@ -56,4 +56,5 @@ public class SpongeWrappedPlayer implements IWrappedPlayer {
     public void openInventory(IWrappedInventory inventory) {
         player.openInventory((Inventory) inventory.getInventory());
     }
+
 }

@@ -27,9 +27,11 @@ import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.Contract;
 
 public class BukkitHolder implements InventoryHolder {
+
     @Override
     @Contract("-> null")
     public Inventory getInventory() {
         return null;
     }
+
 }

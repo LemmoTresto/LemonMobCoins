@@ -49,7 +49,7 @@ public class EntityDeathListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onEntityDeath(EntityDeathEvent event){
+    public void onEntityDeath(EntityDeathEvent event) {
         Player p = event.getEntity().getKiller();
         if (p == null) return;
 
@@ -61,7 +61,9 @@ public class EntityDeathListener implements Listener {
         coinManager.addCoinsToPlayer(p.getUniqueId(), amountToDrop);
         if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId());
 
-        event.getEntity().getKiller().sendMessage(Messages.RECEIVED_COINS_FROM_KILL.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), event.getEntity().getName(), amountToDrop, papiHook));
+        event.getEntity().getKiller().sendMessage(Messages.RECEIVED_COINS_FROM_KILL
+                .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), event.getEntity()
+                                                                                             .getName(), amountToDrop, papiHook));
 
     }
 

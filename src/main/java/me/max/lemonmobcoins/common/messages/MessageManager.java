@@ -31,14 +31,14 @@ import java.io.IOException;
 
 public class MessageManager {
 
-    public MessageManager(){
+    public MessageManager() {
         throw new UnsupportedOperationException("Instantiation of this class is not allowed.");
 
     }
 
-    public static void load(String dataFolder, Logger logger){
+    public static void load(String dataFolder, Logger logger) {
         File file = new File(dataFolder, "messages.yml");
-        if (!file.exists()) {
+        if (! file.exists()) {
             try {
                 logger.info("No files file found, creating one now..");
                 FileUtil.saveResource("messages.yml", dataFolder, "messages.yml");
@@ -50,7 +50,9 @@ public class MessageManager {
         }
 
         try {
-            YAMLConfigurationLoader.builder().setFile(file).build().load().getChildrenMap().forEach((key, value) -> Messages.valueOf(String.valueOf(key)).setMessage(value.getString()));
+            YAMLConfigurationLoader.builder().setFile(file).build().load().getChildrenMap()
+                                   .forEach((key, value) -> Messages.valueOf(String.valueOf(key))
+                                                                    .setMessage(value.getString()));
         } catch (IOException e) {
             logger.error("Could not load files file!");
             e.printStackTrace();

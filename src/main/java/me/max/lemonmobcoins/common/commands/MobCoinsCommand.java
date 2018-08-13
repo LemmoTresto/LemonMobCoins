@@ -41,7 +41,7 @@ public class MobCoinsCommand extends BaseCommand {
     private IWrappedPlatform platform;
     private GuiManager guiManager;
 
-    public MobCoinsCommand(CoinManager coinManager, PAPIHook papiHook, IWrappedPlatform platform, GuiManager guiManager){
+    public MobCoinsCommand(CoinManager coinManager, PAPIHook papiHook, IWrappedPlatform platform, GuiManager guiManager) {
         this.coinManager = coinManager;
         this.papiHook = papiHook;
         this.platform = platform;
@@ -50,64 +50,71 @@ public class MobCoinsCommand extends BaseCommand {
 
     @Subcommand("balance|bal")
     @CommandPermission("lemonmobcoins.balance")
-    public void onBalance(CommandIssuer issuer, @Optional String player){
-        if (player == null){
-            if (issuer.isPlayer()){
-                issuer.sendMessage(Messages.OWN_PLAYER_BALANCE.getMessage(coinManager.getCoinsOfPlayer(issuer.getUniqueId()), platform.getPlayer(issuer.getUniqueId()).getName(), null, 0, papiHook));
+    public void onBalance(CommandIssuer issuer, @Optional String player) {
+        if (player == null) {
+            if (issuer.isPlayer()) {
+                issuer.sendMessage(Messages.OWN_PLAYER_BALANCE
+                        .getMessage(coinManager.getCoinsOfPlayer(issuer.getUniqueId()), platform
+                                .getPlayer(issuer.getUniqueId()).getName(), null, 0, papiHook));
                 return;
             }
             issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
             return;
         }
         IWrappedOfflinePlayer offlinePlayer = platform.getOfflinePlayer(player);
-        if (offlinePlayer == null){
+        if (offlinePlayer == null) {
             issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
             return;
         }
-        issuer.sendMessage(Messages.OTHER_PLAYER_BALANCE.getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), offlinePlayer.getName(), null, 0, papiHook));
+        issuer.sendMessage(Messages.OTHER_PLAYER_BALANCE
+                .getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), offlinePlayer
+                        .getName(), null, 0, papiHook));
     }
 
     @Subcommand("set")
     @CommandPermission("lemonmobcoins.admin")
-    public void onSet(CommandIssuer issuer, String player, double amount){
+    public void onSet(CommandIssuer issuer, String player, double amount) {
         IWrappedOfflinePlayer offlinePlayer = platform.getOfflinePlayer(player);
-        if (offlinePlayer == null){
+        if (offlinePlayer == null) {
             issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
             return;
         }
         coinManager.setCoinsOfPlayer(offlinePlayer.getUniqueId(), amount);
-        issuer.sendMessage(Messages.SET_PLAYER_BALANCE.getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), player, null, 0, papiHook));
+        issuer.sendMessage(Messages.SET_PLAYER_BALANCE
+                .getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), player, null, 0, papiHook));
     }
 
     @Subcommand("give")
     @CommandPermission("lemonmobcoins.admin")
-    public void onGive(CommandIssuer issuer, String player, double amount){
+    public void onGive(CommandIssuer issuer, String player, double amount) {
         IWrappedOfflinePlayer offlinePlayer = platform.getOfflinePlayer(player);
-        if (offlinePlayer == null){
+        if (offlinePlayer == null) {
             issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
             return;
         }
         coinManager.addCoinsToPlayer(offlinePlayer.getUniqueId(), amount);
-        issuer.sendMessage(Messages.GIVE_PLAYER_BALANCE.getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), player, null, amount, papiHook));
+        issuer.sendMessage(Messages.GIVE_PLAYER_BALANCE
+                .getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), player, null, amount, papiHook));
     }
 
     @Subcommand("take")
     @CommandPermission("lemonmobcoins.admin")
-    public void onTake(CommandIssuer issuer, String player, double amount){
+    public void onTake(CommandIssuer issuer, String player, double amount) {
         IWrappedOfflinePlayer offlinePlayer = platform.getOfflinePlayer(player);
-        if (offlinePlayer == null){
+        if (offlinePlayer == null) {
             issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
             return;
         }
         coinManager.deductCoinsFromPlayer(offlinePlayer.getUniqueId(), amount);
-        issuer.sendMessage(Messages.TAKE_PLAYER_BALANCE.getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), player, null, amount, papiHook));
+        issuer.sendMessage(Messages.TAKE_PLAYER_BALANCE
+                .getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), player, null, amount, papiHook));
     }
 
     @Subcommand("reset")
     @CommandPermission("lemonmobcoins.admin")
-    public void onReset(CommandIssuer issuer, String player){
+    public void onReset(CommandIssuer issuer, String player) {
         IWrappedOfflinePlayer offlinePlayer = platform.getOfflinePlayer(player);
-        if (offlinePlayer == null){
+        if (offlinePlayer == null) {
             issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
             return;
         }
@@ -117,35 +124,39 @@ public class MobCoinsCommand extends BaseCommand {
 
     @Subcommand("pay")
     @CommandPermission("lemonmobcoins.pay")
-    public void onPay(CommandIssuer issuer, String player, double amount){
-        if (!issuer.isPlayer()){
+    public void onPay(CommandIssuer issuer, String player, double amount) {
+        if (! issuer.isPlayer()) {
             issuer.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0, papiHook));
             return;
         }
         IWrappedOfflinePlayer offlinePlayer = platform.getOfflinePlayer(player);
-        if (offlinePlayer == null){
+        if (offlinePlayer == null) {
             issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
             return;
         }
-        if (!(coinManager.getCoinsOfPlayer(issuer.getUniqueId()) >= amount)){
-            issuer.sendMessage(Messages.NOT_ENOUGH_MONEY_TO_PAY.getMessage(coinManager.getCoinsOfPlayer(issuer.getUniqueId()), null, null, 0, papiHook));
+        if (! (coinManager.getCoinsOfPlayer(issuer.getUniqueId()) >= amount)) {
+            issuer.sendMessage(Messages.NOT_ENOUGH_MONEY_TO_PAY
+                    .getMessage(coinManager.getCoinsOfPlayer(issuer.getUniqueId()), null, null, 0, papiHook));
             return;
         }
         coinManager.deductCoinsFromPlayer(issuer.getUniqueId(), amount);
         coinManager.addCoinsToPlayer(offlinePlayer.getUniqueId(), amount);
-        issuer.sendMessage(Messages.PAY_PLAYER.getMessage(coinManager.getCoinsOfPlayer(issuer.getUniqueId()), player, null, amount, papiHook));
-        if (offlinePlayer.isOnline()) offlinePlayer.getOnlinePlayer().sendMessage(Messages.PAID_BY_PLAYER.getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), platform.getPlayer(issuer.getUniqueId()).getName(), null, amount, papiHook));
+        issuer.sendMessage(Messages.PAY_PLAYER
+                .getMessage(coinManager.getCoinsOfPlayer(issuer.getUniqueId()), player, null, amount, papiHook));
+        if (offlinePlayer.isOnline()) offlinePlayer.getOnlinePlayer().sendMessage(Messages.PAID_BY_PLAYER
+                .getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), platform
+                        .getPlayer(issuer.getUniqueId()).getName(), null, amount, papiHook));
     }
 
     @Subcommand("reload")
     @CommandPermission("lemonmobcoins.admin")
-    public void onReload(CommandIssuer issuer){
+    public void onReload(CommandIssuer issuer) {
         try {
             issuer.sendMessage(Messages.START_RELOAD.getMessage(0, null, null, 0, papiHook));
             platform.disable();
             platform.enable();
             issuer.sendMessage(Messages.SUCCESSFUL_RELOAD.getMessage(0, null, null, 0, papiHook));
-        } catch (Throwable t){
+        } catch (Throwable t) {
             issuer.sendMessage(Messages.FAILED_RELOAD.getMessage(0, null, null, 0, papiHook));
             t.printStackTrace();
         }
@@ -153,8 +164,8 @@ public class MobCoinsCommand extends BaseCommand {
 
     @Subcommand("help|?|h")
     @CommandPermission("lemonmobcoins.help")
-    public void onHelp(CommandIssuer issuer){
-        if (issuer.hasPermission("lemonmobcoins.admin")){
+    public void onHelp(CommandIssuer issuer) {
+        if (issuer.hasPermission("lemonmobcoins.admin")) {
             issuer.sendMessage(Messages.ADMIN_HELP_MENU.getMessage(0, null, null, 0, papiHook));
             return;
         }
@@ -163,13 +174,14 @@ public class MobCoinsCommand extends BaseCommand {
 
     @Subcommand("shop|s")
     @CommandPermission("lemonmobcoins.shop")
-    public void onShop(CommandIssuer issuer){
+    public void onShop(CommandIssuer issuer) {
         IWrappedPlayer player = platform.getPlayer(issuer.getUniqueId());
         player.openInventory(guiManager.getInventory());
     }
 
     @CatchUnknown
-    public void onUnknownSubCommand(CommandIssuer issuer){
+    public void onUnknownSubCommand(CommandIssuer issuer) {
         issuer.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(0, null, null, 0, papiHook));
     }
+
 }

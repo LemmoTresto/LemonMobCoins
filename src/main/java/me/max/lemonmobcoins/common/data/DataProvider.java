@@ -32,4 +32,5 @@ public interface DataProvider {
     Map<UUID, Double> loadData() throws SQLException, IOException;
 
     void saveData(Map<UUID, Double> coins) throws SQLException, IOException;
+
 }

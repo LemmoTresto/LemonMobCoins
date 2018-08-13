@@ -28,7 +28,7 @@ public class SpongeWrappedInventory implements IWrappedInventory {
 
     private Inventory inventory;
 
-    public SpongeWrappedInventory(Inventory inventory){
+    public SpongeWrappedInventory(Inventory inventory) {
         this.inventory = inventory;
     }
 
@@ -36,4 +36,5 @@ public class SpongeWrappedInventory implements IWrappedInventory {
     public Inventory getInventory() {
         return inventory;
     }
+
 }

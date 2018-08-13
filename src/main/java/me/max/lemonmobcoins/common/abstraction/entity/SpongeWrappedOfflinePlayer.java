@@ -30,7 +30,7 @@ public class SpongeWrappedOfflinePlayer implements IWrappedOfflinePlayer {
 
     private User user;
 
-    public SpongeWrappedOfflinePlayer(User user){
+    public SpongeWrappedOfflinePlayer(User user) {
         this.user = user;
     }
 
@@ -53,4 +53,5 @@ public class SpongeWrappedOfflinePlayer implements IWrappedOfflinePlayer {
     public IWrappedPlayer getOnlinePlayer() {
         return user.getPlayer().map(SpongeWrappedPlayer::new).orElse(null);
     }
+
 }

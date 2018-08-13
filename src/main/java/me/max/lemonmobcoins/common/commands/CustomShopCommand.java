@@ -42,7 +42,7 @@ public class CustomShopCommand extends BaseCommand {
     private PAPIHook papiHook;
     private GuiManager guiManager;
 
-    public CustomShopCommand(IWrappedPlatform platform, PAPIHook papiHook, GuiManager guiManager){
+    public CustomShopCommand(IWrappedPlatform platform, PAPIHook papiHook, GuiManager guiManager) {
         this.platform = platform;
         this.papiHook = papiHook;
         this.guiManager = guiManager;
@@ -50,12 +50,13 @@ public class CustomShopCommand extends BaseCommand {
 
     @Default
     @CatchUnknown
-    public void onShop(CommandIssuer issuer){
-        if (!issuer.isPlayer()){
+    public void onShop(CommandIssuer issuer) {
+        if (! issuer.isPlayer()) {
             issuer.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0, papiHook));
             return;
         }
         IWrappedPlayer player = platform.getPlayer(issuer.getUniqueId());
         player.openInventory(guiManager.getInventory());
     }
+
 }

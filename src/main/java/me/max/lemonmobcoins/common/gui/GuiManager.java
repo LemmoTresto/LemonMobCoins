@@ -44,7 +44,7 @@ public class GuiManager {
     private final List<ShopItem> items;
     private final IWrappedPlatform platform;
 
-    public GuiManager(ConfigurationNode config, Logger logger, IWrappedPlatform platform){
+    public GuiManager(ConfigurationNode config, Logger logger, IWrappedPlatform platform) {
         config = config.getNode("gui");
         rows = config.getNode("rows").getInt();
         command = config.getNode("command").getString();
@@ -52,7 +52,7 @@ public class GuiManager {
         items = new ArrayList<>();
         this.platform = platform;
 
-        for (ConfigurationNode key : config.getNode("items").getChildrenList()){
+        for (ConfigurationNode key : config.getNode("items").getChildrenList()) {
             ConfigurationNode itemNode = config.getNode("items", key.getString());
             try {
                 items.add(new ShopItem.Builder(key.getString())
@@ -89,7 +89,7 @@ public class GuiManager {
         return title;
     }
 
-    public IWrappedInventory getInventory(){
+    public IWrappedInventory getInventory() {
         return platform.createInventory(title, rows, items);
     }
 
@@ -101,4 +101,5 @@ public class GuiManager {
     public ShopItem getShopItem(IWrappedItemStack itemStack) {
         return items.stream().filter(item -> platform.toItemStack(item).equals(itemStack)).findFirst().orElse(null);
     }
+
 }

@@ -36,18 +36,18 @@ public class PluginMessagingListener implements PluginMessageListener {
     private final CoinManager coinManager;
     private final Logger logger;
 
-    public PluginMessagingListener(CoinManager coinManager, Logger logger){
+    public PluginMessagingListener(CoinManager coinManager, Logger logger) {
         this.coinManager = coinManager;
         this.logger = logger;
     }
 
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
-        if (!channel.equals("BungeeCord")) return;
+        if (! channel.equals("BungeeCord")) return;
 
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
         String subchannel = in.readUTF();
-        if (!subchannel.equals("LemonMobCoins")) return;
+        if (! subchannel.equals("LemonMobCoins")) return;
 
         //yes we know about the argument player but we want to be able to receive data from offlineplayers too so this could be a random player!
         String playeruuid = in.readUTF();
@@ -55,4 +55,5 @@ public class PluginMessagingListener implements PluginMessageListener {
         coinManager.setCoinsOfPlayer(UUID.fromString(playeruuid), balance);
         logger.info("Received information of Player " + playeruuid + ". Balance received: " + balance);
     }
+
 }

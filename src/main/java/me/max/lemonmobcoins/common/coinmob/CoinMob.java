@@ -39,7 +39,7 @@ public class CoinMob {
 
     private final Random r = new Random();
 
-    public CoinMob(@NotNull String mob, int chance, int amount, int amount2){
+    public CoinMob(@NotNull String mob, int chance, int amount, int amount2) {
         this.mob = mob;
         this.chance = chance;
         this.amount = amount;
@@ -55,7 +55,7 @@ public class CoinMob {
         return amount;
     }
 
-    private int getAmount2(){
+    private int getAmount2() {
         return amount2;
     }
 
@@ -63,12 +63,12 @@ public class CoinMob {
         return chance;
     }
 
-    private boolean willDropCoins(){
+    private boolean willDropCoins() {
         return r.nextInt(101) < (getChance());
     }
 
-    public int getAmountToDrop(){
-        if (!willDropCoins()) return 0;
+    public int getAmountToDrop() {
+        if (! willDropCoins()) return 0;
 
         //Not using random amount
         if (getAmount2() == 0) return getAmount();
@@ -76,4 +76,5 @@ public class CoinMob {
         //Get a random number between 2 integers.
         return r.nextInt(amount2 + 1 - amount) + amount;
     }
+
 }

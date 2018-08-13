@@ -25,4 +25,5 @@ package me.max.lemonmobcoins.common.abstraction.inventory;
 public interface IWrappedInventory {
 
     Object getInventory();
+
 }

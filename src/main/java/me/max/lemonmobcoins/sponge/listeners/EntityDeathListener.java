@@ -45,8 +45,8 @@ public class EntityDeathListener {
     }
 
     @Listener
-    public void onEntityDeath(DestructEntityEvent.Death event){
-        if (!(event.getSource() instanceof Player)) return;
+    public void onEntityDeath(DestructEntityEvent.Death event) {
+        if (! (event.getSource() instanceof Player)) return;
         Player p = (Player) event.getSource();
 
         CoinMob coinMob = coinMobManager.getCoinMob(event.getTargetEntity().getType().toString());
@@ -58,7 +58,11 @@ public class EntityDeathListener {
 
         if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId());
 
-        p.sendMessage(Text.of(Messages.RECEIVED_COINS_FROM_KILL.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), event.getTargetEntity().getType().getName(), amountToDrop, null)));
+        p.sendMessage(Text.of(Messages.RECEIVED_COINS_FROM_KILL
+                .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), event.getTargetEntity()
+                                                                                             .getType()
+                                                                                             .getName(), amountToDrop, null)));
 
     }
+
 }

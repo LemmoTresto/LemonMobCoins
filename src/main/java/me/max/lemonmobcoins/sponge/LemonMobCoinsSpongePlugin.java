@@ -80,14 +80,15 @@ public final class LemonMobCoinsSpongePlugin {
     private AbstractPluginMessageManager pluginMessageManager;
 
     @Listener
-    public void onPreInit(GamePreInitializationEvent event){
+    public void onPreInit(GamePreInitializationEvent event) {
         try {
             info("Loading messages and config..");
             FileUtil.saveResource("generalconfig.yml", configDir.toString(), "config.yml");
             MessageManager.load(configDir.toString(), logger);
-            dataLoader = YAMLConfigurationLoader.builder().setFile(new File(configDir.toString(), "config.yml")).build();
+            dataLoader = YAMLConfigurationLoader.builder().setFile(new File(configDir.toString(), "config.yml"))
+                                                .build();
             info("Loaded config and files!");
-        } catch (IOException e){
+        } catch (IOException e) {
             error("Could not load config and files!");
             e.printStackTrace();
             shutdown();
@@ -98,7 +99,7 @@ public final class LemonMobCoinsSpongePlugin {
     }
 
     @Listener
-    public void onInit(GameInitializationEvent event){
+    public void onInit(GameInitializationEvent event) {
         ConfigurationNode node;
         try {
             node = dataLoader.load();
@@ -120,7 +121,8 @@ public final class LemonMobCoinsSpongePlugin {
         info("Loaded listeners!");
 
         info("Loading commands..");
-        SpongeCommandManager manager = new SpongeCommandManager(game.getPluginManager().getPlugin("lemonmobcoins").get());
+        SpongeCommandManager manager = new SpongeCommandManager(game.getPluginManager().getPlugin("lemonmobcoins")
+                                                                    .get());
         manager.registerCommand(new MobCoinsCommand(getCoinManager(), null, platform, getGuiManager()));
         manager.registerCommand(new CustomShopCommand(platform, null, getGuiManager()));
         manager.registerCommand(new MStoreCommand(platform, null, getGuiManager()));
@@ -129,7 +131,7 @@ public final class LemonMobCoinsSpongePlugin {
     }
 
     @Listener
-    public void onServerStop(GameStoppingEvent event){
+    public void onServerStop(GameStoppingEvent event) {
         ConfigurationNode node = null;
         try {
             node = dataLoader.load();
@@ -147,7 +149,7 @@ public final class LemonMobCoinsSpongePlugin {
             try {
                 lemonMobCoins.disable();
                 info("Saved data!");
-            } catch (IOException | SQLException e1){
+            } catch (IOException | SQLException e1) {
                 error("Failed saving data again! Data will be lost ;(");
                 e.printStackTrace();
             }
@@ -156,25 +158,25 @@ public final class LemonMobCoinsSpongePlugin {
         info("Disabled successfully!");
     }
 
-    public void shutdown(){
+    public void shutdown() {
         game.getEventManager().unregisterPluginListeners(this);
         game.getCommandManager().getOwnedBy(this).forEach(game.getCommandManager()::removeMapping);
         game.getScheduler().getScheduledTasks(this).forEach(Task::cancel);
     }
 
-    private void registerListeners(Object... listeners){
+    private void registerListeners(Object... listeners) {
         Arrays.stream(listeners).forEach(l -> game.getEventManager().registerListeners(this, l));
     }
 
-    private void info(String s){
+    private void info(String s) {
         logger.info(s);
     }
 
-    private void warn(String s){
+    private void warn(String s) {
         logger.warn(s);
     }
 
-    private void error(String s){
+    private void error(String s) {
         logger.error(s);
     }
 
@@ -182,19 +184,20 @@ public final class LemonMobCoinsSpongePlugin {
         return logger;
     }
 
-    private CoinManager getCoinManager(){
+    private CoinManager getCoinManager() {
         return lemonMobCoins.getCoinManager();
     }
 
-    private CoinMobManager getCoinMobManager(){
+    private CoinMobManager getCoinMobManager() {
         return lemonMobCoins.getCoinMobManager();
     }
 
-    private GuiManager getGuiManager(){
+    private GuiManager getGuiManager() {
         return lemonMobCoins.getGuiManager();
     }
 
     public AbstractPluginMessageManager getPluginMessageManager() {
         return pluginMessageManager;
     }
+
 }

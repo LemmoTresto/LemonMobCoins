@@ -57,12 +57,39 @@ import java.util.Arrays;
 
 public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
 
+    private final Logger logger = LoggerFactory.getLogger(LemonMobCoins.class);
     private LemonMobCoins lemonMobCoins;
     private AbstractPluginMessageManager pluginMessageManager;
     private PAPIHook papiHook;
-    private final Logger logger = LoggerFactory.getLogger(LemonMobCoins.class);
     private YAMLConfigurationLoader dataLoader;
     private IWrappedPlatform platform;
+
+    @Override
+    public void onDisable() {
+        ConfigurationNode node = null;
+        try {
+            node = dataLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (node != null && node.getNode("bungeecord").getBoolean()) return;
+        try {
+            info("Saving data..");
+            lemonMobCoins.disable();
+            info("Saved data!");
+        } catch (IOException | SQLException e) {
+            error("Failed saving data! Retrying..");
+            try {
+                lemonMobCoins.disable();
+                info("Saved data!");
+            } catch (IOException | SQLException e1) {
+                error("Failed saving data again! Data will be lost ;(");
+                e.printStackTrace();
+            }
+        }
+        info("Disabled successfully!");
+    }
 
     @Override
     public void onEnable() {
@@ -70,9 +97,10 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
             info("Loading files and config..");
             FileUtil.saveResource("generalconfig.yml", getDataFolder().toString(), "config.yml");
             MessageManager.load(getDataFolder().toString(), getSLF4JLogger());
-            dataLoader = YAMLConfigurationLoader.builder().setFile(new File(getDataFolder().toString(), "config.yml")).build();
+            dataLoader = YAMLConfigurationLoader.builder().setFile(new File(getDataFolder().toString(), "config.yml"))
+                                                .build();
             info("Loaded config and files!");
-        } catch (IOException e){
+        } catch (IOException e) {
             error("Could not load config and files! Stopping plugin!");
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(this);
@@ -93,7 +121,8 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
         info("Loading listeners..");
         if (node.getNode("bungeecord").getBoolean()) {
             getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-            getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PluginMessagingListener(getCoinManager(), getSLF4JLogger()));
+            getServer().getMessenger()
+                       .registerIncomingPluginChannel(this, "BungeeCord", new PluginMessagingListener(getCoinManager(), getSLF4JLogger()));
             pluginMessageManager = new BukkitPluginMessageManager(getCoinManager(), getSLF4JLogger());
             registerListeners(new PlayerJoinListener(pluginMessageManager));
         }
@@ -115,46 +144,19 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
         }
     }
 
-    @Override
-    public void onDisable() {
-        ConfigurationNode node = null;
-        try {
-            node = dataLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (node != null && node.getNode("bungeecord").getBoolean()) return;
-        try {
-            info("Saving data..");
-            lemonMobCoins.disable();
-            info("Saved data!");
-        } catch (IOException | SQLException e) {
-            error("Failed saving data! Retrying..");
-            try {
-                lemonMobCoins.disable();
-                info("Saved data!");
-            } catch (IOException | SQLException e1){
-                error("Failed saving data again! Data will be lost ;(");
-                e.printStackTrace();
-            }
-        }
-        info("Disabled successfully!");
-    }
-
-    private void registerListeners(Listener... listeners){
+    private void registerListeners(Listener... listeners) {
         Arrays.stream(listeners).forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, this));
     }
 
-    private void error(String s){
+    private void error(String s) {
         getSLF4JLogger().error(s);
     }
 
-    private void warn(String s){
+    private void warn(String s) {
         getSLF4JLogger().warn(s);
     }
 
-    private void info(String s){
+    private void info(String s) {
         getSLF4JLogger().info(s);
     }
 
@@ -170,7 +172,7 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
     }
 
     @NotNull
-    private CoinMobManager getCoinMobManager(){
+    private CoinMobManager getCoinMobManager() {
         return lemonMobCoins.getCoinMobManager();
     }
 
@@ -178,7 +180,8 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
         return pluginMessageManager;
     }
 
-    private Logger getSLF4JLogger(){
+    private Logger getSLF4JLogger() {
         return logger;
     }
+
 }

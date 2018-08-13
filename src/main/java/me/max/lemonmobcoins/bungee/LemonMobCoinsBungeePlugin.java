@@ -41,16 +41,16 @@ import java.util.UUID;
 
 public final class LemonMobCoinsBungeePlugin extends Plugin {
 
-    private LemonMobCoins lemonMobCoins;
     private final Logger logger = LoggerFactory.getLogger(LemonMobCoins.class);
+    private LemonMobCoins lemonMobCoins;
 
     @Override
-    public void onLoad(){
+    public void onLoad() {
         try {
             info("Loading config..");
-            FileUtil.saveResource("bungeeconfig.yml", getDataFolder().toString(), "config.yml" );
+            FileUtil.saveResource("bungeeconfig.yml", getDataFolder().toString(), "config.yml");
             info("Loaded config!");
-        } catch (IOException e){
+        } catch (IOException e) {
             error("Could not load config and files! Stopping plugin!");
             e.printStackTrace();
         }
@@ -62,15 +62,16 @@ public final class LemonMobCoinsBungeePlugin extends Plugin {
     public void onEnable() {
         try {
             info("Loading listeners..");
-            getProxy().getPluginManager().registerListener(this, new PluginMessagingListener(getProxy(), getCoinManager()));
+            getProxy().getPluginManager()
+                      .registerListener(this, new PluginMessagingListener(getProxy(), getCoinManager()));
             info("Loaded listeners!");
-        } catch (Exception e){
+        } catch (Exception e) {
             error("Loading Listeners failed! Stopping plugin..");
             e.printStackTrace();
             return;
         }
 
-        for (Map.Entry<UUID, Double> entry : getCoinManager().getCoins().entrySet()){
+        for (Map.Entry<UUID, Double> entry : getCoinManager().getCoins().entrySet()) {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("LemonMobCoins");
             out.writeUTF(entry.getKey().toString());
@@ -92,7 +93,7 @@ public final class LemonMobCoinsBungeePlugin extends Plugin {
             try {
                 lemonMobCoins.disable();
                 info("Saved data!");
-            } catch (IOException | SQLException e1){
+            } catch (IOException | SQLException e1) {
                 error("Failed saving data again! Data will be lost ;(");
                 e.printStackTrace();
             }
@@ -100,15 +101,15 @@ public final class LemonMobCoinsBungeePlugin extends Plugin {
         info("Disabled successfully!");
     }
 
-    private void info(String s){
+    private void info(String s) {
         getSLF4JLogger().info(s);
     }
 
-    private void warn(String s){
+    private void warn(String s) {
         getSLF4JLogger().warn(s);
     }
 
-    private void error(String s){
+    private void error(String s) {
         getSLF4JLogger().error(s);
     }
 
@@ -120,4 +121,5 @@ public final class LemonMobCoinsBungeePlugin extends Plugin {
     private CoinManager getCoinManager() {
         return lemonMobCoins.getCoinManager();
     }
+
 }

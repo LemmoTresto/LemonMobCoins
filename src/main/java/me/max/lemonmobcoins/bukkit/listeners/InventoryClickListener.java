@@ -52,29 +52,33 @@ public class InventoryClickListener implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event){
+    public void onInventoryClick(InventoryClickEvent event) {
         if (event.getCurrentItem() == null) return;
-        if (!(event.getInventory().getHolder() instanceof BukkitHolder)) return;
+        if (! (event.getInventory().getHolder() instanceof BukkitHolder)) return;
         event.setCancelled(true);
 
         Player p = (Player) event.getWhoClicked();
         ShopItem item = guiManager.getShopItem(new BukkitWrappedItemStack(event.getCurrentItem()));
 
-        if (item.isPermission()){
-            if (!p.hasPermission("lemonmobcoins.buy." + item.getIdentifier())) {
-                p.sendMessage(Messages.NO_PERMISSION_TO_PURCHASE.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook));
+        if (item.isPermission()) {
+            if (! p.hasPermission("lemonmobcoins.buy." + item.getIdentifier())) {
+                p.sendMessage(Messages.NO_PERMISSION_TO_PURCHASE
+                        .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook));
                 return;
             }
         }
 
-        if (!(coinManager.getCoinsOfPlayer(p.getUniqueId()) >= item.getPrice())){
-            p.sendMessage(Messages.NOT_ENOUGH_MONEY_TO_PURCHASE.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook));
+        if (! (coinManager.getCoinsOfPlayer(p.getUniqueId()) >= item.getPrice())) {
+            p.sendMessage(Messages.NOT_ENOUGH_MONEY_TO_PURCHASE
+                    .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook));
             return;
         }
 
         coinManager.deductCoinsFromPlayer(p.getUniqueId(), item.getPrice());
         if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId());
-        p.sendMessage(Messages.PURCHASED_ITEM_FROM_SHOP.getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, item.getPrice(), papiHook).replaceAll("%item%", item.getDisplayname()));
+        p.sendMessage(Messages.PURCHASED_ITEM_FROM_SHOP
+                .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, item.getPrice(), papiHook)
+                .replaceAll("%item%", item.getDisplayname()));
         for (String cmd : item.getCommands())
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ColorUtil
                     .colorize(cmd.replaceAll("%player%", p.getName())));

@@ -59,7 +59,7 @@ public enum Messages { //todo look at the commands with which messages. Some are
     private String message;
 
     @SuppressWarnings("SameParameterValue")
-    Messages(String message){
+    Messages(String message) {
         this.message = message;
     }
 
@@ -79,7 +79,7 @@ public enum Messages { //todo look at the commands with which messages. Some are
         return msg;
     }
 
-    private String removeZeroDecimal(String s){
+    private String removeZeroDecimal(String s) {
         if (s.endsWith(".0")) return s.substring(0, s.length() - 2);
         return s;
     }

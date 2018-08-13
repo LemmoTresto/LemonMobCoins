@@ -40,7 +40,7 @@ public class ShopItem {
     private final double price;
     private final List<String> commands;
 
-    private ShopItem(@NotNull String identifier, int slot, @NotNull String material, int amount, @NotNull String displayname, boolean glowing, @NotNull List<String> lore, boolean permission, double price, @NotNull List<String> commands){
+    private ShopItem(@NotNull String identifier, int slot, @NotNull String material, int amount, @NotNull String displayname, boolean glowing, @NotNull List<String> lore, boolean permission, double price, @NotNull List<String> commands) {
         this.identifier = identifier;
         this.slot = slot;
         this.material = material;
@@ -98,6 +98,7 @@ public class ShopItem {
     }
 
     static class Builder {
+
         private final String identifier;
         private int slot;
         private String material;
@@ -109,7 +110,7 @@ public class ShopItem {
         private double price;
         private List<String> commands;
 
-        Builder(String identifier){
+        Builder(String identifier) {
             this.identifier = identifier;
         }
 
@@ -168,8 +169,10 @@ public class ShopItem {
         }
 
         @Contract("-> new")
-        ShopItem build(){
+        ShopItem build() {
             return new ShopItem(identifier, slot, material, amount, displayname, glowing, lore, permission, price, commands);
         }
+
     }
+
 }

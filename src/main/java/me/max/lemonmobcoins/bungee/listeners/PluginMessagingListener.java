@@ -39,22 +39,23 @@ public class PluginMessagingListener implements Listener {
     private final ProxyServer server;
     private final CoinManager coinManager;
 
-    public PluginMessagingListener(ProxyServer server, CoinManager coinManager){
+    public PluginMessagingListener(ProxyServer server, CoinManager coinManager) {
         this.server = server;
         this.coinManager = coinManager;
     }
 
     @EventHandler
-    public void onPluginMessage(PluginMessageEvent event){
-        if (!event.getTag().equals("BungeeCord")) return;
+    public void onPluginMessage(PluginMessageEvent event) {
+        if (! event.getTag().equals("BungeeCord")) return;
 
         ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
         String subchannel = in.readUTF();
-        if (!subchannel.equals("LemonMobCoins")) return;
+        if (! subchannel.equals("LemonMobCoins")) return;
 
         String playeruuid = in.readUTF();
         double balance = in.readDouble();
-        server.getPluginManager().getPlugin("LemonMobCoins").getLogger().info("Received information of Player " + playeruuid + ". Balance received: " + balance);
+        server.getPluginManager().getPlugin("LemonMobCoins").getLogger()
+              .info("Received information of Player " + playeruuid + ". Balance received: " + balance);
         coinManager.setCoinsOfPlayer(UUID.fromString(playeruuid), balance);
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -63,7 +64,8 @@ public class PluginMessagingListener implements Listener {
         out.writeDouble(balance);
 
         server.getServers().values().forEach(s -> s.sendData("BungeeCord", out.toByteArray(), true));
-        server.getPluginManager().getPlugin("LemonMobCoins").getLogger().info("Sent information of Player " + playeruuid + ". Balance sent: " + balance);
+        server.getPluginManager().getPlugin("LemonMobCoins").getLogger()
+              .info("Sent information of Player " + playeruuid + ". Balance sent: " + balance);
     }
 
 }

@@ -28,7 +28,7 @@ public class BukkitWrappedInventory implements IWrappedInventory {
 
     private Inventory inventory;
 
-    public BukkitWrappedInventory(Inventory inventory){
+    public BukkitWrappedInventory(Inventory inventory) {
         this.inventory = inventory;
     }
 
@@ -36,4 +36,5 @@ public class BukkitWrappedInventory implements IWrappedInventory {
     public Inventory getInventory() {
         return inventory;
     }
+
 }

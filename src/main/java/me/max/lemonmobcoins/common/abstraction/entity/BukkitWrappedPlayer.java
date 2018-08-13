@@ -32,7 +32,7 @@ public class BukkitWrappedPlayer implements IWrappedPlayer {
 
     private Player player;
 
-    public BukkitWrappedPlayer(Player player){
+    public BukkitWrappedPlayer(Player player) {
         this.player = player;
     }
 
@@ -55,4 +55,5 @@ public class BukkitWrappedPlayer implements IWrappedPlayer {
     public void openInventory(IWrappedInventory inventory) {
         player.openInventory((Inventory) inventory.getInventory());
     }
+
 }

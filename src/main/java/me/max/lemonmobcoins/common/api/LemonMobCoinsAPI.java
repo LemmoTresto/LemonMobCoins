@@ -33,26 +33,28 @@ public interface LemonMobCoinsAPI {
     double getCoinsOfPlayer(UUID uuid);
 
     /**
-     * @param uuid the uuid of the player to change the balance of.
+     * @param uuid  the uuid of the player to change the balance of.
      * @param coins integer amount of how many coins to set the player's balance to.
      */
     void setCoinsOfPlayer(UUID uuid, double coins);
 
     /**
-     * @param uuid uuid of the player to add the coins to
+     * @param uuid  uuid of the player to add the coins to
      * @param coins amount of coins to add to balance.
      */
     void addCoinsToPlayer(UUID uuid, double coins);
 
     /**
      * Increments the player's balance by 1.
+     *
      * @param uuid the uuid of the player to increment the balance of
      */
     void incrementPlayerBalance(UUID uuid);
 
     /**
      * Deducts an amount of coins from the player's balance.
-     * @param uuid the uuid of the player from who to deduct the coins
+     *
+     * @param uuid  the uuid of the player from who to deduct the coins
      * @param coins the amount of coins to deduct.
      */
     void deductCoinsFromPlayer(UUID uuid, double coins);

@@ -34,15 +34,16 @@ public class MySqlProvider implements DataProvider {
     private final Connection connection;
 
     public MySqlProvider(String hostname, String port, String username, String password, String database) throws SQLException {
-        connection = DriverManager.getConnection("jdbc:mysql://" + hostname + ":" + port + "/" + database, username, password);
+        connection = DriverManager
+                .getConnection("jdbc:mysql://" + hostname + ":" + port + "/" + database, username, password);
         createTable();
     }
 
     @Override
-    public Map<UUID, Double> loadData() throws SQLException{
+    public Map<UUID, Double> loadData() throws SQLException {
         Map<UUID, Double> coins = new HashMap<>();
         ResultSet rs = getCoins();
-        while (rs.next()){
+        while (rs.next()) {
             coins.put(UUID.fromString(rs.getString(1)), rs.getDouble(2));
         }
         rs.close();
@@ -53,22 +54,6 @@ public class MySqlProvider implements DataProvider {
     public void saveData(Map<UUID, Double> coins) throws SQLException {
         for (Map.Entry<UUID, Double> entry : coins.entrySet()) setCoin(entry.getKey(), entry.getValue());
         connection.close();
-    }
-
-    private enum Queries {
-        CREATE_TABLE("CREATE TABLE IF NOT EXISTS coins(uuid VARCHAR(36), amount DOUBLE);"),
-        GET_COINS("SELECT * FROM coins;"),
-        SET_COIN("INSERT INTO coins(uuid, amount) VALUES(?, ?) ON DUPLICATE KEY UPDATE amount = VALUES(amount);");
-
-        private final String query;
-
-        Queries(String query){
-            this.query = query;
-        }
-
-        public String getQuery() {
-            return query;
-        }
     }
 
     private PreparedStatement prepareStatement(Queries query) throws SQLException {
@@ -94,6 +79,22 @@ public class MySqlProvider implements DataProvider {
         PreparedStatement stm = prepareStatement(Queries.CREATE_TABLE);
         stm.executeUpdate();
         stm.close();
+    }
+
+    private enum Queries {
+        CREATE_TABLE("CREATE TABLE IF NOT EXISTS coins(uuid VARCHAR(36), amount DOUBLE);"),
+        GET_COINS("SELECT * FROM coins;"),
+        SET_COIN("INSERT INTO coins(uuid, amount) VALUES(?, ?) ON DUPLICATE KEY UPDATE amount = VALUES(amount);");
+
+        private final String query;
+
+        Queries(String query) {
+            this.query = query;
+        }
+
+        public String getQuery() {
+            return query;
+        }
     }
 
 

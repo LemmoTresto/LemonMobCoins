@@ -38,7 +38,7 @@ public class BukkitPluginMessageManager extends AbstractPluginMessageManager {
         super(coinManager, logger);
     }
 
-    public void sendPluginMessage(UUID uuid){
+    public void sendPluginMessage(UUID uuid) {
         Player p = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
         if (p == null) {
             if (getCache().contains(uuid)) return;
@@ -56,4 +56,5 @@ public class BukkitPluginMessageManager extends AbstractPluginMessageManager {
 
         getLogger().info("Sent information of Player " + uuid + ". Balance sent: " + balance);
     }
+
 }

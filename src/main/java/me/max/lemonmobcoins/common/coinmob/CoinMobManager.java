@@ -33,10 +33,11 @@ public class CoinMobManager {
 
     private final List<CoinMob> coinMobList;
 
-    public CoinMobManager(ConfigurationNode config){
+    public CoinMobManager(ConfigurationNode config) {
         coinMobList = new ArrayList<>();
 
-        for (Map.Entry<Object, ? extends ConfigurationNode> entry : config.getNode("mob-list").getChildrenMap().entrySet()) {
+        for (Map.Entry<Object, ? extends ConfigurationNode> entry : config.getNode("mob-list").getChildrenMap()
+                                                                          .entrySet()) {
 
             List<String> amounts;
             String amount = entry.getValue().getNode("amount").getString();
@@ -47,7 +48,8 @@ public class CoinMobManager {
                 amounts.add("0");
             }
 
-            coinMobList.add(new CoinMob(entry.getKey().toString(), entry.getValue().getNode("chance").getInt(), Integer.parseInt(amounts.get(0)), Integer.parseInt(amounts.get(1))));
+            coinMobList.add(new CoinMob(entry.getKey().toString(), entry.getValue().getNode("chance").getInt(), Integer
+                    .parseInt(amounts.get(0)), Integer.parseInt(amounts.get(1))));
         }
     }
 
@@ -55,7 +57,9 @@ public class CoinMobManager {
         return coinMobList;
     }
 
-    public CoinMob getCoinMob(String type){
-        return getCoinMobList().stream().filter(coinMob -> coinMob.getMob().equalsIgnoreCase(type)).findFirst().orElse(null);
+    public CoinMob getCoinMob(String type) {
+        return getCoinMobList().stream().filter(coinMob -> coinMob.getMob().equalsIgnoreCase(type)).findFirst()
+                               .orElse(null);
     }
+
 }

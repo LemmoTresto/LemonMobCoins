@@ -27,9 +27,11 @@ import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 
 public class SpongeCarrier implements Carrier {
+
     @Override
     @Contract("-> null")
     public CarriedInventory<? extends Carrier> getInventory() {
         return null;
     }
+
 }

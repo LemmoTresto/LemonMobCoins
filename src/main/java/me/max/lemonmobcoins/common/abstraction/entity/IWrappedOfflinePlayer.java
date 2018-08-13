@@ -33,4 +33,5 @@ public interface IWrappedOfflinePlayer {
     boolean isOnline();
 
     IWrappedPlayer getOnlinePlayer();
+
 }

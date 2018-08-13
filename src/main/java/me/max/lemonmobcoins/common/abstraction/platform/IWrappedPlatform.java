@@ -17,7 +17,7 @@
  *  *  * You should have received a copy of the GNU General Public License
  *  *  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *  *
- *  
+ *
  */
 
 package me.max.lemonmobcoins.common.abstraction.platform;
@@ -50,4 +50,5 @@ public interface IWrappedPlatform {
     IWrappedInventory createInventory(String title, int rows, List<ShopItem> items);
 
     IWrappedItemStack toItemStack(ShopItem item);
+
 }

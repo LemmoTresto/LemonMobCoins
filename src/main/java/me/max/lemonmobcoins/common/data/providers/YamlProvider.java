@@ -47,7 +47,8 @@ public class YamlProvider implements DataProvider {
     public Map<UUID, Double> loadData() throws IOException {
         Map<UUID, Double> coins = new HashMap<>();
         ConfigurationNode coinsData = dataLoader.load();
-        coinsData.getChildrenMap().forEach((key, value) -> coins.put(UUID.fromString(String.valueOf(key)), Double.parseDouble(String.valueOf(value))));
+        coinsData.getChildrenMap().forEach((key, value) -> coins
+                .put(UUID.fromString(String.valueOf(key)), Double.parseDouble(String.valueOf(value))));
         return coins;
     }
 
@@ -57,4 +58,5 @@ public class YamlProvider implements DataProvider {
         coins.forEach((key, value) -> coinsData.getNode(key).setValue(value));
         dataLoader.save(coinsData);
     }
+
 }

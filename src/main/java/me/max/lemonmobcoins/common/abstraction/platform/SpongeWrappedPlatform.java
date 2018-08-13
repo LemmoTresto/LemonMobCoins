@@ -56,7 +56,7 @@ public class SpongeWrappedPlatform implements IWrappedPlatform {
 
     private LemonMobCoinsSpongePlugin plugin;
 
-    public SpongeWrappedPlatform(LemonMobCoinsSpongePlugin plugin){
+    public SpongeWrappedPlatform(LemonMobCoinsSpongePlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -110,12 +110,12 @@ public class SpongeWrappedPlatform implements IWrappedPlatform {
         invBuilder.property(InventoryDimension.PROPERTY_NAME, InventoryDimension.of(9, rows));
         Inventory inv = invBuilder.build(plugin);
 
-        for (ShopItem item : items){
+        for (ShopItem item : items) {
             Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, item.getMaterial());
-            if (!type.isPresent()) continue;
+            if (! type.isPresent()) continue;
             ItemStack itemStack = ItemStack.of(type.get(), item.getAmount());
 
-            if (item.isGlowing()){
+            if (item.isGlowing()) {
                 EnchantmentData enchData = itemStack.getOrCreate(EnchantmentData.class).get();
                 enchData.set(enchData.enchantments().add(Enchantment.of(EnchantmentTypes.UNBREAKING, 1)));
                 itemStack.offer(Keys.HIDE_ENCHANTMENTS, true);
@@ -156,4 +156,5 @@ public class SpongeWrappedPlatform implements IWrappedPlatform {
         Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
         return userStorage.flatMap(userStorage1 -> userStorage1.get(name));
     }
+
 }

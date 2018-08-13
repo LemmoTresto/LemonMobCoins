@@ -28,8 +28,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class PAPIHook {
 
-    public String replacePlaceholders(@Nullable OfflinePlayer p, String s){
+    public String replacePlaceholders(@Nullable OfflinePlayer p, String s) {
         if (p == null) return s;
         return PlaceholderAPI.setPlaceholders(p, s);
     }
+
 }
