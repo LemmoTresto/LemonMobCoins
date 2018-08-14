@@ -4,4 +4,4 @@
 [![Discord](https://discordapp.com/api/guilds/348405921799471105/widget.png)](https://lemmotresto.com/links/discord)
 [![License](https://img.shields.io/github/license/LemmoTresto/LemonMobCoins.svg)](https://github.com/LemmoTresto/LemonMobCoins/blob/master/LICENSE)
 
-##### Kill mobs and get coins that can be used to buy awesome things
+### Kill mobs and get coins that can be used to buy awesome things
