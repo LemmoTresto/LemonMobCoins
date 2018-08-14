@@ -1,7 +1,7 @@
 /*
  *
  *  *
- *  *  * MobCoins - Earn coins for killing mobs.
+ *  *  * LemonMobCoins - Kill mobs and get coins that can be used to buy awesome things
  *  *  * Copyright (C) 2018 Max Berkelmans AKA LemmoTresto
  *  *  *
  *  *  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@ import me.max.lemonmobcoins.common.data.CoinManager;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.network.ChannelBinding;
 
 import java.util.UUID;
 
@@ -53,8 +54,9 @@ public class SpongePluginMessageManager extends AbstractPluginMessageManager {
         out.writeUTF(uuid.toString());
         out.writeDouble(balance);
 
-        //todo send plugin msg
-
+        ChannelBinding.RawDataChannel channel = (ChannelBinding.RawDataChannel) Sponge.getChannelRegistrar()
+                                                                                      .getChannel("BungeeCord").get();
+        channel.sendTo(p, channelBuf -> channelBuf.writeByteArray(out.toByteArray()));
         getLogger().info("Sent information of Player " + uuid + ". Balance sent: " + balance);
     }
 
