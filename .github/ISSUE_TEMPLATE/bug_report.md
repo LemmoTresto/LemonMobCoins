@@ -5,10 +5,10 @@ about: Create a bug report to help fix the bug.
 ---
 
 **Before you start**
-- Make sure you did not reload the plugin even with plugman this won't work.
+- Did you reload the plugin (even with plugman this does not work)?
 - Is the plugin on the latest version?
 
-We will not provide support if you have not checked this!
+We will mark the bug report as invalid if you have not checked these things.
 
 **Describe the bug**
 A clear and concise description of what the bug is.
