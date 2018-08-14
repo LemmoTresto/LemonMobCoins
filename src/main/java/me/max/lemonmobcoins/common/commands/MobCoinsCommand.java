@@ -179,6 +179,7 @@ public class MobCoinsCommand extends BaseCommand {
         player.openInventory(guiManager.getInventory());
     }
 
+    @Default
     @CatchUnknown
     public void onUnknownSubCommand(CommandIssuer issuer) {
         issuer.sendMessage(Messages.UNKNOWN_SUBCOMMAND.getMessage(0, null, null, 0, papiHook));
