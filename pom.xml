@@ -127,7 +127,7 @@
                             <Specification-Vendor>LemmoTresto</Specification-Vendor>
                             <Build-Number>${build.number}</Build-Number>
                             <Build-Origin>${build.origin}</Build-Origin>
-                            <Build-Type>$(build.type</Build-Type>
+                            <Build-Type>$(build.type)</Build-Type>
                             <Build-Date>${project.build.timestamp}</Build-Date>
                         </manifestEntries>
                     </archive>
