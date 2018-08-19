@@ -39,7 +39,6 @@ import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.gui.GuiManager;
 import me.max.lemonmobcoins.common.messages.MessageManager;
 import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
-import me.max.lemonmobcoins.common.pluginmessaging.BukkitPluginMessageManager;
 import me.max.lemonmobcoins.common.utils.FileUtil;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;

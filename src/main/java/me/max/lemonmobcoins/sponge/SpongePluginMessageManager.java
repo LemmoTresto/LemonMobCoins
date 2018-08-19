@@ -20,12 +20,13 @@
  *
  */
 
-package me.max.lemonmobcoins.common.pluginmessaging;
+package me.max.lemonmobcoins.sponge;
 
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.max.lemonmobcoins.common.data.CoinManager;
+import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -35,7 +36,7 @@ import java.util.UUID;
 
 public class SpongePluginMessageManager extends AbstractPluginMessageManager {
 
-    public SpongePluginMessageManager(CoinManager coinManager, Logger logger) {
+    SpongePluginMessageManager(CoinManager coinManager, Logger logger) {
         super(coinManager, logger);
     }
 

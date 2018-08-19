@@ -20,12 +20,13 @@
  *
  */
 
-package me.max.lemonmobcoins.common.pluginmessaging;
+package me.max.lemonmobcoins.bukkit;
 
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.max.lemonmobcoins.common.data.CoinManager;
+import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ import java.util.UUID;
 
 public class BukkitPluginMessageManager extends AbstractPluginMessageManager {
 
-    public BukkitPluginMessageManager(CoinManager coinManager, Logger logger) {
+    BukkitPluginMessageManager(CoinManager coinManager, Logger logger) {
         super(coinManager, logger);
     }
 

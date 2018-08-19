@@ -35,7 +35,6 @@ import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.gui.GuiManager;
 import me.max.lemonmobcoins.common.messages.MessageManager;
 import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
-import me.max.lemonmobcoins.common.pluginmessaging.SpongePluginMessageManager;
 import me.max.lemonmobcoins.common.utils.FileUtil;
 import me.max.lemonmobcoins.sponge.listeners.ClickInventoryListener;
 import me.max.lemonmobcoins.sponge.listeners.EntityDeathListener;

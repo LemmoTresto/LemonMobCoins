@@ -35,7 +35,7 @@ public abstract class AbstractPluginMessageManager {
     private final CoinManager coinManager;
     private final Logger logger;
 
-    AbstractPluginMessageManager(CoinManager coinManager, Logger logger) {
+    public AbstractPluginMessageManager(CoinManager coinManager, Logger logger) {
         this.coinManager = coinManager;
         this.logger = logger;
     }
@@ -44,19 +44,19 @@ public abstract class AbstractPluginMessageManager {
 
     }
 
-    public void sendPendingPluginMessages() {
-        cache.forEach(this::sendPluginMessage);
+    void sendPendingPluginMessages() {
+        getCache().forEach(this::sendPluginMessage);
     }
 
-    public List<UUID> getCache() {
+    protected List<UUID> getCache() {
         return cache;
     }
 
-    CoinManager getCoinManager() {
+    public CoinManager getCoinManager() {
         return coinManager;
     }
 
-    Logger getLogger() {
+    public Logger getLogger() {
         return logger;
     }
 
