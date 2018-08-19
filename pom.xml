@@ -27,17 +27,49 @@
 
     <groupId>me.max</groupId>
     <artifactId>lemonmobcoins</artifactId>
-    <version>1.5</version>
+    <version>1.5.0</version>
     <packaging>jar</packaging>
 
     <name>LemonMobCoins</name>
+    <url>https://www.spigotmc.org/resources/59402</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, Version 3.0</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/LemmoTresto/LemonMobCoins/issues</url>
+    </issueManagement>
+
+    <scm>
+        <connection>scm:git:https://github.com/LemmoTresto/LemonMobCoins.git</connection>
+        <url>https://github.com/LemmoTresto/LemonMobCoins</url>
+    </scm>
 
     <properties>
+        <build.number>UNKNOWN</build.number>
+        <build.origin>UNKNOWN</build.origin>
+        <build.type>Develop</build.type>
+        <project.build.timestamp>${maven.build.timestamp}</project.build.timestamp>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss z</maven.build.timestamp.format>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
+        <finalName>${project.name}-${project.version}_$(build.number)-$(build.type)</finalName>
         <defaultGoal>clean package</defaultGoal>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -51,6 +83,7 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -81,51 +114,58 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Specification-Title>${project.name}</Specification-Title>
+                            <Specification-Version>${project.version}</Specification-Version>
+                            <Specification-Vendor>LemmoTresto</Specification-Vendor>
+                            <Build-Number>${build.number}</Build-Number>
+                            <Build-Origin>${build.origin}</Build-Origin>
+                            <Build-Type>$(build.type</Build-Type>
+                            <Build-Date>${project.build.timestamp}</Build-Date>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
 
     <repositories>
+        <!-- Platforms -->
         <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
-            <id>placeholderapi</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-        <repository>
             <id>sponge</id>
             <url>https://repo.spongepowered.org/maven</url>
         </repository>
+
+        <!-- Command System -->
         <repository>
             <id>aikar</id>
             <url>https://repo.aikar.co/content/groups/aikar/</url>
         </repository>
+
+        <!-- PlaceholderAPI for bukkit -->
+        <repository>
+            <id>placeholderapi</id>
+            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
     </repositories>
 
     <dependencies>
+        <!-- Platforms -->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>1.12.2-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>16.0.2</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.clip</groupId>
-            <artifactId>placeholderapi</artifactId>
-            <version>2.9.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -139,21 +179,36 @@
             <artifactId>spongeapi</artifactId>
             <version>7.0.0</version>
         </dependency>
+
+        <!-- Configurate for configurations and data -->
         <dependency>
             <groupId>org.spongepowered</groupId>
             <artifactId>configurate-core</artifactId>
             <version>3.6</version>
         </dependency>
+
+        <!-- Jetbrains annotations for method contracts and more -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
-            <version>1.7.25</version>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>16.0.2</version>
+            <scope>compile</scope>
         </dependency>
+
+        <!-- Logger -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.25</version>
         </dependency>
+        <!-- Logger binding for java.util.Logger -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+
+        <!-- Command System -->
         <dependency>
             <groupId>co.aikar</groupId>
             <artifactId>acf-bukkit</artifactId>
@@ -163,6 +218,14 @@
             <groupId>co.aikar</groupId>
             <artifactId>acf-sponge</artifactId>
             <version>0.5.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- PlaceholderAPI for bukkit -->
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.9.1</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
