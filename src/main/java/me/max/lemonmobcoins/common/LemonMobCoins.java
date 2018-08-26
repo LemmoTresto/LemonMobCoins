@@ -24,6 +24,7 @@ package me.max.lemonmobcoins.common;
 
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
 import me.max.lemonmobcoins.common.api.LemonMobCoinsAPI;
+import me.max.lemonmobcoins.common.api.event.LMCEventBus;
 import me.max.lemonmobcoins.common.coinmob.CoinMobManager;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.data.DataProvider;
@@ -48,6 +49,8 @@ public class LemonMobCoins {
     private GuiManager guiManager;
     private CoinMobManager coinMobManager;
 
+    public static final LMCEventBus EVENT_BUS = new LMCEventBus();
+    
     public LemonMobCoins(Logger logger, String dataFolder, IWrappedPlatform platform) throws DataLoadException {
         this.logger = logger;
 
