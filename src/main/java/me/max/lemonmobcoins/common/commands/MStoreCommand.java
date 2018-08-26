@@ -29,8 +29,10 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
+import me.max.lemonmobcoins.common.LemonMobCoins;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
+import me.max.lemonmobcoins.common.api.event.shop.ShopOpenedEvent;
 import me.max.lemonmobcoins.common.gui.GuiManager;
 import me.max.lemonmobcoins.common.messages.Messages;
 
@@ -56,7 +58,8 @@ public class MStoreCommand extends BaseCommand {
             return;
         }
         IWrappedPlayer player = platform.getPlayer(issuer.getUniqueId());
-        player.openInventory(guiManager.getInventory());
+        if (!LemonMobCoins.EVENT_BUS.post(new ShopOpenedEvent(player))) player.openInventory(guiManager.getInventory());
+
     }
 
 }

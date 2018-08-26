@@ -23,8 +23,12 @@
 package me.max.lemonmobcoins.bukkit.listeners;
 
 import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
+import me.max.lemonmobcoins.common.LemonMobCoins;
+import me.max.lemonmobcoins.common.abstraction.entity.BukkitWrappedPlayer;
 import me.max.lemonmobcoins.common.abstraction.inventory.BukkitHolder;
 import me.max.lemonmobcoins.common.abstraction.inventory.BukkitWrappedItemStack;
+import me.max.lemonmobcoins.common.api.event.coins.NoPermissionEvent;
+import me.max.lemonmobcoins.common.api.event.shop.PlayerPurchaseItemEvent;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.gui.GuiManager;
 import me.max.lemonmobcoins.common.gui.ShopItem;
@@ -64,6 +68,7 @@ public class InventoryClickListener implements Listener {
             if (!p.hasPermission("lemonmobcoins.buy." + item.getIdentifier())) {
                 p.sendMessage(Messages.NO_PERMISSION_TO_PURCHASE
                         .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, papiHook));
+                LemonMobCoins.EVENT_BUS.post(new NoPermissionEvent.Buy());
                 return;
             }
         }
@@ -74,14 +79,17 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
-        coinManager.deductCoinsFromPlayer(p.getUniqueId(), item.getPrice());
-        if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId());
-        p.sendMessage(Messages.PURCHASED_ITEM_FROM_SHOP
-                .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, item.getPrice(), papiHook)
-                .replaceAll("%item%", item.getDisplayname()));
-        for (String cmd : item.getCommands())
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ColorUtil
-                    .colorize(cmd.replaceAll("%player%", p.getName())));
+        PlayerPurchaseItemEvent purchaseItemEvent = new PlayerPurchaseItemEvent(new BukkitWrappedPlayer(p), item);
+        if (!LemonMobCoins.EVENT_BUS.post(purchaseItemEvent)) {
+            coinManager.deductCoinsFromPlayer(p.getUniqueId(), item.getPrice());
+            if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId());
+            p.sendMessage(Messages.PURCHASED_ITEM_FROM_SHOP
+                    .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, item.getPrice(), papiHook)
+                    .replaceAll("%item%", item.getDisplayname()));
+            for (String cmd : item.getCommands())
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ColorUtil
+                        .colorize(cmd.replaceAll("%player%", p.getName())));
+        }
     }
 
 }

@@ -19,7 +19,6 @@
  *  *
  *
  */
-
 package me.max.lemonmobcoins.common.commands;
 
 import co.aikar.commands.BaseCommand;
