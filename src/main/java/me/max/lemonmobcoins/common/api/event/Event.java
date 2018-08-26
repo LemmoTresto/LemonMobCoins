@@ -19,17 +19,22 @@ package me.max.lemonmobcoins.common.api.event;
 /**
  * Base Event class that all other events are derived from
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class Event {
 
     // Whether the event was canceled or not
     private boolean canceled;
 
     /**
-     * Determine if this function is cancelable at all.
+     * Determines whether the event is cancelable or not.
+     * The value is determined on whether the event class is annotated with
+     * {@link Cancellable} or not
      *
-     * @return If access to setCanceled should be allowed
+     * @return True if the event can be cancelled using {@link #setCanceled(boolean)} or not
      */
-    public abstract boolean isCancelable();
+    public boolean isCancelable() {
+        return this.getClass().isAnnotationPresent(Cancellable.class);
+    }
 
     /**
      * Determine if this event is canceled and should stop executing.
