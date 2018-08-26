@@ -26,9 +26,14 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.*;
 import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
+import me.max.lemonmobcoins.common.LemonMobCoins;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedOfflinePlayer;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
+import me.max.lemonmobcoins.common.api.event.coins.BalanceChangedEvent;
+import me.max.lemonmobcoins.common.api.event.coins.BalanceChangedEvent.Type;
+import me.max.lemonmobcoins.common.api.event.plugin.PluginReloadedEvent;
+import me.max.lemonmobcoins.common.api.event.shop.ShopOpenedEvent;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.gui.GuiManager;
 import me.max.lemonmobcoins.common.messages.Messages;
@@ -79,9 +84,12 @@ public class MobCoinsCommand extends BaseCommand {
             issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
             return;
         }
-        coinManager.setCoinsOfPlayer(offlinePlayer.getUniqueId(), amount);
-        issuer.sendMessage(Messages.SET_PLAYER_BALANCE
-                .getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), player, null, 0, papiHook));
+        BalanceChangedEvent balanceChangedEvent = new BalanceChangedEvent(offlinePlayer, amount, Type.SET);
+        if (!LemonMobCoins.EVENT_BUS.post(balanceChangedEvent)) {
+            coinManager.setCoinsOfPlayer(offlinePlayer.getUniqueId(), amount);
+            issuer.sendMessage(Messages.SET_PLAYER_BALANCE
+                    .getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), player, null, 0, papiHook));
+        }
     }
 
     @Subcommand("give")
@@ -92,9 +100,12 @@ public class MobCoinsCommand extends BaseCommand {
             issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
             return;
         }
-        coinManager.addCoinsToPlayer(offlinePlayer.getUniqueId(), amount);
-        issuer.sendMessage(Messages.GIVE_PLAYER_BALANCE
-                .getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), player, null, amount, papiHook));
+        BalanceChangedEvent balanceChangedEvent = new BalanceChangedEvent(offlinePlayer, amount, Type.GIVEN);
+        if (!LemonMobCoins.EVENT_BUS.post(balanceChangedEvent)) {
+            coinManager.addCoinsToPlayer(offlinePlayer.getUniqueId(), amount);
+            issuer.sendMessage(Messages.GIVE_PLAYER_BALANCE
+                    .getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), player, null, amount, papiHook));
+        }
     }
 
     @Subcommand("take")
@@ -105,9 +116,12 @@ public class MobCoinsCommand extends BaseCommand {
             issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
             return;
         }
-        coinManager.deductCoinsFromPlayer(offlinePlayer.getUniqueId(), amount);
-        issuer.sendMessage(Messages.TAKE_PLAYER_BALANCE
-                .getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), player, null, amount, papiHook));
+        BalanceChangedEvent balanceChangedEvent = new BalanceChangedEvent(offlinePlayer, amount, Type.TAKEN);
+        if (!LemonMobCoins.EVENT_BUS.post(balanceChangedEvent)) {
+            coinManager.deductCoinsFromPlayer(offlinePlayer.getUniqueId(), amount);
+            issuer.sendMessage(Messages.TAKE_PLAYER_BALANCE
+                    .getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), player, null, amount, papiHook));
+        }
     }
 
     @Subcommand("reset")
@@ -118,8 +132,11 @@ public class MobCoinsCommand extends BaseCommand {
             issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0, papiHook));
             return;
         }
-        coinManager.setCoinsOfPlayer(offlinePlayer.getUniqueId(), 0);
-        issuer.sendMessage(Messages.RESET_PLAYER_BALANCE.getMessage(0, player, null, 0, papiHook));
+        BalanceChangedEvent balanceChangedEvent = new BalanceChangedEvent(offlinePlayer, 0, Type.RESET);
+        if (!LemonMobCoins.EVENT_BUS.post(balanceChangedEvent)) {
+            coinManager.setCoinsOfPlayer(offlinePlayer.getUniqueId(), 0);
+            issuer.sendMessage(Messages.RESET_PLAYER_BALANCE.getMessage(0, player, null, 0, papiHook));
+        }
     }
 
     @Subcommand("pay")
@@ -155,6 +172,8 @@ public class MobCoinsCommand extends BaseCommand {
             issuer.sendMessage(Messages.START_RELOAD.getMessage(0, null, null, 0, papiHook));
             platform.disable();
             platform.enable();
+            PluginReloadedEvent event = new PluginReloadedEvent();
+            LemonMobCoins.EVENT_BUS.post(event);
             issuer.sendMessage(Messages.SUCCESSFUL_RELOAD.getMessage(0, null, null, 0, papiHook));
         } catch (Throwable t) {
             issuer.sendMessage(Messages.FAILED_RELOAD.getMessage(0, null, null, 0, papiHook));
@@ -176,7 +195,7 @@ public class MobCoinsCommand extends BaseCommand {
     @CommandPermission("lemonmobcoins.shop")
     public void onShop(CommandIssuer issuer) {
         IWrappedPlayer player = platform.getPlayer(issuer.getUniqueId());
-        player.openInventory(guiManager.getInventory());
+        if (!LemonMobCoins.EVENT_BUS.post(new ShopOpenedEvent(player))) player.openInventory(guiManager.getInventory());
     }
 
     @Default
