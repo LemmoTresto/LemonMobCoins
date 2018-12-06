@@ -27,7 +27,6 @@ import co.aikar.commands.annotation.CatchUnknown;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
-import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
 import me.max.lemonmobcoins.common.gui.GuiManager;
@@ -38,12 +37,10 @@ import me.max.lemonmobcoins.common.messages.Messages;
 public class CustomShopCommand extends BaseCommand {
 
     private final IWrappedPlatform platform;
-    private final PAPIHook papiHook;
     private final GuiManager guiManager;
 
-    public CustomShopCommand(IWrappedPlatform platform, PAPIHook papiHook, GuiManager guiManager) {
+    public CustomShopCommand(IWrappedPlatform platform, GuiManager guiManager) {
         this.platform = platform;
-        this.papiHook = papiHook;
         this.guiManager = guiManager;
     }
 
@@ -51,7 +48,7 @@ public class CustomShopCommand extends BaseCommand {
     @CatchUnknown
     public void onShop(CommandIssuer issuer) {
         if (!issuer.isPlayer()) {
-            issuer.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0, papiHook));
+            issuer.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0));
             return;
         }
         IWrappedPlayer player = platform.getPlayer(issuer.getUniqueId());

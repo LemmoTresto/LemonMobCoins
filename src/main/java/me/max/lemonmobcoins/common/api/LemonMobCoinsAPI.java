@@ -22,41 +22,67 @@
 
 package me.max.lemonmobcoins.common.api;
 
+import me.max.lemonmobcoins.common.api.event.LMCEventBus;
+
 import java.util.UUID;
 
-public interface LemonMobCoinsAPI {
+@SuppressWarnings("unused")
+public class LemonMobCoinsAPI {
+
+    private LMCEventBus eventBus;
+
+    public LemonMobCoinsAPI() {
+        this.eventBus = new LMCEventBus();
+    }
 
     /**
-     * @param uuid the uuid of the player of who you want to get the coins.
-     * @return integer amount of coins player has.
+     * @param uuid the uuid of the player of who you want to get the balance.
+     * @return integer amount of balance player has.
      */
-    double getCoinsOfPlayer(UUID uuid);
+    public double getCoinsOfPlayer(UUID uuid) {
+        return 0;
+    }
 
     /**
      * @param uuid  the uuid of the player to change the balance of.
-     * @param coins integer amount of how many coins to set the player's balance to.
+     * @param coins integer amount of how many balance to set the player's balance to.
      */
-    void setCoinsOfPlayer(UUID uuid, double coins);
+    public void setCoinsOfPlayer(UUID uuid, double coins) {
+
+    }
 
     /**
-     * @param uuid  uuid of the player to add the coins to
-     * @param coins amount of coins to add to balance.
+     * @param uuid  uuid of the player to add the balance to
+     * @param coins amount of balance to add to balance.
      */
-    void addCoinsToPlayer(UUID uuid, double coins);
+    public void addCoinsToPlayer(UUID uuid, double coins) {
+
+    }
 
     /**
      * Increments the player's balance by 1.
      *
      * @param uuid the uuid of the player to increment the balance of
      */
-    void incrementPlayerBalance(UUID uuid);
+    public void incrementPlayerBalance(UUID uuid) {
+
+    }
 
     /**
-     * Deducts an amount of coins from the player's balance.
+     * Deducts an amount of balance from the player's balance.
      *
-     * @param uuid  the uuid of the player from who to deduct the coins
-     * @param coins the amount of coins to deduct.
+     * @param uuid  the uuid of the player from who to deduct the balance
+     * @param coins the amount of balance to deduct.
      */
-    void deductCoinsFromPlayer(UUID uuid, double coins);
+    public void deductCoinsFromPlayer(UUID uuid, double coins) {
+
+    }
+
+    /**
+     * @return the event bus.
+     */
+    public LMCEventBus getEventBus() {
+        return eventBus;
+    }
 
 }

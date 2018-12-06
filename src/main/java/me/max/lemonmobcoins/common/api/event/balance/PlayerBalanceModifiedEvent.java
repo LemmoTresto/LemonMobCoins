@@ -1,7 +1,7 @@
 /*
  *
  *  *
- *  *  * MobCoins - Earn coins for killing mobs.
+ *  *  * LemonMobCoins - Kill mobs and get coins that can be used to buy awesome things
  *  *  * Copyright (C) 2018 Max Berkelmans AKA LemmoTresto
  *  *  *
  *  *  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@
  *
  */
 
-package me.max.lemonmobcoins.common.api.event.coins;
+package me.max.lemonmobcoins.common.api.event.balance;
 
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedOfflinePlayer;
 import me.max.lemonmobcoins.common.api.event.Cancellable;
@@ -29,19 +29,18 @@ import me.max.lemonmobcoins.common.api.event.Event;
 /**
  * Fired when a player's balance gets modified
  * <p>
- * This event gets fired in 3 different types: balance is taken from player,
- * balance is given to player, player's balance got set or got reset.
+ * This event gets fired in different types.
  */
+@SuppressWarnings("unused")
 @Cancellable
-public class BalanceChangedEvent extends Event {
+public class PlayerBalanceModifiedEvent extends Event {
 
     private IWrappedOfflinePlayer player;
-
+    private double oldBalance;
     private double newBalance;
-
     private Type type;
 
-    public BalanceChangedEvent(IWrappedOfflinePlayer player, double newBalance, Type type) {
+    public PlayerBalanceModifiedEvent(IWrappedOfflinePlayer player, double oldBalance, double newBalance, Type type) {
         this.player = player;
         this.newBalance = newBalance;
         this.type = type;
@@ -49,6 +48,10 @@ public class BalanceChangedEvent extends Event {
 
     public IWrappedOfflinePlayer getPlayer() {
         return player;
+    }
+
+    public double getOldBalance() {
+        return oldBalance;
     }
 
     public double getNewBalance() {
@@ -68,6 +71,8 @@ public class BalanceChangedEvent extends Event {
         SET,
 
         RESET,
+
+        EARN,
 
     }
 

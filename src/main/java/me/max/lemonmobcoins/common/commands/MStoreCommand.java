@@ -28,7 +28,6 @@ import co.aikar.commands.annotation.CatchUnknown;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
-import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
 import me.max.lemonmobcoins.common.LemonMobCoins;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
@@ -36,17 +35,16 @@ import me.max.lemonmobcoins.common.api.event.shop.ShopOpenedEvent;
 import me.max.lemonmobcoins.common.gui.GuiManager;
 import me.max.lemonmobcoins.common.messages.Messages;
 
+@SuppressWarnings("unused")
 @CommandAlias("mstore|mshop")
 @CommandPermission("lemonmobcoins.shop")
 public class MStoreCommand extends BaseCommand {
 
     private final IWrappedPlatform platform;
-    private final PAPIHook papiHook;
     private final GuiManager guiManager;
 
-    public MStoreCommand(IWrappedPlatform platform, PAPIHook papiHook, GuiManager guiManager) {
+    public MStoreCommand(IWrappedPlatform platform, GuiManager guiManager) {
         this.platform = platform;
-        this.papiHook = papiHook;
         this.guiManager = guiManager;
     }
 
@@ -54,11 +52,12 @@ public class MStoreCommand extends BaseCommand {
     @CatchUnknown
     public void onShop(CommandIssuer issuer) {
         if (!issuer.isPlayer()) {
-            issuer.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0, papiHook));
+            issuer.sendMessage(Messages.CONSOLE_CANNOT_USE_COMMAND.getMessage(0, null, null, 0));
             return;
         }
         IWrappedPlayer player = platform.getPlayer(issuer.getUniqueId());
-        if (!LemonMobCoins.EVENT_BUS.post(new ShopOpenedEvent(player))) player.openInventory(guiManager.getInventory());
+        if (!LemonMobCoins.getLemonMobCoinsAPI().getEventBus().post(new ShopOpenedEvent(player)))
+            player.openInventory(guiManager.getInventory());
 
     }
 

@@ -59,21 +59,22 @@ public class ClickInventoryListener {
         if (item.isPermission()) {
             if (!p.hasPermission("lemonmobcoins.buy." + item.getIdentifier())) {
                 p.sendMessage(Text.of(Messages.NO_PERMISSION_TO_PURCHASE
-                        .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, null)));
+                        .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0)));
                 return;
             }
         }
 
         if (!(coinManager.getCoinsOfPlayer(p.getUniqueId()) >= item.getPrice())) {
             p.sendMessage(Text.of(Messages.NOT_ENOUGH_MONEY_TO_PURCHASE
-                    .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0, null)));
+                    .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, 0)));
             return;
         }
 
         coinManager.deductCoinsFromPlayer(p.getUniqueId(), item.getPrice());
+
         if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId());
         p.sendMessage(Text.of(Messages.PURCHASED_ITEM_FROM_SHOP
-                .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, item.getPrice(), null)
+                .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), null, item.getPrice())
                 .replaceAll("%item%", item.getDisplayname())));
         for (String cmd : item.getCommands())
             Sponge.getCommandManager().process(Sponge.getServer().getConsole(), ColorUtil

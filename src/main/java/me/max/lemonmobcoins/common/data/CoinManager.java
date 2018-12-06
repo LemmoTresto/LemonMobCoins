@@ -23,7 +23,6 @@
 package me.max.lemonmobcoins.common.data;
 
 
-import me.max.lemonmobcoins.common.api.LemonMobCoinsAPI;
 import me.max.lemonmobcoins.common.exceptions.DataLoadException;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +31,7 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.UUID;
 
-public class CoinManager implements LemonMobCoinsAPI {
+public class CoinManager {
 
     private final DataProvider dataProvider;
     private final Map<UUID, Double> coins;
@@ -50,27 +49,22 @@ public class CoinManager implements LemonMobCoinsAPI {
         dataProvider.saveData(coins);
     }
 
-    @Override
     public double getCoinsOfPlayer(@NotNull UUID uuid) {
         return coins.getOrDefault(uuid, 0.0);
     }
 
-    @Override
     public void setCoinsOfPlayer(@NotNull UUID uuid, double coins) {
         this.coins.put(uuid, coins);
     }
 
-    @Override
     public void addCoinsToPlayer(@NotNull UUID uuid, double coins) {
         setCoinsOfPlayer(uuid, getCoinsOfPlayer(uuid) + coins);
     }
 
-    @Override
     public void incrementPlayerBalance(@NotNull UUID uuid) {
         addCoinsToPlayer(uuid, 1);
     }
 
-    @Override
     public void deductCoinsFromPlayer(@NotNull UUID uuid, double price) {
         setCoinsOfPlayer(uuid, getCoinsOfPlayer(uuid) - price);
     }

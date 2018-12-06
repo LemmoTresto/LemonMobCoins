@@ -62,8 +62,6 @@ import java.util.Arrays;
 @Plugin(id = "lemonmobcoins", name = "LemonMobCoins", version = "1.5", authors = "LemmoTresto")
 public final class LemonMobCoinsSpongePlugin {
 
-    private LemonMobCoins lemonMobCoins;
-
     @Inject
     private Game game;
 
@@ -74,6 +72,7 @@ public final class LemonMobCoinsSpongePlugin {
     @ConfigDir(sharedRoot = false)
     private Path configDir;
 
+    private LemonMobCoins lemonMobCoins;
     private YAMLConfigurationLoader dataLoader;
     private IWrappedPlatform platform;
     private AbstractPluginMessageManager pluginMessageManager;
@@ -123,9 +122,9 @@ public final class LemonMobCoinsSpongePlugin {
         @SuppressWarnings("OptionalGetWithoutIsPresent")
         SpongeCommandManager manager = new SpongeCommandManager(game.getPluginManager().getPlugin("lemonmobcoins")
                                                                     .get());
-        manager.registerCommand(new MobCoinsCommand(getCoinManager(), null, platform, getGuiManager()));
-        manager.registerCommand(new CustomShopCommand(platform, null, getGuiManager()));
-        manager.registerCommand(new MStoreCommand(platform, null, getGuiManager()));
+        manager.registerCommand(new MobCoinsCommand(getCoinManager(), platform, getGuiManager()));
+        manager.registerCommand(new CustomShopCommand(platform, getGuiManager()));
+        manager.registerCommand(new MStoreCommand(platform, getGuiManager()));
         manager.getCommandReplacements().addReplacement("shopCmd", getGuiManager().getCommand().substring(1));
         info("Loaded commands!");
     }

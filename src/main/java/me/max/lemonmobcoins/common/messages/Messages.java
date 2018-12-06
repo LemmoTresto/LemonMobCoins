@@ -22,9 +22,7 @@
 
 package me.max.lemonmobcoins.common.messages;
 
-import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
 import me.max.lemonmobcoins.common.utils.ColorUtil;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,7 +61,7 @@ public enum Messages { //todo look at the commands with which messages. Some are
         this.message = message;
     }
 
-    public String getMessage(double balance, @Nullable String playerName, @Nullable String entityName, double amount, @Nullable PAPIHook papiHook) {
+    public String getMessage(double balance, @Nullable String playerName, @Nullable String entityName, double amount) {
         String msg = ColorUtil.colorize(message);
 
         if (entityName != null) msg = msg.replaceAll("%entity%", entityName);
@@ -73,8 +71,6 @@ public enum Messages { //todo look at the commands with which messages. Some are
         if (playerName != null) msg = msg.replaceAll("%player%", playerName);
 
         msg = msg.replaceAll("%balance%", removeZeroDecimal(String.valueOf(balance)));
-
-        if (papiHook != null) msg = papiHook.replacePlaceholders(Bukkit.getOfflinePlayer(playerName), msg);
 
         return msg;
     }

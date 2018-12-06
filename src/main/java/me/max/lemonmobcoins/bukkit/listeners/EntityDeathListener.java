@@ -22,10 +22,9 @@
 
 package me.max.lemonmobcoins.bukkit.listeners;
 
-import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
 import me.max.lemonmobcoins.common.LemonMobCoins;
-import me.max.lemonmobcoins.common.abstraction.entity.BukkitWrappedPlayer;
-import me.max.lemonmobcoins.common.api.event.coins.PlayerEarnCoinsEvent;
+import me.max.lemonmobcoins.common.abstraction.entity.BukkitWrappedOfflinePlayer;
+import me.max.lemonmobcoins.common.api.event.balance.PlayerBalanceModifiedEvent;
 import me.max.lemonmobcoins.common.coinmob.CoinMob;
 import me.max.lemonmobcoins.common.coinmob.CoinMobManager;
 import me.max.lemonmobcoins.common.data.CoinManager;
@@ -42,13 +41,11 @@ public class EntityDeathListener implements Listener {
     private final CoinManager coinManager;
     private final AbstractPluginMessageManager pluginMessageManager;
     private final CoinMobManager coinMobManager;
-    private final PAPIHook papiHook;
 
-    public EntityDeathListener(CoinManager coinManager, CoinMobManager coinMobManager, AbstractPluginMessageManager pluginMessageManager, PAPIHook papiHook) {
+    public EntityDeathListener(CoinManager coinManager, CoinMobManager coinMobManager, AbstractPluginMessageManager pluginMessageManager) {
         this.coinManager = coinManager;
         this.pluginMessageManager = pluginMessageManager;
         this.coinMobManager = coinMobManager;
-        this.papiHook = papiHook;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -61,14 +58,17 @@ public class EntityDeathListener implements Listener {
 
         int amountToDrop = coinMob.getAmountToDrop();
         if (amountToDrop == 0) return;
-        PlayerEarnCoinsEvent playerEarnCoinsEvent = new PlayerEarnCoinsEvent(new BukkitWrappedPlayer(p), amountToDrop);
-        if (!LemonMobCoins.EVENT_BUS.post(playerEarnCoinsEvent)) {
+
+        PlayerBalanceModifiedEvent playerBalanceModifiedEvent = new PlayerBalanceModifiedEvent(new BukkitWrappedOfflinePlayer(p), coinManager
+                .getCoinsOfPlayer(p.getUniqueId()), coinManager
+                .getCoinsOfPlayer(p.getUniqueId()) + amountToDrop, PlayerBalanceModifiedEvent.Type.EARN);
+        if (!LemonMobCoins.getLemonMobCoinsAPI().getEventBus().post(playerBalanceModifiedEvent)) {
             coinManager.addCoinsToPlayer(p.getUniqueId(), amountToDrop);
             if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId());
 
             event.getEntity().getKiller().sendMessage(Messages.RECEIVED_COINS_FROM_KILL
                     .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), event.getEntity()
-                            .getName(), amountToDrop, papiHook));
+                                                                                                 .getName(), amountToDrop));
         }
     }
 

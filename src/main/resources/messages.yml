@@ -1,11 +1,11 @@
 # Use \n for a newline!
 # Use & for color codes.
 RECEIVED_COINS_FROM_KILL: "&fYou received &e%amount% &fMobCoins for killing &e%entity%&f, your total balance is &e%balance%."
-PURCHASED_ITEM_FROM_SHOP: "&fYou bought &e%item% &ffor &e%amount%&f coins, your balance left is &e%balance%."
+PURCHASED_ITEM_FROM_SHOP: "&fYou bought &e%item% &ffor &e%amount%&f balance, your balance left is &e%balance%."
 NOT_ENOUGH_MONEY_TO_PURCHASE: "&fYou do not have enough funds to buy this! Your current balance is &e%balance%."
 NO_PERMISSION_TO_PURCHASE: "&cYou do not have permission to buy this!"
 UNKNOWN_SUBCOMMAND: "&fUnknown subcommand, try &e/mobcoins help"
-ADMIN_HELP_MENU: "&e/mobcoins help &8- &fDisplay this menu\n&e/mobcoins balance &8- &fCheck your balance\n&e/mobcoins balance [name] &8- &fCheck somebody else balance\n&e/mobcoins shop\n&e/mshop &8- &fOpen the shop\n&e/mc give [name] [amount] &8- &fGive mob coins to a player\n&e/mc take [name] [amount] &8- &fTake mob coins from a player\n&e/mc set [name] [amount] &8- &fSet the balance of a player\n&e/mc reset [name] &8- &fResets player's balance\n&e/mc reload &8- &fReloads the plugin"
+ADMIN_HELP_MENU: "&e/mobcoins help &8- &fDisplay this menu\n&e/mobcoins balance &8- &fCheck your balance\n&e/mobcoins balance [name] &8- &fCheck somebody else balance\n&e/mobcoins shop\n&e/mshop &8- &fOpen the shop\n&e/mc give [name] [amount] &8- &fGive mob balance to a player\n&e/mc take [name] [amount] &8- &fTake mob balance from a player\n&e/mc set [name] [amount] &8- &fSet the balance of a player\n&e/mc reset [name] &8- &fResets player's balance\n&e/mc reload &8- &fReloads the plugin"
 PLAYER_HELP_MENU: "&e/mobcoins help &8- &fDisplay this menu\n&e/mobcoins balance &8- &fCheck your balance\n&e/mobcoins balance [name] &8- &fCheck somebody else balance\n&e/mobcoins shop\n&e/mshop &8- &fOpen the shop"
 OWN_PLAYER_BALANCE: "&fYour balance is &e%balance%."
 OTHER_PLAYER_BALANCE: "&e%player%'s &fbalance is &e%balance%."

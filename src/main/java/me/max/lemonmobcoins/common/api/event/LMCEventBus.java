@@ -1,7 +1,7 @@
 /*
  *
  *  *
- *  *  * MobCoins - Earn coins for killing mobs.
+ *  *  * MobCoins - Earn balance for killing mobs.
  *  *  * Copyright (C) 2018 Max Berkelmans AKA LemmoTresto
  *  *  *
  *  *  * This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,11 @@ import com.google.common.eventbus.EventBus;
 public class LMCEventBus {
 
     // Instance of the event bus
-    private EventBus eventBus = new EventBus();
+    private EventBus eventBus;
+
+    public LMCEventBus() {
+        eventBus = new EventBus();
+    }
 
     /**
      * Registers a specific listener

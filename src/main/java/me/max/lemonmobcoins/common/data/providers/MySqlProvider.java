@@ -82,9 +82,9 @@ public class MySqlProvider implements DataProvider {
     }
 
     private enum Queries {
-        CREATE_TABLE("CREATE TABLE IF NOT EXISTS coins(uuid VARCHAR(36), amount DOUBLE);"),
-        GET_COINS("SELECT * FROM coins;"),
-        SET_COIN("INSERT INTO coins(uuid, amount) VALUES(?, ?) ON DUPLICATE KEY UPDATE amount = VALUES(amount);");
+        CREATE_TABLE("CREATE TABLE IF NOT EXISTS balance(uuid VARCHAR(36), amount DOUBLE);"),
+        GET_COINS("SELECT * FROM balance;"),
+        SET_COIN("INSERT INTO balance(uuid, amount) VALUES(?, ?) ON DUPLICATE KEY UPDATE amount = VALUES(amount);");
 
         private final String query;
 

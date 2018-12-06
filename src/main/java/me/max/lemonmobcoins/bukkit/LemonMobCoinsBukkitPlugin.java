@@ -23,7 +23,6 @@
 package me.max.lemonmobcoins.bukkit;
 
 import co.aikar.commands.BukkitCommandManager;
-import me.max.lemonmobcoins.bukkit.hooks.PAPIHook;
 import me.max.lemonmobcoins.bukkit.listeners.EntityDeathListener;
 import me.max.lemonmobcoins.bukkit.listeners.InventoryClickListener;
 import me.max.lemonmobcoins.bukkit.listeners.PlayerJoinListener;
@@ -59,7 +58,6 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
     private final Logger logger = LoggerFactory.getLogger(LemonMobCoins.class);
     private LemonMobCoins lemonMobCoins;
     private AbstractPluginMessageManager pluginMessageManager;
-    private PAPIHook papiHook;
     private YAMLConfigurationLoader dataLoader;
 
     @Override
@@ -124,22 +122,16 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
             pluginMessageManager = new BukkitPluginMessageManager(getCoinManager(), getSLF4JLogger());
             registerListeners(new PlayerJoinListener(pluginMessageManager));
         }
-        registerListeners(new EntityDeathListener(getCoinManager(), getCoinMobManager(), getPluginMessageManager(), papiHook), new InventoryClickListener(getCoinManager(), getGuiManager(), getPluginMessageManager(), papiHook));
+        registerListeners(new EntityDeathListener(getCoinManager(), getCoinMobManager(), getPluginMessageManager()), new InventoryClickListener(getCoinManager(), getGuiManager(), getPluginMessageManager()));
         info("Loaded listeners!");
 
         info("Loading commands..");
         BukkitCommandManager manager = new BukkitCommandManager(this);
-        manager.registerCommand(new MobCoinsCommand(getCoinManager(), papiHook, platform, getGuiManager()));
-        manager.registerCommand(new CustomShopCommand(platform, papiHook, getGuiManager()));
-        manager.registerCommand(new MStoreCommand(platform, papiHook, getGuiManager()));
+        manager.registerCommand(new MobCoinsCommand(getCoinManager(), platform, getGuiManager()));
+        manager.registerCommand(new CustomShopCommand(platform, getGuiManager()));
+        manager.registerCommand(new MStoreCommand(platform, getGuiManager()));
         manager.getCommandReplacements().addReplacement("shopCmd", getGuiManager().getCommand().substring(1));
         info("Loaded commands!");
-
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            papiHook = new PAPIHook();
-        } else {
-            warn("PlaceholderAPI was not found placeholders from PlaceholderAPI will NOT work!");
-        }
     }
 
     private void registerListeners(Listener... listeners) {

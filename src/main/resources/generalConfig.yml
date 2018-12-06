@@ -18,12 +18,12 @@ storage:
     database: "lemonmobcoins"
 
 # Mob-list
-# This list is the chances and the amount of coins the mobs drop when killed.
+# This list is the chances and the amount of balance the mobs drop when killed.
 #
 # Chance: the chance for the amount to be dropped. Make this 100 if you want it to always drop the amount.
 # Amount: the amount to be dropped. This can be randomized by doing:
 # amount: "minimumValue-maximumValue"
-# For example I want to drop a random amount ranging from 2 to 8 coins
+# For example I want to drop a random amount ranging from 2 to 8 balance
 # Then I would do:
 # amount: "2-8"
 mob-list:

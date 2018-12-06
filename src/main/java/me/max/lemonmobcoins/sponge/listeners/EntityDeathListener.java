@@ -61,7 +61,7 @@ public class EntityDeathListener {
         p.sendMessage(Text.of(Messages.RECEIVED_COINS_FROM_KILL
                 .getMessage(coinManager.getCoinsOfPlayer(p.getUniqueId()), p.getName(), event.getTargetEntity()
                                                                                              .getType()
-                                                                                             .getName(), amountToDrop, null)));
+                                                                                             .getName(), amountToDrop)));
 
     }
 
