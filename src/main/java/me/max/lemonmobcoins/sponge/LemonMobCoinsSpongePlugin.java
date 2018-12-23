@@ -55,11 +55,10 @@ import org.spongepowered.api.scheduler.Task;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-@Plugin(id = "lemonmobcoins", name = "LemonMobCoins", version = "1.5", authors = "LemmoTresto")
+@Plugin(id = "lemonmobcoins", name = "LemonMobCoins", version = "2.0.0", authors = "LemmoTresto")
 public final class LemonMobCoinsSpongePlugin {
 
     @Inject
@@ -70,7 +69,7 @@ public final class LemonMobCoinsSpongePlugin {
 
     @Inject
     @ConfigDir(sharedRoot = false)
-    private Path configDir;
+    private File configDir;
 
     private LemonMobCoins lemonMobCoins;
     private YAMLConfigurationLoader dataLoader;
@@ -81,9 +80,9 @@ public final class LemonMobCoinsSpongePlugin {
     public void onPreInit(GamePreInitializationEvent event) {
         try {
             info("Loading messages and config..");
-            FileUtil.saveResource("generalConfig.yml", configDir.toString(), "config.yml");
-            MessageManager.load(configDir.toString(), logger);
-            dataLoader = YAMLConfigurationLoader.builder().setFile(new File(configDir.toString(), "config.yml"))
+            FileUtil.saveResource("generalConfig.yml", configDir, "config.yml");
+            MessageManager.load(configDir, logger);
+            dataLoader = YAMLConfigurationLoader.builder().setFile(new File(configDir, "config.yml"))
                                                 .build();
             info("Loaded config and files!");
         } catch (IOException e) {
@@ -93,7 +92,7 @@ public final class LemonMobCoinsSpongePlugin {
             return;
         }
         platform = new SpongeWrappedPlatform(this);
-        lemonMobCoins = new LemonMobCoins(getLogger(), configDir.toString(), new SpongeWrappedPlatform(this));
+        lemonMobCoins = new LemonMobCoins(getLogger(), configDir, platform);
     }
 
     @Listener

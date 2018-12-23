@@ -47,8 +47,8 @@ public class LemonMobCoins {
     private CoinManager coinManager;
     private GuiManager guiManager;
     private CoinMobManager coinMobManager;
-    
-    public LemonMobCoins(Logger logger, String dataFolder, IWrappedPlatform platform) throws DataLoadException {
+
+    public LemonMobCoins(Logger logger, File dataFolder, IWrappedPlatform platform) throws DataLoadException {
         this.logger = logger;
 
         try {
@@ -68,7 +68,7 @@ public class LemonMobCoins {
                         .getNode("password").getString(), mysqlSection.getNode("database").getString());
             } else {
                 error("Invalid storage type found! Using flatfile!");
-                dataProvider = new YamlProvider(dataFolder);
+                dataProvider = new YamlProvider(dataFolder.toString());
             }
 
             coinManager = new CoinManager(dataProvider);

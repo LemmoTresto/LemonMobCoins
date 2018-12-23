@@ -32,7 +32,7 @@ import java.nio.file.Files;
 
 public class FileUtil {
 
-    public static void saveResource(@NotNull String resource, @NotNull String dataFolder, @NotNull String file) throws IOException {
+    public static void saveResource(@NotNull String resource, @NotNull File dataFolder, @NotNull String file) throws IOException {
         try {
             Files.copy(LemonMobCoins.class.getResourceAsStream(resource), new File(dataFolder, file).toPath());
         } catch (FileAlreadyExistsException ignored) {

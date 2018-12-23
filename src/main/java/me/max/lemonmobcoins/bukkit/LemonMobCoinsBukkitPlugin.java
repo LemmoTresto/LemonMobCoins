@@ -55,7 +55,7 @@ import java.util.Arrays;
 
 public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
 
-    private final Logger logger = LoggerFactory.getLogger(LemonMobCoins.class);
+    private final Logger logger = LoggerFactory.getLogger(LemonMobCoinsBukkitPlugin.class);
     private LemonMobCoins lemonMobCoins;
     private AbstractPluginMessageManager pluginMessageManager;
     private YAMLConfigurationLoader dataLoader;
@@ -91,8 +91,8 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
     public void onEnable() {
         try {
             info("Loading files and config..");
-            FileUtil.saveResource("generalConfig.yml", getDataFolder().toString(), "config.yml");
-            MessageManager.load(getDataFolder().toString(), getSLF4JLogger());
+            FileUtil.saveResource("generalConfig.yml", getDataFolder(), "config.yml");
+            MessageManager.load(getDataFolder(), getSLF4JLogger());
             dataLoader = YAMLConfigurationLoader.builder().setFile(new File(getDataFolder().toString(), "config.yml"))
                                                 .build();
             info("Loaded config and files!");
@@ -104,7 +104,7 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
         }
 
         final IWrappedPlatform platform = new BukkitWrappedPlatform(this);
-        lemonMobCoins = new LemonMobCoins(getSLF4JLogger(), getDataFolder().toString(), platform);
+        lemonMobCoins = new LemonMobCoins(getSLF4JLogger(), getDataFolder(), platform);
 
         ConfigurationNode node;
         try {

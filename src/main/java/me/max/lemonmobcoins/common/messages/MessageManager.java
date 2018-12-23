@@ -24,6 +24,7 @@ package me.max.lemonmobcoins.common.messages;
 
 import me.max.lemonmobcoins.common.utils.FileUtil;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -36,7 +37,7 @@ public class MessageManager {
 
     }
 
-    public static void load(String dataFolder, Logger logger) {
+    public static void load(@NonNull File dataFolder, @NonNull Logger logger) {
         File file = new File(dataFolder, "messages.yml");
         if (!file.exists()) {
             try {

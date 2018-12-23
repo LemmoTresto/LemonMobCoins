@@ -26,7 +26,7 @@ import me.max.lemonmobcoins.common.utils.ColorUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public enum Messages { //todo look at the commands with which messages. Some are internally (maybe change this or remove it)
+public enum Messages { //todo rewrite.
     RECEIVED_COINS_FROM_KILL(""),
     PURCHASED_ITEM_FROM_SHOP(""),
     NOT_ENOUGH_MONEY_TO_PURCHASE(""),

@@ -48,14 +48,14 @@ public final class LemonMobCoinsBungeePlugin extends Plugin {
     public void onLoad() {
         try {
             info("Loading config..");
-            FileUtil.saveResource("bungeeConfig.yml", getDataFolder().toString(), "config.yml");
+            FileUtil.saveResource("bungeeConfig.yml", getDataFolder(), "config.yml");
             info("Loaded config!");
         } catch (IOException e) {
             error("Could not load config and files! Stopping plugin!");
             e.printStackTrace();
         }
 
-        lemonMobCoins = new LemonMobCoins(getSLF4JLogger(), getDataFolder().toString(), null);
+        lemonMobCoins = new LemonMobCoins(getSLF4JLogger(), getDataFolder(), null);
     }
 
     @Override
