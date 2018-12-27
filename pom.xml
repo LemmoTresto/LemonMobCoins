@@ -60,7 +60,7 @@
     </properties>
 
     <build>
-        <finalName>${project.name}-${project.version}_${build.number}-Release</finalName>
+        <finalName>${project.name}-${project.version}_${build.number}-Develop</finalName>
         <defaultGoal>clean package</defaultGoal>
         <resources>
             <resource>
