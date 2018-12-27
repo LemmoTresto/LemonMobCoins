@@ -34,6 +34,8 @@ public class FileUtil {
 
     public static void saveResource(@NotNull String resource, @NotNull File dataFolder, @NotNull String file) throws IOException {
         try {
+            dataFolder.mkdir();
+            System.out.println("yes");
             Files.copy(LemonMobCoins.class.getResourceAsStream(resource), new File(dataFolder, file).toPath());
         } catch (FileAlreadyExistsException ignored) {
         }

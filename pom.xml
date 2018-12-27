@@ -60,7 +60,7 @@
     </properties>
 
     <build>
-        <finalName>${project.name}-${project.version}_${build.number}-Develop</finalName>
+        <finalName>${project.name}-${project.version}_${build.number}-Release</finalName>
         <defaultGoal>clean package</defaultGoal>
         <resources>
             <resource>
@@ -109,6 +109,7 @@
                                 </relocation>
                             </relocations>
                             <minimizeJar>true</minimizeJar>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
                     </execution>
                 </executions>
@@ -148,7 +149,7 @@
         <!-- Command System -->
         <repository>
             <id>aikar</id>
-            <url>https://repo.aikar.co/content/groups/aikar/</url>
+            <url>http://repo.aikar.co/content/groups/aikar/</url>
         </repository>
     </repositories>
 

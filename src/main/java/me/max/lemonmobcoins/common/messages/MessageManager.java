@@ -34,7 +34,6 @@ public class MessageManager {
 
     public MessageManager() {
         throw new UnsupportedOperationException("Instantiation of this class is not allowed.");
-
     }
 
     public static void load(@NonNull File dataFolder, @NonNull Logger logger) {
