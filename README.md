@@ -5,3 +5,7 @@
 [![License](https://img.shields.io/github/license/LemmoTresto/LemonMobCoins.svg)](https://github.com/LemmoTresto/LemonMobCoins/blob/master/LICENSE)
 
 ### Kill mobs and get coins that can be used to buy awesome things
+
+#### Thanks to Jetbrains for licensing
+[![InteliJ Idea](https://upload.wikimedia.org/wikipedia/commons/d/d5/IntelliJ_IDEA_Logo.svg)](https://www.jetbrains.com/)
+##### The Java IDE by Jetbrains
