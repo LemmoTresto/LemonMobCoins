@@ -61,6 +61,7 @@ public enum Messages { //todo rewrite.
         this.message = message;
     }
 
+    //todo rewrite plz this is ugly lol
     public String getMessage(double balance, @Nullable String playerName, @Nullable String entityName, double amount) {
         String msg = ColorUtil.colorize(message);
 
