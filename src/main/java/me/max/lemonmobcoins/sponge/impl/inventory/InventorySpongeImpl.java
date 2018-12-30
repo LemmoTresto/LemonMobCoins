@@ -20,39 +20,22 @@
  *
  */
 
-package me.max.lemonmobcoins.common.abstraction.entity;
+package me.max.lemonmobcoins.sponge.impl.inventory;
 
-import org.bukkit.OfflinePlayer;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
+import org.spongepowered.api.item.inventory.Inventory;
 
-import java.util.UUID;
+public class InventorySpongeImpl implements IWrappedInventory {
 
-public class BukkitWrappedOfflinePlayer implements IWrappedOfflinePlayer {
+    private final Inventory inventory;
 
-    private final OfflinePlayer offlinePlayer;
-
-    public BukkitWrappedOfflinePlayer(OfflinePlayer offlinePlayer) {
-        this.offlinePlayer = offlinePlayer;
+    public InventorySpongeImpl(Inventory inventory) {
+        this.inventory = inventory;
     }
 
     @Override
-    public String getName() {
-        return offlinePlayer.getName();
-    }
-
-    @Override
-    public UUID getUniqueId() {
-        return offlinePlayer.getUniqueId();
-    }
-
-    @Override
-    public boolean isOnline() {
-        return offlinePlayer.isOnline();
-
-    }
-
-    @Override
-    public IWrappedPlayer getOnlinePlayer() {
-        return new BukkitWrappedPlayer(offlinePlayer.getPlayer());
+    public Inventory getInventory() {
+        return inventory;
     }
 
 }

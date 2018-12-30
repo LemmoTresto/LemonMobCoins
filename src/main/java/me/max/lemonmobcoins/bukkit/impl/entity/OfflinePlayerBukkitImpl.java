@@ -20,44 +20,41 @@
  *
  */
 
-package me.max.lemonmobcoins.common.pluginmessaging;
+package me.max.lemonmobcoins.bukkit.impl.entity;
 
-import me.max.lemonmobcoins.common.data.CoinManager;
-import org.slf4j.Logger;
+import me.max.lemonmobcoins.common.abstraction.entity.IWrappedOfflinePlayer;
+import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
+import org.bukkit.OfflinePlayer;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-public abstract class AbstractPluginMessageManager {
+public class OfflinePlayerBukkitImpl implements IWrappedOfflinePlayer {
 
-    private final List<UUID> cache = new ArrayList<>();
-    private final CoinManager coinManager;
-    private final Logger logger;
+    private final OfflinePlayer offlinePlayer;
 
-    public AbstractPluginMessageManager(CoinManager coinManager, Logger logger) {
-        this.coinManager = coinManager;
-        this.logger = logger;
+    public OfflinePlayerBukkitImpl(OfflinePlayer offlinePlayer) {
+        this.offlinePlayer = offlinePlayer;
     }
 
-    public void sendPluginMessage(UUID uuid) {
+    @Override
+    public String getName() {
+        return offlinePlayer.getName();
+    }
+
+    @Override
+    public UUID getUniqueId() {
+        return offlinePlayer.getUniqueId();
+    }
+
+    @Override
+    public boolean isOnline() {
+        return offlinePlayer.isOnline();
 
     }
 
-    void sendPendingPluginMessages() {
-        getCache().forEach(this::sendPluginMessage);
-    }
-
-    protected List<UUID> getCache() {
-        return cache;
-    }
-
-    public CoinManager getCoinManager() {
-        return coinManager;
-    }
-
-    public Logger getLogger() {
-        return logger;
+    @Override
+    public IWrappedPlayer getOnlinePlayer() {
+        return new PlayerBukkitImpl(offlinePlayer.getPlayer());
     }
 
 }

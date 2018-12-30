@@ -20,18 +20,28 @@
  *
  */
 
-package me.max.lemonmobcoins.common.abstraction.inventory;
+package me.max.lemonmobcoins.bukkit.impl.inventory;
 
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.jetbrains.annotations.Contract;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedItemStack;
+import org.bukkit.inventory.ItemStack;
 
-public class BukkitHolder implements InventoryHolder {
+public class ItemStackBukkitImpl implements IWrappedItemStack {
+
+    private final ItemStack itemStack;
+
+    public ItemStackBukkitImpl(ItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
 
     @Override
-    @Contract("-> null")
-    public Inventory getInventory() {
-        return null;
+    public ItemStack getStack() {
+        return itemStack;
+    }
+
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    @Override
+    public boolean equals(Object obj) {
+        return itemStack.equals(obj);
     }
 
 }

@@ -20,33 +20,44 @@
  *
  */
 
-package me.max.lemonmobcoins.common.pluginmessaging;
+package me.max.lemonmobcoins.common.abstraction.pluginmessaging;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import me.max.lemonmobcoins.common.data.CoinManager;
+import org.slf4j.Logger;
 
-public class AbstractPlayerJoinListener {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
-    private final Timer timer = new Timer();
-    private final AbstractPluginMessageManager pluginMessageManager;
-    private final TimerTask timerTask = new TimerTask() {
-        @Override
-        public void run() {
-            pluginMessageManager.sendPendingPluginMessages();
-        }
-    };
+public abstract class AbstractPluginMessageManager {
 
-    protected AbstractPlayerJoinListener(AbstractPluginMessageManager pluginMessageManager) {
-        this.pluginMessageManager = pluginMessageManager;
+    private final List<UUID> cache = new ArrayList<>();
+    private final CoinManager coinManager;
+    private final Logger logger;
+
+    public AbstractPluginMessageManager(CoinManager coinManager, Logger logger) {
+        this.coinManager = coinManager;
+        this.logger = logger;
     }
 
-    private AbstractPluginMessageManager getPluginMessageManager() {
-        return pluginMessageManager;
+    public void sendPluginMessage(UUID uuid) {
+
     }
 
-    protected void launchTimer() {
-        if (getPluginMessageManager().getCache().isEmpty()) return;
-        timer.schedule(timerTask, 1500L);
+    void sendPendingPluginMessages() {
+        getCache().forEach(this::sendPluginMessage);
+    }
+
+    protected List<UUID> getCache() {
+        return cache;
+    }
+
+    public CoinManager getCoinManager() {
+        return coinManager;
+    }
+
+    public Logger getLogger() {
+        return logger;
     }
 
 }

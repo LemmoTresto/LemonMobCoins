@@ -22,8 +22,8 @@
 
 package me.max.lemonmobcoins.sponge.listeners;
 
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPlayerJoinListener;
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
+import me.max.lemonmobcoins.common.abstraction.pluginmessaging.AbstractPlayerJoinListener;
+import me.max.lemonmobcoins.common.abstraction.pluginmessaging.AbstractPluginMessageManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 

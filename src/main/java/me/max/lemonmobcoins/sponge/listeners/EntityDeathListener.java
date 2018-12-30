@@ -22,11 +22,11 @@
 
 package me.max.lemonmobcoins.sponge.listeners;
 
+import me.max.lemonmobcoins.common.abstraction.pluginmessaging.AbstractPluginMessageManager;
 import me.max.lemonmobcoins.common.coinmob.CoinMob;
 import me.max.lemonmobcoins.common.coinmob.CoinMobManager;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.messages.Messages;
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DestructEntityEvent;

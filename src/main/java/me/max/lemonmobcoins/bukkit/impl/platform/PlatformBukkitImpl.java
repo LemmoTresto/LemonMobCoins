@@ -20,14 +20,19 @@
  *
  */
 
-package me.max.lemonmobcoins.common.abstraction.platform;
+package me.max.lemonmobcoins.bukkit.impl.platform;
 
 import me.max.lemonmobcoins.bukkit.LemonMobCoinsBukkitPlugin;
-import me.max.lemonmobcoins.common.abstraction.entity.BukkitWrappedOfflinePlayer;
-import me.max.lemonmobcoins.common.abstraction.entity.BukkitWrappedPlayer;
+import me.max.lemonmobcoins.bukkit.impl.entity.OfflinePlayerBukkitImpl;
+import me.max.lemonmobcoins.bukkit.impl.entity.PlayerBukkitImpl;
+import me.max.lemonmobcoins.bukkit.impl.inventory.InventoryBukkitImpl;
+import me.max.lemonmobcoins.bukkit.impl.inventory.InventoryHolderBukkitImpl;
+import me.max.lemonmobcoins.bukkit.impl.inventory.ItemStackBukkitImpl;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedOfflinePlayer;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
-import me.max.lemonmobcoins.common.abstraction.inventory.*;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedItemStack;
+import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
 import me.max.lemonmobcoins.common.gui.ShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -41,39 +46,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class BukkitWrappedPlatform implements IWrappedPlatform {
+public class PlatformBukkitImpl implements IWrappedPlatform {
 
     private final LemonMobCoinsBukkitPlugin plugin;
 
-    public BukkitWrappedPlatform(LemonMobCoinsBukkitPlugin plugin) {
+    public PlatformBukkitImpl(LemonMobCoinsBukkitPlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public IWrappedPlayer[] getOnlinePlayers() {
         List<IWrappedPlayer> players = new ArrayList<>();
-        Bukkit.getOnlinePlayers().forEach(o -> players.add(new BukkitWrappedPlayer(o)));
+        Bukkit.getOnlinePlayers().forEach(o -> players.add(new PlayerBukkitImpl(o)));
         return players.toArray(new IWrappedPlayer[0]);
     }
 
     @Override
     public IWrappedPlayer getPlayer(String name) {
-        return new BukkitWrappedPlayer(Bukkit.getPlayer(name));
+        return new PlayerBukkitImpl(Bukkit.getPlayer(name));
     }
 
     @Override
     public IWrappedPlayer getPlayer(UUID uuid) {
-        return new BukkitWrappedPlayer(Bukkit.getPlayer(uuid));
+        return new PlayerBukkitImpl(Bukkit.getPlayer(uuid));
     }
 
     @Override
     public IWrappedOfflinePlayer getOfflinePlayer(UUID uuid) {
-        return new BukkitWrappedOfflinePlayer(Bukkit.getOfflinePlayer(uuid));
+        return new OfflinePlayerBukkitImpl(Bukkit.getOfflinePlayer(uuid));
     }
 
     @Override
     public IWrappedOfflinePlayer getOfflinePlayer(String name) {
-        return new BukkitWrappedOfflinePlayer(Bukkit.getOfflinePlayer(name));
+        return new OfflinePlayerBukkitImpl(Bukkit.getOfflinePlayer(name));
     }
 
     @Override
@@ -88,20 +93,11 @@ public class BukkitWrappedPlatform implements IWrappedPlatform {
 
     @Override
     public IWrappedInventory createInventory(String title, int rows, List<ShopItem> items) {
-        Inventory inv = Bukkit.createInventory(new BukkitHolder(), rows, title);
+        Inventory inv = Bukkit.createInventory(new InventoryHolderBukkitImpl(), rows, title);
         for (ShopItem item : items) {
-            ItemStack itemStack = new ItemStack(Material.matchMaterial(item.getMaterial()), item.getAmount());
-            ItemMeta meta = itemStack.getItemMeta();
-            meta.setDisplayName(item.getDisplayname());
-            meta.setLore(item.getLore());
-            if (item.isGlowing()) {
-                meta.addEnchant(Enchantment.KNOCKBACK, 1, false);
-                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            }
-            itemStack.setItemMeta(meta);
-            inv.setItem(item.getSlot(), itemStack);
+            inv.setItem(item.getSlot(), (ItemStack) toItemStack(item));
         }
-        return new BukkitWrappedInventory(inv);
+        return new InventoryBukkitImpl(inv);
     }
 
     @Override
@@ -115,7 +111,7 @@ public class BukkitWrappedPlatform implements IWrappedPlatform {
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
         itemStack.setItemMeta(meta);
-        return new BukkitWrappedItemStack(itemStack);
+        return new ItemStackBukkitImpl(itemStack);
     }
 
 }

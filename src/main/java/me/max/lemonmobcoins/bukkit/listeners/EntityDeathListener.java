@@ -22,14 +22,14 @@
 
 package me.max.lemonmobcoins.bukkit.listeners;
 
+import me.max.lemonmobcoins.bukkit.impl.entity.OfflinePlayerBukkitImpl;
 import me.max.lemonmobcoins.common.LemonMobCoins;
-import me.max.lemonmobcoins.common.abstraction.entity.BukkitWrappedOfflinePlayer;
+import me.max.lemonmobcoins.common.abstraction.pluginmessaging.AbstractPluginMessageManager;
 import me.max.lemonmobcoins.common.api.event.balance.PlayerBalanceModifiedEvent;
 import me.max.lemonmobcoins.common.coinmob.CoinMob;
 import me.max.lemonmobcoins.common.coinmob.CoinMobManager;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.messages.Messages;
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -59,7 +59,7 @@ public class EntityDeathListener implements Listener {
         int amountToDrop = coinMob.getAmountToDrop();
         if (amountToDrop == 0) return;
 
-        PlayerBalanceModifiedEvent playerBalanceModifiedEvent = new PlayerBalanceModifiedEvent(new BukkitWrappedOfflinePlayer(p), coinManager
+        PlayerBalanceModifiedEvent playerBalanceModifiedEvent = new PlayerBalanceModifiedEvent(new OfflinePlayerBukkitImpl(p), coinManager
                 .getCoinsOfPlayer(p.getUniqueId()), coinManager
                 .getCoinsOfPlayer(p.getUniqueId()) + amountToDrop, PlayerBalanceModifiedEvent.Type.EARN);
         if (!LemonMobCoins.getLemonMobCoinsAPI().getEventBus().post(playerBalanceModifiedEvent)) {

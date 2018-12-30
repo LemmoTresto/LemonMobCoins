@@ -20,41 +20,19 @@
  *
  */
 
-package me.max.lemonmobcoins.common.abstraction.entity;
+package me.max.lemonmobcoins.bukkit.impl.inventory;
 
-import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.text.Text;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventoryHolder;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.jetbrains.annotations.Contract;
 
-import java.util.UUID;
-
-public class SpongeWrappedPlayer implements IWrappedPlayer {
-
-    private final Player player;
-
-    public SpongeWrappedPlayer(Player player) {
-        this.player = player;
-    }
+public class InventoryHolderBukkitImpl implements IWrappedInventoryHolder, InventoryHolder {
 
     @Override
-    public String getName() {
-        return player.getName();
-    }
-
-    @Override
-    public UUID getUniqueId() {
-        return player.getUniqueId();
-    }
-
-    @Override
-    public void sendMessage(String message) {
-        player.sendMessage(Text.of(message));
-    }
-
-    @Override
-    public void openInventory(IWrappedInventory inventory) {
-        player.openInventory((Inventory) inventory.getInventory());
+    @Contract("-> null")
+    public Inventory getInventory() {
+        return null;
     }
 
 }

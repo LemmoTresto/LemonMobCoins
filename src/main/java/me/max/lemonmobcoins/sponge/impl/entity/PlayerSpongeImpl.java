@@ -20,27 +20,42 @@
  *
  */
 
-package me.max.lemonmobcoins.common.abstraction.inventory;
+package me.max.lemonmobcoins.sponge.impl.entity;
 
-import org.spongepowered.api.item.inventory.ItemStack;
+import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.text.Text;
 
-public class SpongeWrappedItemStack implements IWrappedItemStack {
+import java.util.UUID;
 
-    private final ItemStack itemStack;
+public class PlayerSpongeImpl implements IWrappedPlayer {
 
-    public SpongeWrappedItemStack(ItemStack itemStack) {
-        this.itemStack = itemStack;
+    private final Player player;
+
+    public PlayerSpongeImpl(Player player) {
+        this.player = player;
     }
 
     @Override
-    public ItemStack getStack() {
-        return itemStack;
+    public String getName() {
+        return player.getName();
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof ItemStack)) return false;
-        return itemStack.equalTo((ItemStack) obj);
+    public UUID getUniqueId() {
+        return player.getUniqueId();
+    }
+
+    @Override
+    public void sendMessage(String message) {
+        player.sendMessage(Text.of(message));
+    }
+
+    @Override
+    public void openInventory(IWrappedInventory inventory) {
+        player.openInventory((Inventory) inventory.getInventory());
     }
 
 }

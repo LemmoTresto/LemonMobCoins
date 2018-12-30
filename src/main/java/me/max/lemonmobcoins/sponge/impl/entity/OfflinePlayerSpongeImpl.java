@@ -20,23 +20,40 @@
  *
  */
 
-package me.max.lemonmobcoins.bukkit.listeners;
+package me.max.lemonmobcoins.sponge.impl.entity;
 
-import me.max.lemonmobcoins.common.abstraction.pluginmessaging.AbstractPlayerJoinListener;
-import me.max.lemonmobcoins.common.abstraction.pluginmessaging.AbstractPluginMessageManager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import me.max.lemonmobcoins.common.abstraction.entity.IWrappedOfflinePlayer;
+import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
+import org.spongepowered.api.entity.living.player.User;
 
-public class PlayerJoinListener extends AbstractPlayerJoinListener implements Listener {
+import java.util.UUID;
 
-    public PlayerJoinListener(AbstractPluginMessageManager pluginMessageManager) {
-        super(pluginMessageManager);
+public class OfflinePlayerSpongeImpl implements IWrappedOfflinePlayer {
+
+    private final User user;
+
+    public OfflinePlayerSpongeImpl(User user) {
+        this.user = user;
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        launchTimer();
+    @Override
+    public String getName() {
+        return user.getName();
+    }
+
+    @Override
+    public UUID getUniqueId() {
+        return user.getUniqueId();
+    }
+
+    @Override
+    public boolean isOnline() {
+        return user.isOnline();
+    }
+
+    @Override
+    public IWrappedPlayer getOnlinePlayer() {
+        return user.getPlayer().map(PlayerSpongeImpl::new).orElse(null);
     }
 
 }

@@ -20,21 +20,28 @@
  *
  */
 
-package me.max.lemonmobcoins.common.abstraction.inventory;
+package me.max.lemonmobcoins.sponge.impl.inventory;
 
-import org.spongepowered.api.item.inventory.Inventory;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedItemStack;
+import org.spongepowered.api.item.inventory.ItemStack;
 
-public class SpongeWrappedInventory implements IWrappedInventory {
+public class ItemStackSpongeImpl implements IWrappedItemStack {
 
-    private final Inventory inventory;
+    private final ItemStack itemStack;
 
-    public SpongeWrappedInventory(Inventory inventory) {
-        this.inventory = inventory;
+    public ItemStackSpongeImpl(ItemStack itemStack) {
+        this.itemStack = itemStack;
     }
 
     @Override
-    public Inventory getInventory() {
-        return inventory;
+    public ItemStack getStack() {
+        return itemStack;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ItemStack)) return false;
+        return itemStack.equalTo((ItemStack) obj);
     }
 
 }

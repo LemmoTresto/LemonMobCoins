@@ -20,27 +20,33 @@
  *
  */
 
-package me.max.lemonmobcoins.common.abstraction.inventory;
+package me.max.lemonmobcoins.common.abstraction.pluginmessaging;
 
-import org.bukkit.inventory.ItemStack;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class BukkitWrappedItemStack implements IWrappedItemStack {
+public class AbstractPlayerJoinListener {
 
-    private final ItemStack itemStack;
+    private final Timer timer = new Timer();
+    private final AbstractPluginMessageManager pluginMessageManager;
+    private final TimerTask timerTask = new TimerTask() {
+        @Override
+        public void run() {
+            pluginMessageManager.sendPendingPluginMessages();
+        }
+    };
 
-    public BukkitWrappedItemStack(ItemStack itemStack) {
-        this.itemStack = itemStack;
+    protected AbstractPlayerJoinListener(AbstractPluginMessageManager pluginMessageManager) {
+        this.pluginMessageManager = pluginMessageManager;
     }
 
-    @Override
-    public ItemStack getStack() {
-        return itemStack;
+    private AbstractPluginMessageManager getPluginMessageManager() {
+        return pluginMessageManager;
     }
 
-    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-    @Override
-    public boolean equals(Object obj) {
-        return itemStack.equals(obj);
+    protected void launchTimer() {
+        if (getPluginMessageManager().getCache().isEmpty()) return;
+        timer.schedule(timerTask, 1500L);
     }
 
 }
