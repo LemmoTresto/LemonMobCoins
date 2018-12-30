@@ -24,7 +24,7 @@ package me.max.lemonmobcoins.bukkit;
 
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
+import me.max.lemonmobcoins.bukkit.impl.entity.PlayerBukkitImpl;
 import me.max.lemonmobcoins.common.abstraction.pluginmessaging.AbstractPluginMessageManager;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import org.bukkit.Bukkit;
@@ -41,18 +41,11 @@ public class BukkitPluginMessageManager extends AbstractPluginMessageManager {
 
     public void sendPluginMessage(UUID uuid) {
         Player p = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
-        if (p == null) {
-            if (getCache().contains(uuid)) return;
-            getCache().add(uuid);
-            return;
-        }
-
         double balance = getCoinManager().getCoinsOfPlayer(uuid);
 
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("LemonMobCoins");
-        out.writeUTF(uuid.toString());
-        out.writeDouble(balance);
+        ByteArrayDataOutput out = getPluginMessage(new PlayerBukkitImpl(p), uuid, balance);
+        if (out == null) return;
+
         p.sendPluginMessage(Bukkit.getPluginManager().getPlugin("LemonMobCoins"), "BungeeCord", out.toByteArray());
 
         getLogger().info("Sent information of Player " + uuid + ". Balance sent: " + balance);
