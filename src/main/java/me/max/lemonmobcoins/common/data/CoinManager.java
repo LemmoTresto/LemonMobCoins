@@ -74,4 +74,7 @@ public class CoinManager {
         return coins;
     }
 
+    public Map<String, Double> getTopPlayers(int page) {
+        //todo
+    }
 }
