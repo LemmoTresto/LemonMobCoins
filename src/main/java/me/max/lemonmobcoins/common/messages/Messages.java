@@ -55,6 +55,7 @@ public enum Messages { //todo rewrite.
     NOT_ENOUGH_MONEY_TO_PAY(""),
     //todo
     TOP_PLAYERS_BEGIN(""),
+    TOP_PLAYERS_END(""),
     TOP_PLAYER_ENTRY("");
 
     private String message;

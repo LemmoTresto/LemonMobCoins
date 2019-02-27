@@ -193,14 +193,9 @@ public class MobCoinsCommand extends BaseCommand {
     @CommandPermission("lemonmobcoins.top")
     public void onTop(CommandIssuer issuer, @Optional int page){
         Map<String, Double> topPlayers = coinManager.getTopPlayers(page, platform);
-
         issuer.sendMessage(Messages.TOP_PLAYERS_BEGIN.getMessage(coinManager.getCoinsOfPlayer(issuer.getUniqueId()), platform.getPlayer(issuer.getUniqueId()).getName(), null, 0));
-        int i = 0;
-        for (Map.Entry entry : topPlayers.entrySet()){
-            issuer.sendMessage(Messages.TOP_PLAYER_ENTRY.getMessage(coinManager.getCoinsOfPlayer(issuer.getUniqueId()), platform.getPlayer(issuer.getUniqueId()).getName(), null, 0));
-
-            i++;
-        }
+        topPlayers.forEach((key, value) -> issuer.sendMessage(Messages.TOP_PLAYER_ENTRY.getMessage(value, key, null, 0)));
+        issuer.sendMessage(Messages.TOP_PLAYERS_END.getMessage(coinManager.getCoinsOfPlayer(issuer.getUniqueId()), platform.getPlayer(issuer.getUniqueId()).getName(), null, 0));
     }
 
     @Subcommand("shop|s")
