@@ -52,7 +52,10 @@ public enum Messages { //todo rewrite.
     INVALID_USAGE_RESET_COMMAND(""),
     PAY_PLAYER(""),
     PAID_BY_PLAYER(""),
-    NOT_ENOUGH_MONEY_TO_PAY("");
+    NOT_ENOUGH_MONEY_TO_PAY(""),
+    //todo
+    TOP_PLAYERS_BEGIN(""),
+    TOP_PLAYER_ENTRY("");
 
     private String message;
 
