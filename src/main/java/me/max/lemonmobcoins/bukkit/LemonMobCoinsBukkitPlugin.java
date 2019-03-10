@@ -32,7 +32,6 @@ import me.max.lemonmobcoins.common.LemonMobCoins;
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
 import me.max.lemonmobcoins.common.abstraction.pluginmessaging.AbstractPluginMessageManager;
 import me.max.lemonmobcoins.common.coinmob.CoinMobManager;
-import me.max.lemonmobcoins.common.commands.CustomShopCommand;
 import me.max.lemonmobcoins.common.commands.MStoreCommand;
 import me.max.lemonmobcoins.common.commands.MobCoinsCommand;
 import me.max.lemonmobcoins.common.data.CoinManager;
@@ -128,7 +127,6 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
         info("Loading commands..");
         BukkitCommandManager manager = new BukkitCommandManager(this);
         manager.registerCommand(new MobCoinsCommand(getCoinManager(), platform, getGuiManager()));
-        manager.registerCommand(new CustomShopCommand(platform, getGuiManager()));
         manager.registerCommand(new MStoreCommand(platform, getGuiManager()));
         manager.getCommandReplacements().addReplacement("shopCmd", getGuiManager().getCommand().substring(1));
         info("Loaded commands!");
