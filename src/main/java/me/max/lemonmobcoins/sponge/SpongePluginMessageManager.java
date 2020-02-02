@@ -24,9 +24,9 @@ package me.max.lemonmobcoins.sponge;
 
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
+import me.max.lemonmobcoins.common.abstraction.pluginmessaging.AbstractPluginMessageManager;
 import me.max.lemonmobcoins.common.data.CoinManager;
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
+import me.max.lemonmobcoins.sponge.impl.entity.PlayerSpongeImpl;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -42,18 +42,10 @@ public class SpongePluginMessageManager extends AbstractPluginMessageManager {
 
     public void sendPluginMessage(UUID uuid) {
         Player p = Iterables.getFirst(Sponge.getGame().getServer().getOnlinePlayers(), null);
-        if (p == null) {
-            if (getCache().contains(uuid)) return;
-            getCache().add(uuid);
-            return;
-        }
-
         double balance = getCoinManager().getCoinsOfPlayer(uuid);
 
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("LemonMobCoins");
-        out.writeUTF(uuid.toString());
-        out.writeDouble(balance);
+        ByteArrayDataOutput out = getPluginMessage(new PlayerSpongeImpl(p), uuid, balance);
+        if (out == null) return;
 
         ChannelBinding.RawDataChannel channel = (ChannelBinding.RawDataChannel) Sponge.getChannelRegistrar()
                                                                                       .getChannel("BungeeCord").get();

@@ -26,16 +26,15 @@ import co.aikar.commands.SpongeCommandManager;
 import com.google.inject.Inject;
 import me.max.lemonmobcoins.common.LemonMobCoins;
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
-import me.max.lemonmobcoins.common.abstraction.platform.SpongeWrappedPlatform;
+import me.max.lemonmobcoins.common.abstraction.pluginmessaging.AbstractPluginMessageManager;
 import me.max.lemonmobcoins.common.coinmob.CoinMobManager;
-import me.max.lemonmobcoins.common.commands.CustomShopCommand;
 import me.max.lemonmobcoins.common.commands.MStoreCommand;
 import me.max.lemonmobcoins.common.commands.MobCoinsCommand;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.gui.GuiManager;
 import me.max.lemonmobcoins.common.messages.MessageManager;
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
 import me.max.lemonmobcoins.common.utils.FileUtil;
+import me.max.lemonmobcoins.sponge.impl.platform.PlatformSpongeImpl;
 import me.max.lemonmobcoins.sponge.listeners.ClickInventoryListener;
 import me.max.lemonmobcoins.sponge.listeners.EntityDeathListener;
 import me.max.lemonmobcoins.sponge.listeners.PlayerJoinListener;
@@ -91,7 +90,7 @@ public final class LemonMobCoinsSpongePlugin {
             shutdown();
             return;
         }
-        platform = new SpongeWrappedPlatform(this);
+        platform = new PlatformSpongeImpl(this);
         lemonMobCoins = new LemonMobCoins(getLogger(), configDir, platform);
     }
 
@@ -122,7 +121,6 @@ public final class LemonMobCoinsSpongePlugin {
         SpongeCommandManager manager = new SpongeCommandManager(game.getPluginManager().getPlugin("lemonmobcoins")
                                                                     .get());
         manager.registerCommand(new MobCoinsCommand(getCoinManager(), platform, getGuiManager()));
-        manager.registerCommand(new CustomShopCommand(platform, getGuiManager()));
         manager.registerCommand(new MStoreCommand(platform, getGuiManager()));
         manager.getCommandReplacements().addReplacement("shopCmd", getGuiManager().getCommand().substring(1));
         info("Loaded commands!");

@@ -20,40 +20,9 @@
  *
  */
 
-package me.max.lemonmobcoins.common.abstraction.entity;
+package me.max.lemonmobcoins.common.abstraction.inventory;
 
-import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
+public interface IWrappedInventoryHolder {
 
-import java.util.UUID;
-
-public class BukkitWrappedPlayer implements IWrappedPlayer {
-
-    private final Player player;
-
-    public BukkitWrappedPlayer(Player player) {
-        this.player = player;
-    }
-
-    @Override
-    public String getName() {
-        return player.getName();
-    }
-
-    @Override
-    public UUID getUniqueId() {
-        return player.getUniqueId();
-    }
-
-    @Override
-    public void sendMessage(String message) {
-        player.sendMessage(message);
-    }
-
-    @Override
-    public void openInventory(IWrappedInventory inventory) {
-        player.openInventory((Inventory) inventory.getInventory());
-    }
-
+    Object getInventory();
 }

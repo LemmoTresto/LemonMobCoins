@@ -20,18 +20,41 @@
  *
  */
 
-package me.max.lemonmobcoins.common.abstraction.inventory;
+package me.max.lemonmobcoins.bukkit.impl.entity;
 
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.jetbrains.annotations.Contract;
+import me.max.lemonmobcoins.common.abstraction.entity.IWrappedOfflinePlayer;
+import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
+import org.bukkit.OfflinePlayer;
 
-public class BukkitHolder implements InventoryHolder {
+import java.util.UUID;
+
+public class OfflinePlayerBukkitImpl implements IWrappedOfflinePlayer {
+
+    private final OfflinePlayer offlinePlayer;
+
+    public OfflinePlayerBukkitImpl(OfflinePlayer offlinePlayer) {
+        this.offlinePlayer = offlinePlayer;
+    }
 
     @Override
-    @Contract("-> null")
-    public Inventory getInventory() {
-        return null;
+    public String getName() {
+        return offlinePlayer.getName();
+    }
+
+    @Override
+    public UUID getUniqueId() {
+        return offlinePlayer.getUniqueId();
+    }
+
+    @Override
+    public boolean isOnline() {
+        return offlinePlayer.isOnline();
+
+    }
+
+    @Override
+    public IWrappedPlayer getOnlinePlayer() {
+        return new PlayerBukkitImpl(offlinePlayer.getPlayer());
     }
 
 }

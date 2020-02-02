@@ -22,16 +22,16 @@
 
 package me.max.lemonmobcoins.bukkit.listeners;
 
+import me.max.lemonmobcoins.bukkit.impl.entity.PlayerBukkitImpl;
+import me.max.lemonmobcoins.bukkit.impl.inventory.InventoryHolderBukkitImpl;
+import me.max.lemonmobcoins.bukkit.impl.inventory.ItemStackBukkitImpl;
 import me.max.lemonmobcoins.common.LemonMobCoins;
-import me.max.lemonmobcoins.common.abstraction.entity.BukkitWrappedPlayer;
-import me.max.lemonmobcoins.common.abstraction.inventory.BukkitHolder;
-import me.max.lemonmobcoins.common.abstraction.inventory.BukkitWrappedItemStack;
+import me.max.lemonmobcoins.common.abstraction.pluginmessaging.AbstractPluginMessageManager;
 import me.max.lemonmobcoins.common.api.event.shop.PlayerPurchaseItemEvent;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.gui.GuiManager;
 import me.max.lemonmobcoins.common.gui.ShopItem;
 import me.max.lemonmobcoins.common.messages.Messages;
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
 import me.max.lemonmobcoins.common.utils.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -54,11 +54,11 @@ public class InventoryClickListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getCurrentItem() == null) return;
-        if (!(event.getInventory().getHolder() instanceof BukkitHolder)) return;
+        if (!(event.getInventory().getHolder() instanceof InventoryHolderBukkitImpl)) return;
         event.setCancelled(true);
 
         Player p = (Player) event.getWhoClicked();
-        ShopItem item = guiManager.getShopItem(new BukkitWrappedItemStack(event.getCurrentItem()));
+        ShopItem item = guiManager.getShopItem(new ItemStackBukkitImpl(event.getCurrentItem()));
 
         if (item.isPermission()) {
             if (!p.hasPermission("lemonmobcoins.buy." + item.getIdentifier())) {
@@ -74,7 +74,7 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
-        PlayerPurchaseItemEvent purchaseItemEvent = new PlayerPurchaseItemEvent(new BukkitWrappedPlayer(p), item);
+        PlayerPurchaseItemEvent purchaseItemEvent = new PlayerPurchaseItemEvent(new PlayerBukkitImpl(p), item);
         if (!LemonMobCoins.getLemonMobCoinsAPI().getEventBus().post(purchaseItemEvent)) {
             coinManager.deductCoinsFromPlayer(p.getUniqueId(), item.getPrice());
             if (pluginMessageManager != null) pluginMessageManager.sendPluginMessage(p.getUniqueId());

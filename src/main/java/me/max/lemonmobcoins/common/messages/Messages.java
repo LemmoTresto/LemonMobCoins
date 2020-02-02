@@ -52,7 +52,11 @@ public enum Messages { //todo rewrite.
     INVALID_USAGE_RESET_COMMAND(""),
     PAY_PLAYER(""),
     PAID_BY_PLAYER(""),
-    NOT_ENOUGH_MONEY_TO_PAY("");
+    NOT_ENOUGH_MONEY_TO_PAY(""),
+    //todo
+    TOP_PLAYERS_BEGIN(""),
+    TOP_PLAYERS_END(""),
+    TOP_PLAYER_ENTRY("");
 
     private String message;
 
@@ -61,6 +65,7 @@ public enum Messages { //todo rewrite.
         this.message = message;
     }
 
+    //todo rewrite plz this is ugly lol
     public String getMessage(double balance, @Nullable String playerName, @Nullable String entityName, double amount) {
         String msg = ColorUtil.colorize(message);
 

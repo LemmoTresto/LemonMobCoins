@@ -22,13 +22,13 @@
 
 package me.max.lemonmobcoins.sponge.listeners;
 
-import me.max.lemonmobcoins.common.abstraction.inventory.SpongeWrappedItemStack;
+import me.max.lemonmobcoins.common.abstraction.pluginmessaging.AbstractPluginMessageManager;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.gui.GuiManager;
 import me.max.lemonmobcoins.common.gui.ShopItem;
 import me.max.lemonmobcoins.common.messages.Messages;
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
 import me.max.lemonmobcoins.common.utils.ColorUtil;
+import me.max.lemonmobcoins.sponge.impl.inventory.ItemStackSpongeImpl;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -54,7 +54,7 @@ public class ClickInventoryListener {
 
         Player p = (Player) event.getSource();
         ShopItem item = guiManager
-                .getShopItem(new SpongeWrappedItemStack(event.getCursorTransaction().getFinal().createStack()));
+                .getShopItem(new ItemStackSpongeImpl(event.getCursorTransaction().getFinal().createStack()));
 
         if (item.isPermission()) {
             if (!p.hasPermission("lemonmobcoins.buy." + item.getIdentifier())) {

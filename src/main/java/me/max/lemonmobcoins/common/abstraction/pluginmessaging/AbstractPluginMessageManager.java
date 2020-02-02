@@ -20,8 +20,11 @@
  *
  */
 
-package me.max.lemonmobcoins.common.pluginmessaging;
+package me.max.lemonmobcoins.common.abstraction.pluginmessaging;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import org.slf4j.Logger;
 
@@ -44,11 +47,25 @@ public abstract class AbstractPluginMessageManager {
 
     }
 
+    protected ByteArrayDataOutput getPluginMessage(IWrappedPlayer p, UUID uuid, double balance) {
+        if (p == null) {
+            if (getCache().contains(uuid)) return null;
+            getCache().add(uuid);
+            return null;
+        }
+
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("LemonMobCoins");
+        out.writeUTF(uuid.toString());
+        out.writeDouble(balance);
+        return out;
+    }
+
     void sendPendingPluginMessages() {
         getCache().forEach(this::sendPluginMessage);
     }
 
-    protected List<UUID> getCache() {
+    List<UUID> getCache() {
         return cache;
     }
 

@@ -36,7 +36,7 @@ import me.max.lemonmobcoins.common.gui.GuiManager;
 import me.max.lemonmobcoins.common.messages.Messages;
 
 @SuppressWarnings("unused")
-@CommandAlias("mstore|mshop")
+@CommandAlias("mstore|mshop|%shopCmd")
 @CommandPermission("lemonmobcoins.shop")
 public class MStoreCommand extends BaseCommand {
 

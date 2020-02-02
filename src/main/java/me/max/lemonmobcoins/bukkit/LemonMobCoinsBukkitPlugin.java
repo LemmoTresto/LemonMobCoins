@@ -23,21 +23,20 @@
 package me.max.lemonmobcoins.bukkit;
 
 import co.aikar.commands.BukkitCommandManager;
+import me.max.lemonmobcoins.bukkit.impl.platform.PlatformBukkitImpl;
 import me.max.lemonmobcoins.bukkit.listeners.EntityDeathListener;
 import me.max.lemonmobcoins.bukkit.listeners.InventoryClickListener;
 import me.max.lemonmobcoins.bukkit.listeners.PlayerJoinListener;
 import me.max.lemonmobcoins.bukkit.listeners.PluginMessagingListener;
 import me.max.lemonmobcoins.common.LemonMobCoins;
-import me.max.lemonmobcoins.common.abstraction.platform.BukkitWrappedPlatform;
 import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
+import me.max.lemonmobcoins.common.abstraction.pluginmessaging.AbstractPluginMessageManager;
 import me.max.lemonmobcoins.common.coinmob.CoinMobManager;
-import me.max.lemonmobcoins.common.commands.CustomShopCommand;
 import me.max.lemonmobcoins.common.commands.MStoreCommand;
 import me.max.lemonmobcoins.common.commands.MobCoinsCommand;
 import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.gui.GuiManager;
 import me.max.lemonmobcoins.common.messages.MessageManager;
-import me.max.lemonmobcoins.common.pluginmessaging.AbstractPluginMessageManager;
 import me.max.lemonmobcoins.common.utils.FileUtil;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
@@ -103,7 +102,7 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
             return;
         }
 
-        final IWrappedPlatform platform = new BukkitWrappedPlatform(this);
+        final IWrappedPlatform platform = new PlatformBukkitImpl(this);
         lemonMobCoins = new LemonMobCoins(getSLF4JLogger(), getDataFolder(), platform);
 
         ConfigurationNode node;
@@ -128,7 +127,6 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
         info("Loading commands..");
         BukkitCommandManager manager = new BukkitCommandManager(this);
         manager.registerCommand(new MobCoinsCommand(getCoinManager(), platform, getGuiManager()));
-        manager.registerCommand(new CustomShopCommand(platform, getGuiManager()));
         manager.registerCommand(new MStoreCommand(platform, getGuiManager()));
         manager.getCommandReplacements().addReplacement("shopCmd", getGuiManager().getCommand().substring(1));
         info("Loaded commands!");

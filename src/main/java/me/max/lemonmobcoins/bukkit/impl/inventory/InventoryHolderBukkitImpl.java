@@ -20,21 +20,19 @@
  *
  */
 
-package me.max.lemonmobcoins.common.abstraction.inventory;
+package me.max.lemonmobcoins.bukkit.impl.inventory;
 
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventoryHolder;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.jetbrains.annotations.Contract;
 
-public class BukkitWrappedInventory implements IWrappedInventory {
-
-    private final Inventory inventory;
-
-    public BukkitWrappedInventory(Inventory inventory) {
-        this.inventory = inventory;
-    }
+public class InventoryHolderBukkitImpl implements IWrappedInventoryHolder, InventoryHolder {
 
     @Override
+    @Contract("-> null")
     public Inventory getInventory() {
-        return inventory;
+        return null;
     }
 
 }

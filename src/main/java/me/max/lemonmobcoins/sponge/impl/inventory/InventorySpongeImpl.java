@@ -20,33 +20,22 @@
  *
  */
 
-package me.max.lemonmobcoins.common.pluginmessaging;
+package me.max.lemonmobcoins.sponge.impl.inventory;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
+import org.spongepowered.api.item.inventory.Inventory;
 
-public class AbstractPlayerJoinListener {
+public class InventorySpongeImpl implements IWrappedInventory {
 
-    private final Timer timer = new Timer();
-    private final AbstractPluginMessageManager pluginMessageManager;
-    private final TimerTask timerTask = new TimerTask() {
-        @Override
-        public void run() {
-            pluginMessageManager.sendPendingPluginMessages();
-        }
-    };
+    private final Inventory inventory;
 
-    protected AbstractPlayerJoinListener(AbstractPluginMessageManager pluginMessageManager) {
-        this.pluginMessageManager = pluginMessageManager;
+    public InventorySpongeImpl(Inventory inventory) {
+        this.inventory = inventory;
     }
 
-    private AbstractPluginMessageManager getPluginMessageManager() {
-        return pluginMessageManager;
-    }
-
-    protected void launchTimer() {
-        if (getPluginMessageManager().getCache().isEmpty()) return;
-        timer.schedule(timerTask, 1500L);
+    @Override
+    public Inventory getInventory() {
+        return inventory;
     }
 
 }

@@ -20,15 +20,20 @@
  *
  */
 
-package me.max.lemonmobcoins.common.abstraction.platform;
+package me.max.lemonmobcoins.sponge.impl.platform;
 
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedOfflinePlayer;
 import me.max.lemonmobcoins.common.abstraction.entity.IWrappedPlayer;
-import me.max.lemonmobcoins.common.abstraction.entity.SpongeWrappedOfflinePlayer;
-import me.max.lemonmobcoins.common.abstraction.entity.SpongeWrappedPlayer;
-import me.max.lemonmobcoins.common.abstraction.inventory.*;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedItemStack;
+import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
 import me.max.lemonmobcoins.common.gui.ShopItem;
 import me.max.lemonmobcoins.sponge.LemonMobCoinsSpongePlugin;
+import me.max.lemonmobcoins.sponge.impl.entity.OfflinePlayerSpongeImpl;
+import me.max.lemonmobcoins.sponge.impl.entity.PlayerSpongeImpl;
+import me.max.lemonmobcoins.sponge.impl.inventory.InventoryHolderSpongeImpl;
+import me.max.lemonmobcoins.sponge.impl.inventory.InventorySpongeImpl;
+import me.max.lemonmobcoins.sponge.impl.inventory.ItemStackSpongeImpl;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
@@ -52,43 +57,43 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class SpongeWrappedPlatform implements IWrappedPlatform {
+public class PlatformSpongeImpl implements IWrappedPlatform {
 
     private final LemonMobCoinsSpongePlugin plugin;
 
-    public SpongeWrappedPlatform(LemonMobCoinsSpongePlugin plugin) {
+    public PlatformSpongeImpl(LemonMobCoinsSpongePlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public IWrappedPlayer[] getOnlinePlayers() {
         List<IWrappedPlayer> players = new ArrayList<>();
-        Sponge.getGame().getServer().getOnlinePlayers().forEach(player -> players.add(new SpongeWrappedPlayer(player)));
+        Sponge.getGame().getServer().getOnlinePlayers().forEach(player -> players.add(new PlayerSpongeImpl(player)));
         return players.toArray(new IWrappedPlayer[0]);
     }
 
     @Override
     public IWrappedPlayer getPlayer(String name) {
         Optional<Player> player = Sponge.getGame().getServer().getPlayer(name);
-        return player.map(SpongeWrappedPlayer::new).orElse(null);
+        return player.map(PlayerSpongeImpl::new).orElse(null);
     }
 
     @Override
     public IWrappedPlayer getPlayer(UUID uuid) {
         Optional<Player> player = Sponge.getGame().getServer().getPlayer(uuid);
-        return player.map(SpongeWrappedPlayer::new).orElse(null);
+        return player.map(PlayerSpongeImpl::new).orElse(null);
     }
 
     @Override
     public IWrappedOfflinePlayer getOfflinePlayer(UUID uuid) {
         Optional<User> user = getUser(uuid);
-        return user.map(SpongeWrappedOfflinePlayer::new).orElse(null);
+        return user.map(OfflinePlayerSpongeImpl::new).orElse(null);
     }
 
     @Override
     public IWrappedOfflinePlayer getOfflinePlayer(String name) {
         Optional<User> user = getUser(name);
-        return user.map(SpongeWrappedOfflinePlayer::new).orElse(null);
+        return user.map(OfflinePlayerSpongeImpl::new).orElse(null);
     }
 
     @Override
@@ -105,29 +110,16 @@ public class SpongeWrappedPlatform implements IWrappedPlatform {
     @Override
     public IWrappedInventory createInventory(String title, int rows, List<ShopItem> items) {
         Inventory.Builder invBuilder = Inventory.builder();
-        invBuilder.forCarrier(new SpongeCarrier());
+        invBuilder.forCarrier(new InventoryHolderSpongeImpl());
         invBuilder.property(InventoryTitle.PROPERTY_NAME, InventoryTitle.of(Text.of(title)));
         invBuilder.property(InventoryDimension.PROPERTY_NAME, InventoryDimension.of(9, rows));
         Inventory inv = invBuilder.build(plugin);
 
         for (ShopItem item : items) {
-            Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, item.getMaterial());
-            if (!type.isPresent()) continue;
-            ItemStack itemStack = ItemStack.of(type.get(), item.getAmount());
-
-            if (item.isGlowing()) {
-                @SuppressWarnings("OptionalGetWithoutIsPresent")
-                EnchantmentData enchData = itemStack.getOrCreate(EnchantmentData.class).get();
-                enchData.set(enchData.enchantments().add(Enchantment.of(EnchantmentTypes.UNBREAKING, 1)));
-                itemStack.offer(Keys.HIDE_ENCHANTMENTS, true);
-            }
-
-            itemStack.offer(Keys.DISPLAY_NAME, Text.of(item.getDisplayname()));
-            itemStack.offer(Keys.ITEM_LORE, item.getLore().stream().map(Text::of).collect(Collectors.toList()));
-            inv.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(item.getSlot()))).first().set(itemStack);
+            inv.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(item.getSlot()))).first().set((ItemStack) toItemStack(item));
         }
 
-        return new SpongeWrappedInventory(inv);
+        return new InventorySpongeImpl(inv);
 
     }
 
@@ -146,7 +138,7 @@ public class SpongeWrappedPlatform implements IWrappedPlatform {
 
         itemStack.offer(Keys.DISPLAY_NAME, Text.of(item.getDisplayname()));
         itemStack.offer(Keys.ITEM_LORE, item.getLore().stream().map(Text::of).collect(Collectors.toList()));
-        return new SpongeWrappedItemStack(itemStack);
+        return new ItemStackSpongeImpl(itemStack);
     }
 
     private Optional<User> getUser(UUID uuid) {

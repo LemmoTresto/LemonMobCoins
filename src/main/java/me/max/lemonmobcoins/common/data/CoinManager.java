@@ -23,11 +23,14 @@
 package me.max.lemonmobcoins.common.data;
 
 
+import me.max.lemonmobcoins.common.abstraction.platform.IWrappedPlatform;
 import me.max.lemonmobcoins.common.exceptions.DataLoadException;
+import me.max.lemonmobcoins.common.utils.MapUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -39,7 +42,7 @@ public class CoinManager {
     public CoinManager(DataProvider dataProvider) throws DataLoadException {
         this.dataProvider = dataProvider;
         try {
-            coins = dataProvider.loadData();
+            coins = MapUtil.sortByValue(dataProvider.loadData());
         } catch (Throwable t) {
             throw new DataLoadException(t);
         }
@@ -74,4 +77,16 @@ public class CoinManager {
         return coins;
     }
 
+    public Map<String, Double> getTopPlayers(int page, IWrappedPlatform platform) {
+        Map<String, Double> topPlayers = new HashMap<>();
+
+        int i = 0;
+        for (Map.Entry<UUID, Double> entry : getCoins().entrySet()){
+            if (i >= (page * 10)) return topPlayers;
+            topPlayers.put(platform.getOfflinePlayer(entry.getKey()).getName(), entry.getValue());
+            i++;
+        }
+
+        return topPlayers;
+    }
 }

@@ -20,41 +20,28 @@
  *
  */
 
-package me.max.lemonmobcoins.common.abstraction.entity;
+package me.max.lemonmobcoins.bukkit.impl.inventory;
 
-import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.text.Text;
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedItemStack;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.UUID;
+public class ItemStackBukkitImpl implements IWrappedItemStack {
 
-public class SpongeWrappedPlayer implements IWrappedPlayer {
+    private final ItemStack itemStack;
 
-    private final Player player;
-
-    public SpongeWrappedPlayer(Player player) {
-        this.player = player;
+    public ItemStackBukkitImpl(ItemStack itemStack) {
+        this.itemStack = itemStack;
     }
 
     @Override
-    public String getName() {
-        return player.getName();
+    public ItemStack getStack() {
+        return itemStack;
     }
 
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
-    public UUID getUniqueId() {
-        return player.getUniqueId();
-    }
-
-    @Override
-    public void sendMessage(String message) {
-        player.sendMessage(Text.of(message));
-    }
-
-    @Override
-    public void openInventory(IWrappedInventory inventory) {
-        player.openInventory((Inventory) inventory.getInventory());
+    public boolean equals(Object obj) {
+        return itemStack.equals(obj);
     }
 
 }

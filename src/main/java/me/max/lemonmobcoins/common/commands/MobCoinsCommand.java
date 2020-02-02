@@ -37,6 +37,8 @@ import me.max.lemonmobcoins.common.data.CoinManager;
 import me.max.lemonmobcoins.common.gui.GuiManager;
 import me.max.lemonmobcoins.common.messages.Messages;
 
+import java.util.Map;
+
 @SuppressWarnings("unused")
 @CommandAlias("mobcoins|mobcoin|mc|mcoin|mcoins|mobc")
 public class MobCoinsCommand extends BaseCommand {
@@ -49,29 +51,6 @@ public class MobCoinsCommand extends BaseCommand {
         this.coinManager = coinManager;
         this.platform = platform;
         this.guiManager = guiManager;
-    }
-
-    @Subcommand("balance|bal")
-    @CommandPermission("lemonmobcoins.balance")
-    public void onBalance(CommandIssuer issuer, @Optional String player) {
-        if (player == null) {
-            if (issuer.isPlayer()) {
-                issuer.sendMessage(Messages.OWN_PLAYER_BALANCE
-                        .getMessage(coinManager.getCoinsOfPlayer(issuer.getUniqueId()), platform
-                                .getPlayer(issuer.getUniqueId()).getName(), null, 0));
-                return;
-            }
-            issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0));
-            return;
-        }
-        IWrappedOfflinePlayer offlinePlayer = platform.getOfflinePlayer(player);
-        if (offlinePlayer == null) {
-            issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0));
-            return;
-        }
-        issuer.sendMessage(Messages.OTHER_PLAYER_BALANCE
-                .getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), offlinePlayer
-                        .getName(), null, 0));
     }
 
     @Subcommand("set")
@@ -144,6 +123,22 @@ public class MobCoinsCommand extends BaseCommand {
         }
     }
 
+    @Subcommand("reload")
+    @CommandPermission("lemonmobcoins.admin")
+    public void onReload(CommandIssuer issuer) {
+        try {
+            issuer.sendMessage(Messages.START_RELOAD.getMessage(0, null, null, 0));
+            platform.disable();
+            platform.enable();
+            PluginReloadedEvent event = new PluginReloadedEvent();
+            LemonMobCoins.getLemonMobCoinsAPI().getEventBus().post(event);
+            issuer.sendMessage(Messages.SUCCESSFUL_RELOAD.getMessage(0, null, null, 0));
+        } catch (Throwable t) {
+            issuer.sendMessage(Messages.FAILED_RELOAD.getMessage(0, null, null, 0));
+            t.printStackTrace();
+        }
+    }
+
     @Subcommand("pay")
     @CommandPermission("lemonmobcoins.pay")
     public void onPay(CommandIssuer issuer, String player, double amount) {
@@ -171,20 +166,44 @@ public class MobCoinsCommand extends BaseCommand {
                         .getPlayer(issuer.getUniqueId()).getName(), null, amount));
     }
 
-    @Subcommand("reload")
-    @CommandPermission("lemonmobcoins.admin")
-    public void onReload(CommandIssuer issuer) {
-        try {
-            issuer.sendMessage(Messages.START_RELOAD.getMessage(0, null, null, 0));
-            platform.disable();
-            platform.enable();
-            PluginReloadedEvent event = new PluginReloadedEvent();
-            LemonMobCoins.getLemonMobCoinsAPI().getEventBus().post(event);
-            issuer.sendMessage(Messages.SUCCESSFUL_RELOAD.getMessage(0, null, null, 0));
-        } catch (Throwable t) {
-            issuer.sendMessage(Messages.FAILED_RELOAD.getMessage(0, null, null, 0));
-            t.printStackTrace();
+    @Subcommand("balance|bal")
+    @CommandPermission("lemonmobcoins.balance")
+    public void onBalance(CommandIssuer issuer, @Optional String player) {
+        if (player == null) {
+            if (issuer.isPlayer()) {
+                issuer.sendMessage(Messages.OWN_PLAYER_BALANCE
+                        .getMessage(coinManager.getCoinsOfPlayer(issuer.getUniqueId()), platform
+                                .getPlayer(issuer.getUniqueId()).getName(), null, 0));
+                return;
+            }
+            issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0));
+            return;
         }
+        IWrappedOfflinePlayer offlinePlayer = platform.getOfflinePlayer(player);
+        if (offlinePlayer == null) {
+            issuer.sendMessage(Messages.UNKNOWN_PLAYER.getMessage(0, null, null, 0));
+            return;
+        }
+        issuer.sendMessage(Messages.OTHER_PLAYER_BALANCE
+                .getMessage(coinManager.getCoinsOfPlayer(offlinePlayer.getUniqueId()), offlinePlayer
+                        .getName(), null, 0));
+    }
+
+    @Subcommand("top")
+    @CommandPermission("lemonmobcoins.top")
+    public void onTop(CommandIssuer issuer, @Optional int page){
+        Map<String, Double> topPlayers = coinManager.getTopPlayers(page, platform);
+        issuer.sendMessage(Messages.TOP_PLAYERS_BEGIN.getMessage(coinManager.getCoinsOfPlayer(issuer.getUniqueId()), platform.getPlayer(issuer.getUniqueId()).getName(), null, 0));
+        topPlayers.forEach((key, value) -> issuer.sendMessage(Messages.TOP_PLAYER_ENTRY.getMessage(value, key, null, 0)));
+        issuer.sendMessage(Messages.TOP_PLAYERS_END.getMessage(coinManager.getCoinsOfPlayer(issuer.getUniqueId()), platform.getPlayer(issuer.getUniqueId()).getName(), null, 0));
+    }
+
+    @Subcommand("shop|s")
+    @CommandPermission("lemonmobcoins.shop")
+    public void onShop(CommandIssuer issuer) {
+        IWrappedPlayer player = platform.getPlayer(issuer.getUniqueId());
+        if (!LemonMobCoins.getLemonMobCoinsAPI().getEventBus().post(new ShopOpenedEvent(player)))
+            player.openInventory(guiManager.getInventory());
     }
 
     @Subcommand("help|?|h")
@@ -195,14 +214,6 @@ public class MobCoinsCommand extends BaseCommand {
             return;
         }
         issuer.sendMessage(Messages.PLAYER_HELP_MENU.getMessage(0, null, null, 0));
-    }
-
-    @Subcommand("shop|s")
-    @CommandPermission("lemonmobcoins.shop")
-    public void onShop(CommandIssuer issuer) {
-        IWrappedPlayer player = platform.getPlayer(issuer.getUniqueId());
-        if (!LemonMobCoins.getLemonMobCoinsAPI().getEventBus().post(new ShopOpenedEvent(player)))
-            player.openInventory(guiManager.getInventory());
     }
 
     @Default

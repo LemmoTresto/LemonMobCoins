@@ -20,15 +20,16 @@
  *
  */
 
-package me.max.lemonmobcoins.common.abstraction.inventory;
+package me.max.lemonmobcoins.sponge.impl.inventory;
 
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedItemStack;
 import org.spongepowered.api.item.inventory.ItemStack;
 
-public class SpongeWrappedItemStack implements IWrappedItemStack {
+public class ItemStackSpongeImpl implements IWrappedItemStack {
 
     private final ItemStack itemStack;
 
-    public SpongeWrappedItemStack(ItemStack itemStack) {
+    public ItemStackSpongeImpl(ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 

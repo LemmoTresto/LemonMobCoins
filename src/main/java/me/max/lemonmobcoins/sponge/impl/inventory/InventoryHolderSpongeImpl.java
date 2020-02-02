@@ -20,14 +20,15 @@
  *
  */
 
-package me.max.lemonmobcoins.common.abstraction.inventory;
+package me.max.lemonmobcoins.sponge.impl.inventory;
 
+import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventoryHolder;
 import org.jetbrains.annotations.Contract;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 
 @SuppressWarnings("NullableProblems")
-public class SpongeCarrier implements Carrier {
+public class InventoryHolderSpongeImpl implements IWrappedInventoryHolder, Carrier {
 
     @Override
     @Contract("-> null")
