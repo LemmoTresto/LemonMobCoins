@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ShopItem {
+public final class ShopItem {
 
     private final String identifier;
     private final int slot;

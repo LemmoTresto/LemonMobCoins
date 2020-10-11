@@ -28,7 +28,7 @@ import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 
 @SuppressWarnings("NullableProblems")
-public class InventoryHolderSpongeImpl implements IWrappedInventoryHolder, Carrier {
+public final class InventoryHolderSpongeImpl implements IWrappedInventoryHolder, Carrier {
 
     @Override
     @Contract("-> null")

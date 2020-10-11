@@ -27,7 +27,7 @@ import com.google.common.eventbus.EventBus;
 /**
  * Event bus used by the plugin to handle API events
  */
-public class LMCEventBus {
+public final class LMCEventBus {
 
     // Instance of the event bus
     private EventBus eventBus;

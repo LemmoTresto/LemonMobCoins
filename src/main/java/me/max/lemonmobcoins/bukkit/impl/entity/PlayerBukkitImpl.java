@@ -29,7 +29,7 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.UUID;
 
-public class PlayerBukkitImpl implements IWrappedPlayer {
+public final class PlayerBukkitImpl implements IWrappedPlayer {
 
     private final Player player;
 

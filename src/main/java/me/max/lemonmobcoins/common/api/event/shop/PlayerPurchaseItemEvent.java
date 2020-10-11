@@ -31,7 +31,7 @@ import me.max.lemonmobcoins.common.gui.ShopItem;
  * Fired when the player purchases an item
  */
 @Cancellable
-public class PlayerPurchaseItemEvent extends Event {
+public final class PlayerPurchaseItemEvent extends Event {
 
     private IWrappedPlayer player;
 

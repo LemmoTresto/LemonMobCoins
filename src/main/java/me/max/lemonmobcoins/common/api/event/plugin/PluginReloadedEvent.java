@@ -27,6 +27,6 @@ import me.max.lemonmobcoins.common.api.event.Event;
 /**
  * Fired when the plugin is reloaded by "/mobcoins reload"
  */
-public class PluginReloadedEvent extends Event {
+public final class PluginReloadedEvent extends Event {
 
 }

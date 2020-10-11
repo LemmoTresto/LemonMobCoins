@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class CoinMobManager {
+public final class CoinMobManager {
 
     private final List<CoinMob> coinMobList;
 

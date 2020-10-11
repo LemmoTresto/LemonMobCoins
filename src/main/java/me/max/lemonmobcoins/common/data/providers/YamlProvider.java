@@ -32,14 +32,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class YamlProvider implements DataProvider {
+public final class YamlProvider implements DataProvider {
 
     private YAMLConfigurationLoader dataLoader;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public YamlProvider(String dataFolder) throws IOException {
+        final File dataDir = new File(dataFolder + File.separator + "data");
+        dataDir.mkdir();
+
         File dataFile = new File(dataFolder + File.separator + "data" + File.separator, "balance.yml");
-        dataFile.mkdir();
         dataFile.createNewFile();
         dataLoader = YAMLConfigurationLoader.builder().setFile(dataFile).build();
     }

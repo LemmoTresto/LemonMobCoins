@@ -28,7 +28,7 @@ import org.bukkit.OfflinePlayer;
 
 import java.util.UUID;
 
-public class OfflinePlayerBukkitImpl implements IWrappedOfflinePlayer {
+public final class OfflinePlayerBukkitImpl implements IWrappedOfflinePlayer {
 
     private final OfflinePlayer offlinePlayer;
 
@@ -49,7 +49,6 @@ public class OfflinePlayerBukkitImpl implements IWrappedOfflinePlayer {
     @Override
     public boolean isOnline() {
         return offlinePlayer.isOnline();
-
     }
 
     @Override

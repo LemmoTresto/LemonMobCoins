@@ -33,7 +33,7 @@ import org.slf4j.Logger;
 
 import java.util.UUID;
 
-public class BukkitPluginMessageManager extends AbstractPluginMessageManager {
+public final class BukkitPluginMessageManager extends AbstractPluginMessageManager {
 
     BukkitPluginMessageManager(CoinManager coinManager, Logger logger) {
         super(coinManager, logger);

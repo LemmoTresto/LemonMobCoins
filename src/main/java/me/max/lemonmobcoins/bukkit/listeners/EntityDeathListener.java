@@ -36,7 +36,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-public class EntityDeathListener implements Listener {
+public final class EntityDeathListener implements Listener {
 
     private final CoinManager coinManager;
     private final AbstractPluginMessageManager pluginMessageManager;

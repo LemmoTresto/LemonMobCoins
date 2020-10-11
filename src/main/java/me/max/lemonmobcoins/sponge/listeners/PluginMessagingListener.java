@@ -32,7 +32,7 @@ import org.spongepowered.api.network.RemoteConnection;
 
 import java.util.UUID;
 
-public class PluginMessagingListener implements RawDataListener {
+public final class PluginMessagingListener implements RawDataListener {
 
     private CoinManager coinManager;
     private Logger logger;

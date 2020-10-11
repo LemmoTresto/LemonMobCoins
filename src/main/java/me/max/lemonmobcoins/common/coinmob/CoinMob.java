@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class CoinMob {
+public final class CoinMob {
 
     private final String mob;
     private final int chance;

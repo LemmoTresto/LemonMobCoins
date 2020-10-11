@@ -40,7 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class LemonMobCoins {
+public final class LemonMobCoins {
 
     private static LemonMobCoinsAPI lemonMobCoinsAPI;
     private final Logger logger;
@@ -67,7 +67,7 @@ public class LemonMobCoins {
                         .getNode("port").getString(), mysqlSection.getNode("username").getString(), mysqlSection
                         .getNode("password").getString(), mysqlSection.getNode("database").getString());
             } else {
-                error("Invalid storage type found! Using flatfile!");
+                warn("Invalid storage type found! Using flatfile!");
                 dataProvider = new YamlProvider(dataFolder.toString());
             }
 

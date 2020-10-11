@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GuiManager {
+public final class GuiManager {
 
     private final int rows;
     private final String command;
@@ -95,7 +95,7 @@ public class GuiManager {
 
     @NotNull
     public String getCommand() {
-        return command;
+        return command == null ? "" : command;
     }
 
     public ShopItem getShopItem(IWrappedItemStack itemStack) {

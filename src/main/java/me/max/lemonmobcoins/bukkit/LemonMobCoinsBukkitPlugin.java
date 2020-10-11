@@ -125,10 +125,12 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
         info("Loaded listeners!");
 
         info("Loading commands..");
-        BukkitCommandManager manager = new BukkitCommandManager(this);
-        manager.registerCommand(new MobCoinsCommand(getCoinManager(), platform, getGuiManager()));
-        manager.registerCommand(new MStoreCommand(platform, getGuiManager()));
-        manager.getCommandReplacements().addReplacement("shopCmd", getGuiManager().getCommand().substring(1));
+        final BukkitCommandManager manager = new BukkitCommandManager(this);
+        final GuiManager guiManager = getGuiManager();
+
+        manager.registerCommand(new MobCoinsCommand(getCoinManager(), platform, guiManager));
+        manager.registerCommand(new MStoreCommand(platform, guiManager));
+        manager.getCommandReplacements().addReplacement("shopCmd", guiManager.getCommand() /*.substring(1) */);
         info("Loaded commands!");
     }
 
@@ -147,7 +149,6 @@ public final class LemonMobCoinsBukkitPlugin extends JavaPlugin {
     private void info(String s) {
         getSLF4JLogger().info(s);
     }
-
 
     @NotNull
     private CoinManager getCoinManager() {

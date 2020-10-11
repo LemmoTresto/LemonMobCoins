@@ -22,7 +22,7 @@
 
 package me.max.lemonmobcoins.common.utils;
 
-public class ColorUtil {
+public final class ColorUtil {
 
     public static String colorize(String s) {
         char[] b = s.toCharArray();

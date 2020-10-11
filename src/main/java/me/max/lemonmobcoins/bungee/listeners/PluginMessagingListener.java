@@ -34,7 +34,7 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.util.UUID;
 
-public class PluginMessagingListener implements Listener {
+public final class PluginMessagingListener implements Listener {
 
     private final ProxyServer server;
     private final CoinManager coinManager;

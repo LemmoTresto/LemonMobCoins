@@ -34,7 +34,7 @@ import org.spongepowered.api.network.ChannelBinding;
 
 import java.util.UUID;
 
-public class SpongePluginMessageManager extends AbstractPluginMessageManager {
+public final class SpongePluginMessageManager extends AbstractPluginMessageManager {
 
     SpongePluginMessageManager(CoinManager coinManager, Logger logger) {
         super(coinManager, logger);

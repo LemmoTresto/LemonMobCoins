@@ -28,7 +28,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-public class PlayerJoinListener extends AbstractPlayerJoinListener implements Listener {
+public final class PlayerJoinListener extends AbstractPlayerJoinListener implements Listener {
 
     public PlayerJoinListener(AbstractPluginMessageManager pluginMessageManager) {
         super(pluginMessageManager);

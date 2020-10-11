@@ -27,7 +27,7 @@ import me.max.lemonmobcoins.common.api.event.LMCEventBus;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-public class LemonMobCoinsAPI {
+public final class LemonMobCoinsAPI {
 
     private LMCEventBus eventBus;
 

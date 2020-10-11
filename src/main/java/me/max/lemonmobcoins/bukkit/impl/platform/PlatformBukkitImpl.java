@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class PlatformBukkitImpl implements IWrappedPlatform {
+public final class PlatformBukkitImpl implements IWrappedPlatform {
 
     private final LemonMobCoinsBukkitPlugin plugin;
 

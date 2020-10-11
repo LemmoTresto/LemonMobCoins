@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class MySqlProvider implements DataProvider {
+public final class MySqlProvider implements DataProvider {
 
     private final Connection connection;
 

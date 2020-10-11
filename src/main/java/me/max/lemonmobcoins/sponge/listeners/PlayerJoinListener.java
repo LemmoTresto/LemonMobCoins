@@ -27,7 +27,7 @@ import me.max.lemonmobcoins.common.abstraction.pluginmessaging.AbstractPluginMes
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 
-public class PlayerJoinListener extends AbstractPlayerJoinListener {
+public final class PlayerJoinListener extends AbstractPlayerJoinListener {
 
     public PlayerJoinListener(AbstractPluginMessageManager pluginMessageManager) {
         super(pluginMessageManager);

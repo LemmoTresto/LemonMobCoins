@@ -35,7 +35,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.text.Text;
 
-public class ClickInventoryListener {
+public final class ClickInventoryListener {
 
     private final CoinManager coinManager;
     private final GuiManager guiManager;

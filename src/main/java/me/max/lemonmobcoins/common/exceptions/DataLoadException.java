@@ -22,7 +22,7 @@
 
 package me.max.lemonmobcoins.common.exceptions;
 
-public class DataLoadException extends RuntimeException {
+public final class DataLoadException extends RuntimeException {
 
     private final Throwable t;
 

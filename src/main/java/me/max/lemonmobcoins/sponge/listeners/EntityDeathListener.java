@@ -32,7 +32,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.text.Text;
 
-public class EntityDeathListener {
+public final class EntityDeathListener {
 
     private final CoinManager coinManager;
     private final CoinMobManager coinMobManager;

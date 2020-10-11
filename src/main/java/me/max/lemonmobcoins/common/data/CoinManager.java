@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class CoinManager {
+public final class CoinManager {
 
     private final DataProvider dataProvider;
     private final Map<UUID, Double> coins;
