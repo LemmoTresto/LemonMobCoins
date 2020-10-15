@@ -22,8 +22,7 @@
 
 package me.max.lemonmobcoins.common.utils;
 
-import me.max.lemonmobcoins.bukkit.LemonMobCoinsBukkitPlugin;
-import org.bukkit.plugin.java.JavaPlugin;
+import me.max.lemonmobcoins.common.LemonMobCoins;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -35,12 +34,10 @@ import java.nio.file.Files;
 public final class FileUtil {
 
     public static void saveResource(@NotNull String resource, @NotNull File dataFolder, @NotNull String file) throws IOException {
-        final LemonMobCoinsBukkitPlugin plugin = JavaPlugin.getPlugin(LemonMobCoinsBukkitPlugin.class);
-
         try {
             dataFolder.mkdir();
 
-            final InputStream resourceStream = plugin.getResource(resource);
+            final InputStream resourceStream = LemonMobCoins.class.getResourceAsStream(resource);
             Files.copy(resourceStream, new File(dataFolder, file).toPath());
         } catch (FileAlreadyExistsException ignored) {
         }
