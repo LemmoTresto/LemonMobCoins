@@ -33,7 +33,7 @@ import me.max.lemonmobcoins.common.api.event.Event;
  */
 @SuppressWarnings("unused")
 @Cancellable
-public class PlayerBalanceModifiedEvent extends Event {
+public final class PlayerBalanceModifiedEvent extends Event {
 
     private IWrappedOfflinePlayer player;
     private double oldBalance;
@@ -63,15 +63,10 @@ public class PlayerBalanceModifiedEvent extends Event {
     }
 
     public enum Type {
-
         GIVEN,
-
         TAKEN,
-
         SET,
-
         RESET,
-
         EARN,
 
     }

@@ -30,7 +30,7 @@ import me.max.lemonmobcoins.common.api.event.Event;
  * Fired when the shop is opened
  */
 @Cancellable
-public class ShopOpenedEvent extends Event {
+public final class ShopOpenedEvent extends Event {
 
     // The shop who opened the shop
     private IWrappedPlayer player;

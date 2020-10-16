@@ -28,7 +28,7 @@ import org.spongepowered.api.entity.living.player.User;
 
 import java.util.UUID;
 
-public class OfflinePlayerSpongeImpl implements IWrappedOfflinePlayer {
+public final class OfflinePlayerSpongeImpl implements IWrappedOfflinePlayer {
 
     private final User user;
 

@@ -41,7 +41,7 @@ import java.util.Map;
 
 @SuppressWarnings("unused")
 @CommandAlias("mobcoins|mobcoin|mc|mcoin|mcoins|mobc")
-public class MobCoinsCommand extends BaseCommand {
+public final class MobCoinsCommand extends BaseCommand {
 
     private final CoinManager coinManager;
     private final IWrappedPlatform platform;

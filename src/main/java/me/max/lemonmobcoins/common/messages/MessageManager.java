@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.IOException;
 
-public class MessageManager {
+public final class MessageManager {
 
     public MessageManager() {
         throw new UnsupportedOperationException("Instantiation of this class is not allowed.");

@@ -1,5 +1,5 @@
 name: LemonMobCoins
-version: ${project.version}
+version: 2.0.0 # It's being a hoe if you use @version@ for some reason
 author: LemmoTresto
 main: me.max.lemonmobcoins.bukkit.LemonMobCoinsBukkitPlugin
 softdepend: [PlaceholderAPI]

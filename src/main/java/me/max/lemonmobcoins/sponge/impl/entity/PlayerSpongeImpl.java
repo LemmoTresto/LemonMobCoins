@@ -30,7 +30,7 @@ import org.spongepowered.api.text.Text;
 
 import java.util.UUID;
 
-public class PlayerSpongeImpl implements IWrappedPlayer {
+public final class PlayerSpongeImpl implements IWrappedPlayer {
 
     private final Player player;
 

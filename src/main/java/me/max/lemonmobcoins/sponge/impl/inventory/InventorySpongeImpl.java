@@ -25,7 +25,7 @@ package me.max.lemonmobcoins.sponge.impl.inventory;
 import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
 import org.spongepowered.api.item.inventory.Inventory;
 
-public class InventorySpongeImpl implements IWrappedInventory {
+public final class InventorySpongeImpl implements IWrappedInventory {
 
     private final Inventory inventory;
 

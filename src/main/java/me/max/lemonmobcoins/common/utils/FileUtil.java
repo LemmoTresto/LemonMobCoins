@@ -27,16 +27,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 
-public class FileUtil {
+public final class FileUtil {
 
     public static void saveResource(@NotNull String resource, @NotNull File dataFolder, @NotNull String file) throws IOException {
         try {
             dataFolder.mkdir();
-            System.out.println("yes");
-            Files.copy(LemonMobCoins.class.getResourceAsStream(resource), new File(dataFolder, file).toPath());
+
+            final InputStream resourceStream = LemonMobCoins.class.getResourceAsStream(resource);
+            Files.copy(resourceStream, new File(dataFolder, file).toPath());
         } catch (FileAlreadyExistsException ignored) {
         }
     }

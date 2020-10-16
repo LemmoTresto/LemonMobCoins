@@ -1,0 +1,53 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "6.0.0"
+    id "maven-publish"
+    id "java"
+}
+
+group = "me.max"
+version = "2.0.0"
+
+repositories {
+    mavenLocal()
+    maven { url "https://hub.spigotmc.org/nexus/content/groups/public/" }
+    maven { url "https://repo.spongepowered.org/maven" }
+    maven { url "http://repo.aikar.co/content/groups/aikar/" }
+    maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+dependencies {
+    implementation "org.jetbrains:annotations:20.1.0"
+	
+    compileOnly "org.slf4j:slf4j-api:1.7.25"
+    compileOnly "org.slf4j:slf4j-jdk14:1.7.25"
+    
+    implementation "co.aikar:acf-bukkit:0.5.0-SNAPSHOT"
+    implementation "co.aikar:acf-sponge:0.5.0-SNAPSHOT"
+    implementation "org.spongepowered:configurate-core:3.6"
+    implementation "org.spongepowered:spongeapi:7.0.0"
+    
+    compileOnly "org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT"
+    compileOnly "net.md-5:bungeecord-api:1.15-SNAPSHOT"
+}
+
+shadowJar {
+    minimize()
+    archiveFileName.set("LemonMobCoins-${version}.jar")
+    
+    relocate "ninja.leaping.configurate", "me.max.lemonmobcoins.dependencies.configurate"
+    relocate "co.aikar.commands", "me.max.lemonmobcoins.dependencies.commands"
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8

@@ -25,7 +25,7 @@ package me.max.lemonmobcoins.bukkit.impl.inventory;
 import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedInventory;
 import org.bukkit.inventory.Inventory;
 
-public class InventoryBukkitImpl implements IWrappedInventory {
+public final class InventoryBukkitImpl implements IWrappedInventory {
 
     private final Inventory inventory;
 

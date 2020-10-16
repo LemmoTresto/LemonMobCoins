@@ -25,7 +25,7 @@ package me.max.lemonmobcoins.bukkit.impl.inventory;
 import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedItemStack;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemStackBukkitImpl implements IWrappedItemStack {
+public final class ItemStackBukkitImpl implements IWrappedItemStack {
 
     private final ItemStack itemStack;
 

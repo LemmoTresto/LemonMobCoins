@@ -39,7 +39,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class InventoryClickListener implements Listener {
+public final class InventoryClickListener implements Listener {
 
     private final CoinManager coinManager;
     private final GuiManager guiManager;

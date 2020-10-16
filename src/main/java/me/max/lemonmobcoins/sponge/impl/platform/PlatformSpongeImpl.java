@@ -57,7 +57,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class PlatformSpongeImpl implements IWrappedPlatform {
+public final class PlatformSpongeImpl implements IWrappedPlatform {
 
     private final LemonMobCoinsSpongePlugin plugin;
 

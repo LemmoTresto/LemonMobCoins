@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 
 import java.util.UUID;
 
-public class PluginMessagingListener implements PluginMessageListener {
+public final class PluginMessagingListener implements PluginMessageListener {
 
     private final CoinManager coinManager;
     private final Logger logger;

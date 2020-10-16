@@ -25,7 +25,7 @@ package me.max.lemonmobcoins.sponge.impl.inventory;
 import me.max.lemonmobcoins.common.abstraction.inventory.IWrappedItemStack;
 import org.spongepowered.api.item.inventory.ItemStack;
 
-public class ItemStackSpongeImpl implements IWrappedItemStack {
+public final class ItemStackSpongeImpl implements IWrappedItemStack {
 
     private final ItemStack itemStack;
 
